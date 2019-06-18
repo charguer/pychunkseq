@@ -21,7 +21,7 @@
 PRUN=prun
 PPLOT=pplot
 
-MYPROG=./test.sh
+MYPROG=./test.py
 
 
 ################################################################
@@ -55,7 +55,8 @@ show:
 # make SEQ=StackListOfChunks stack_debug
 
 stack_debug: $(MYPROG)
-	$(MYPROG) -debug 1 -nb_repeat 1 -n 30 -seq chunk_stack -chunk_capacity 8
+	$(MYPROG) -length 30 -n 30 -seq debug -chunk_capacity 8
+	$(MYPROG) -length 30 -n 30 -seq debug_stdlib -chunk_capacity 8
 
 
 
@@ -72,6 +73,9 @@ stack_chunk_capacity: $(MYPROG)
 # PERFORMANCE
 
 stack_perf: $(MYPROG)
-	$(PRUN) $< -test stack_repeat_pushn_popn -n 5000000 -length 10,1000,10000,100000,500000 -seq chunk_stack,stdlib_list,container_deque -chunk_capacity 256 -timeout 10
+	$(PRUN) $< -n 500000 -length 10,1000,10000,500000 -seq chunk_stack,stdlib_list,container_deque -chunk_capacity 128 -timeout 5
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
 
+list_perf: $(MYPROG)
+	$(PRUN) $< -n 500000,5000000 -length 500000 -seq stdlib_list -timeout 5
+	$(PPLOT) scatter --yzero --xlog -x n -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf

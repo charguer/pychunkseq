@@ -1,34 +1,79 @@
 #!/usr/bin/env python3
 
 import stack
+import chunk
 from collections import deque
+import time
+import argparse
 
-N = 2 ** 12
-S = 2 ** 4
-q = stack.stack()
+parser = argparse.ArgumentParser()
+parser.add_argument("-seq", type=str,
+                    help="type of sequence")
+parser.add_argument("-n", type=int, help="total number of pushes")
+parser.add_argument("-length", type=int, help="number of pushes in one cycle")
+parser.add_argument("-chunk_capacity", type=int, help="capacity of the chunk")
+args = parser.parse_args()
 
-for i in range (N // S):
-    for k in range(1, S):
-        q.print_()
-        q.push(k)
-    q.print_()
-    print()
-    for _ in range(1, S):
-        q.print_()
-        q.pop()
-    q.print_()
-    print()
+global N, S, R
 
-stack_test = []
+N = args.n
+S = args.length
+R = N // S
+seq = args.seq
+chunk.set_capacity(args.chunk_capacity)
 
-for i in range(N // S):
-    for k in range(1, S):
-        stack_test.append(k)
-    for _ in range(1, S):
-        stack_test.pop()
+t1 = time.time()
 
-deque_test = deque()
+if seq == "debug":
+    q = stack.stack()
+    for i in range (R):
+        for k in range(1, S):
+            q.push(k)
+            q.print_()
+        print()
+        for _ in range(1, S):
+            q.pop()
+            q.print_()
+        print()
 
-for i in range(N // S):
-    for k in range(1, S):
-        deque_test.append(k)
+elif seq == "chunk_stack":
+    q = stack.stack()
+    for i in range(R):
+        for k in range(1, S):
+            q.push(k)
+        for _ in range(1, S):
+            q.pop()
+
+elif seq == "stdlib_list":
+    stack_test = []
+
+    for i in range(R):
+        for k in range(1, S):
+            stack_test.append(k)
+        for k in range(1, S):
+            x = stack_test.pop()
+            #if (x != S+1-k):
+             #   exit()
+
+elif seq == "container_deque":
+    deque_test = deque()
+
+    for i in range(R):
+        for k in range(1, S):
+            deque_test.append(k)
+        for _ in range(1, S):
+            deque_test.pop()
+
+elif seq == "debug_stdlib":
+    stack_test = []
+
+    for i in range(R):
+        for k in range(1, S):
+            stack_test.append(k)
+            print(stack_test)
+        for _ in range(1, S):
+            stack_test.pop()
+            print(stack_test)
+
+print("exectime", time.time() - t1)
+

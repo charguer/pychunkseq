@@ -1,7 +1,10 @@
-class chunk:
+global K
 
+def set_capacity(chunk_capacity):
     global K
-    K = 4
+    K = chunk_capacity
+
+class chunk:
 
     def __init__(self):
         self.data = [0] * K
@@ -15,32 +18,24 @@ class chunk:
         return self.size == K
 
     def push(self, item):
-        if self.is_full():
-            raise FullError("La file est pleine")
         i = (self.head + self.size) % K
         self.data[i] = item
         self.size += 1
 
     def pop(self):
-        if self.is_empty():
-            print("La file est vide")
-        else:
-            self.size -= 1
-            i = (self.head + self.size) % K
-            x = self.data[i]
-            return x
+        i = (self.head + self.size) % K
+        x = self.data[i]
+        self.size -= 1
+        return x
 
     def top(self):
         i = (self.head + self.size - 1) % K
         return self.data[i]
 
     def print_(self):
-        print(self.size)
-        for j in range(self.size - 1):
+        for j in range(self.size):
             i = (self.head + j) % K
-            print("AFZEFZEFZEZEZE", self.data, end = " ")
-
-        print(" | ")
+            print(self.data[i], end = " ")
 
     def clear(self):
         self.data = [0] * K
