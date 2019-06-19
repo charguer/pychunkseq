@@ -53,7 +53,7 @@ elif seq == "stdlib_list":
         for k in range(1, S):
             x = stack_test.pop()
             #if (x != S+1-k):
-             #   exit()
+             #,   exit()
 
 elif seq == "container_deque":
     deque_test = deque()
