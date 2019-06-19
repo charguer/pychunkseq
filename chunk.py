@@ -1,13 +1,19 @@
+import ctypes
+
 global K
 
 def set_capacity(chunk_capacity):
     global K
     K = chunk_capacity
 
+def create_chunk_array():
+    global K
+    return (K * ctypes.py_object) ()
+
 class chunk:
 
     def __init__(self):
-        self.data = [None] * K
+        self.data = create_chunk_array()
         self.head = 0
         self.size = 0
 
@@ -18,14 +24,15 @@ class chunk:
         return self.size == K
 
     def push(self, item):
-        i = self.size - 1
+        i = self.size
         self.data[i] = item
         self.size += 1
 
     def pop(self):
-        i = self.size - 1
-        x = self.data[i]
         self.size -= 1
+        i = self.size
+        x = self.data[i]
+        self.data[i] = None #writing None is useful to release objects for garbage collection
         return x
 
     def top(self):

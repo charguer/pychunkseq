@@ -14,7 +14,7 @@ class dynamic_array:
         return self.n
 
     def get_item(self, k):
-        if not 0 <= k < self._n:
+        if not 0 <= k < self.n:
             raise IndexError("invalid index")
         return self.tab[k]
 
@@ -28,12 +28,16 @@ class dynamic_array:
     def push(self, obj):
         if self.n == self.capacity:
             self.resize(2 * self.capacity)
-        self.A[self.n] = obj
+        self.tab[self.n] = obj
         self.n += 1
 
     def pop(self):
         if self.n == 0:
             raise IndexError("empty array")
-        x = self.A[self.n - 1]
-        self.A[self.n - 1] = None
+        x = self.tab[self.n - 1]
+        self.tab[self.n - 1] = None
         return x
+
+    def print_(self):
+        for k in range(self.n):
+            pass

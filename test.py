@@ -8,10 +8,10 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-seq", type=str,
-                    help="type of sequence")
-parser.add_argument("-n", type=int, help="total number of pushes")
-parser.add_argument("-length", type=int, help="number of pushes in one cycle")
-parser.add_argument("-chunk_capacity", type=int, help="capacity of the chunk")
+                    help="type of sequence", default="debug")
+parser.add_argument("-n", type=int, help="total number of pushes", default=10)
+parser.add_argument("-length", type=int, help="number of pushes in one cycle", default=10)
+parser.add_argument("-chunk_capacity", type=int, help="capacity of the chunk", default=4)
 args = parser.parse_args()
 
 global N, S, R
@@ -21,11 +21,13 @@ S = args.length
 R = N // S
 seq = args.seq
 chunk.set_capacity(args.chunk_capacity)
+"""stack.set_capacity(args.chunk_capacity)"""
 
 t1 = time.time()
 
 if seq == "debug":
     q = stack.stack()
+    q.print_()
     for i in range (R):
         for k in range(1, S):
             q.push(k)
