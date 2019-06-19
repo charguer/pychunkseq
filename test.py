@@ -9,8 +9,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-seq", type=str,
                     help="type of sequence", default="debug")
-parser.add_argument("-n", type=int, help="total number of pushes", default=10)
-parser.add_argument("-length", type=int, help="number of pushes in one cycle", default=10)
+parser.add_argument("-n", type=int, help="total number of pushes", default=80)
+parser.add_argument("-length", type=int, help="number of pushes in one cycle", default=80)
 parser.add_argument("-chunk_capacity", type=int, help="capacity of the chunk", default=4)
 args = parser.parse_args()
 

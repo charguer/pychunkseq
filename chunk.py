@@ -44,6 +44,14 @@ class chunk:
             i = j
             print(self.data[i], end = " ")
 
+    def print_general(self, print_item):
+        print("[", end = "")
+        for j in range(self.size):
+            i = j
+            print_item(self.data[i])
+            print(", ", end = "")
+        print("]", end = "")
+
     def clear(self):
         self.data = [0] * K
         self.head = 0

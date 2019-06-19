@@ -8,13 +8,15 @@ class stack:
 
     def __init__(self):
         self.head = chunk.chunk()
-        self.tail = list()
+        self.tail = None
         self.nb_tail = 0
         self.spare = None
 
     def push(self, item):
         if self.head.is_full():
-            self.tail.append(self.head)
+            if self.tail == None:
+                self.tail = stack()
+            self.tail.push(self.head)
             self.nb_tail += 1
             if self.spare != None:
                 self.head = self.spare
@@ -32,10 +34,18 @@ class stack:
                 self.nb_tail -= 1
         return x
 
+    def print_general(self, print_item):
+        def f(c):
+            c.print_general(print_item)
+            print(" | ", end ="")
+        if self.tail != None:
+            self.tail.print_general(f)
+            print()
+        self.head.print_general(print_item)
+
+
     def print_(self):
-        #print("stack =", end = " ")
-        for i in range(self.nb_tail):
-            self.tail[i].print_()
-            print(" | ", end = " ")
-        self.head.print_()
-        print()
+        def f(x):
+            print(x, end = "")
+        self.print_general(f)
+        print("\n=====================")
