@@ -1,9 +1,5 @@
 import chunk
 
-"""def set_capacity(chunk_capacity):
-    global K
-    K = chunk_capacity"""
-
 class stack:
 
     def __init__(self):
@@ -25,22 +21,33 @@ class stack:
                 self.head = chunk.chunk()
         self.head.push(item)
 
-    def pop(self):
+    def pop_right(self):
+        #ça suppose que self.head.size > 0
         x = self.head.pop()
         if self.head.is_empty():
             if self.nb_tail > 0:
                 self.spare = self.head
-                self.head = self.tail.pop()
+                self.head = self.tail.pop_right()
+                self.tail.head = None
                 self.nb_tail -= 1
+        return x
+
+    def pop_left(self):
+        if self.nb_tail == 0:
+            self.tail.push(self.head)
+            self.head = chunk.chunk()
+            self.nb_tail += 1
+        x = self.tail.pop(0)
+        self.nb_tail -= 1
         return x
 
     def print_general(self, print_item):
         def f(c):
             c.print_general(print_item)
-            print(" | ", end ="")
+            print(" | ", end = "")
         if self.tail != None:
             self.tail.print_general(f)
-            print()
+            #print()
         self.head.print_general(print_item)
 
 

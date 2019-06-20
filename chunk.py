@@ -1,6 +1,7 @@
 import ctypes
 
 global K
+K = 4
 
 def set_capacity(chunk_capacity):
     global K
@@ -23,31 +24,36 @@ class chunk:
     def is_full(self):
         return self.size == K
 
-    def push(self, item):
-        i = self.size
+    def push_right(self, item):
+        i = (self.head + self.size) % K
         self.data[i] = item
         self.size += 1
 
-    def pop(self):
+    def push_left(self, item):
+        i = (self.head + K - 1) % K
+        self.head = i
+        self.data[i] = item
+        self.size += 1
+
+    def pop_right(self):
+        i = (self.head + self.size - 1) % K
         self.size -= 1
-        i = self.size
         x = self.data[i]
         self.data[i] = None #writing None is useful to release objects for garbage collection
         return x
 
-    def top(self):
-        i = self.size - 1
-        return self.data[i]
-
-    def print_(self):
-        for j in range(self.size):
-            i = j
-            print(self.data[i], end = " ")
+    def pop_left(self):
+        i = self.head
+        x = self.data[i]
+        self.data[i] = None
+        self.size -= 1
+        self.head = (self.head + 1) % K
+        return x
 
     def print_general(self, print_item):
         print("[", end = "")
         for j in range(self.size):
-            i = j
+            i = (self.head + j) % K
             print_item(self.data[i])
             print(", ", end = "")
         print("]", end = "")

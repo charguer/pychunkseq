@@ -34,7 +34,7 @@ if seq == "debug":
             q.print_()
         print()
         for _ in range(1, S):
-            q.pop()
+            q.pop_left()
             q.print_()
         print()
 
@@ -44,7 +44,7 @@ elif seq == "chunk_stack":
         for k in range(1, S):
             q.push(k)
         for _ in range(1, S):
-            q.pop()
+            q.pop_left()
 
 elif seq == "stdlib_list":
     stack_test = []
@@ -53,7 +53,7 @@ elif seq == "stdlib_list":
         for k in range(1, S):
             stack_test.append(k)
         for k in range(1, S):
-            x = stack_test.pop()
+            x = stack_test.pop_left()
             #if (x != S+1-k):
              #,   exit()
 
@@ -64,7 +64,7 @@ elif seq == "container_deque":
         for k in range(1, S):
             deque_test.append(k)
         for _ in range(1, S):
-            deque_test.pop()
+            deque_test.pop_left()
 
 elif seq == "debug_stdlib":
     stack_test = []
@@ -74,7 +74,7 @@ elif seq == "debug_stdlib":
             stack_test.append(k)
             print(stack_test)
         for _ in range(1, S):
-            stack_test.pop()
+            stack_test.pop_left()
             print(stack_test)
 
 print("exectime", time.time() - t1)
