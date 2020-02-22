@@ -17,7 +17,7 @@ class Pchunk:
         return self.view.seg_size == K
 
     def push_right(self, item):
-        if self.support.is_full():
+        if self.is_full():
             # TODO: message d'erreur?
             return
 
@@ -38,7 +38,7 @@ class Pchunk:
             return new_pchunk
 
     def push_left(self, item):
-        if self.support.is_full():
+        if self.is_full():
             # TODO: message d'erreur?
             return
 
@@ -55,6 +55,7 @@ class Pchunk:
             new_pchunk = Pchunk(new_support, new_view)
             return new_pchunk
 
+    # TODO: vérifier valeur de retour? (element ou nouveau obj?)
     def pop_right(self):
         if self.is_empty():
             return self
