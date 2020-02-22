@@ -2,6 +2,7 @@
 
 import chunk
 import pchunk
+import pstack
 
 def main():
     # mychunk = chunk.chunk()
@@ -19,24 +20,42 @@ def main():
     # print('\nmychunk2')
     # mychunk2.print_general(print)   # [2, 3]
 
-    mychunk = pchunk.Pchunk()
-    mychunk = mychunk.push_right(3)
-    mychunk = mychunk.push_left(2)
-    mychunk2 = mychunk.push_left(1)
-    mychunk = mychunk.push_left(4)
-    print('mychunk')
-    mychunk.print_general(print_item)    # [4, 2, 3]
-    print('\nmychunk2')
-    mychunk2.print_general(print_item)   # [1, 2, 3]
+    # mychunk = pchunk.Pchunk()
+    # mychunk = mychunk.push_right(3)
+    # mychunk = mychunk.push_left(2)
+    # mychunk2 = mychunk.push_left(1)
+    # mychunk = mychunk.push_left(4)
+    # print('mychunk')
+    # mychunk.print_general(print_item)    # [4, 2, 3]
+    # print('\nmychunk2')
+    # mychunk2.print_general(print_item)   # [1, 2, 3]
 
-    mychunk = mychunk.pop_left()
-    mychunk = mychunk.pop_right()
-    print('\nmychunk')
-    mychunk.print_general(print_item)    # [2]
+    # mychunk = mychunk.pop_left()
+    # mychunk = mychunk.pop_right()
+    # print('\nmychunk')
+    # mychunk.print_general(print_item)    # [2]
 
-    empty_chunk = mychunk.clear()
-    print('\nempty chunk')
-    empty_chunk.print_general(print_item) # []
+    # empty_chunk = mychunk.clear()
+    # print('\nempty chunk')
+    # empty_chunk.print_general(print_item) # []
+
+    mystack = pstack.Pstack()
+    mystack = mystack.push(1)
+    mystack = mystack.push(2)
+    mystack = mystack.push(3)
+    mystack = mystack.push(4)
+    mystack = mystack.push(5)
+    mystack = mystack.push(6)
+
+    print('stack')
+    mystack.print_general(print_item)
+
+    mystack = mystack.pop()
+    mystack = mystack.pop()
+    mystack = mystack.pop()
+
+    print('after pop 3 elts')
+    mystack.print_general(print_item)
 
 
 def print_item(item):
