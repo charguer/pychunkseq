@@ -37,6 +37,24 @@ class Pchunk:
             new_pchunk = Pchunk(new_support, new_view)
             return new_pchunk
 
+    def push_left(self, item):
+        if self.support.is_full():
+            # TODO: message d'erreur?
+            return
+
+        # si la case head - 1 est vide on peut ajouter
+        if (self.view.seg_head - 1 - self.support.head) % K <= self.support.size:
+            self.support.push_left(item)
+            new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
+            new_pchunk = Pchunk(self.support, new_view)
+            return new_pchunk
+        else:
+            new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
+            new_support = self.support.ncopy(self.view.seg_size)
+            new_support.push_left(item)
+            new_pchunk = Pchunk(new_support, new_view)
+            return new_pchunk
+
     def print_general(self, print_item):
         print("[", end = "")
         for j in range(self.view.seg_size):
