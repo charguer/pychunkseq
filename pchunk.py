@@ -32,13 +32,7 @@ class Pchunk:
         else:
             # sinon on doit copier le chunk avec les valeurs qui nous interessent
             new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
-            new_support = chunk.chunk()
-            new_support.head = self.support.head
-            new_support.size = 0
-            # copier support
-            for i in range(self.view.seg_size):
-                new_support.push_right(self.support.data[i + self.support.head]) # copier objet?? deep copy pcq pas tjrs type primitif?
-            # push nouveau objet
+            new_support = self.support.ncopy(self.view.seg_size)
             new_support.push_right(item)              
             new_pchunk = Pchunk(new_support, new_view)
             return new_pchunk

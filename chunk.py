@@ -62,3 +62,13 @@ class chunk:
         self.data = [0] * K
         self.head = 0
         self.size = 0
+
+    # créer une copie (partielle ou complete - size elts) d'un chunk
+    def ncopy(self, size):
+        new_chunk = chunk()
+        new_chunk.head = self.head
+        new_chunk.size = 0
+        # copier size elements
+        for i in range(size):
+            new_chunk.push_right(self.data[(i + self.head) % K]) # copier item?
+        return new_chunk
