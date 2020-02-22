@@ -55,6 +55,22 @@ class Pchunk:
             new_pchunk = Pchunk(new_support, new_view)
             return new_pchunk
 
+    def pop_right(self):
+        if self.is_empty():
+            return self
+
+        new_view = view.View(self.view.seg_head, self.view.seg_size - 1)
+        new_pchunk = Pchunk(self.support, new_view)
+        return new_pchunk
+
+    def pop_left(self):
+        if self.is_empty():
+            return self
+        
+        new_view = view.View((self.view.seg_head + 1) % K, self.view.seg_size - 1)
+        new_pchunk = Pchunk(self.support, new_view)
+        return new_pchunk
+
     def print_general(self, print_item):
         print("[", end = "")
         for j in range(self.view.seg_size):
