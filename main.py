@@ -32,7 +32,11 @@ def main():
     mychunk = mychunk.pop_left()
     mychunk = mychunk.pop_right()
     print('\nmychunk')
-    mychunk.print_general(print_item)    # [4, 2, 3]
+    mychunk.print_general(print_item)    # [2]
+
+    empty_chunk = mychunk.clear()
+    print('\nempty chunk')
+    empty_chunk.print_general(print_item) # []
 
 
 def print_item(item):

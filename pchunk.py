@@ -71,6 +71,11 @@ class Pchunk:
         new_pchunk = Pchunk(self.support, new_view)
         return new_pchunk
 
+    def clear(self):
+        new_view = view.View(0, 0)
+        new_pchunk = Pchunk(self.support, new_view)
+        return new_pchunk
+
     def print_general(self, print_item):
         print("[", end = "")
         for j in range(self.view.seg_size):
