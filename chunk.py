@@ -50,6 +50,10 @@ class chunk:
         self.head = (self.head + 1) % K
         return x
 
+    # TODO: ajouter
+    # get_absolute(i) = self.data[i]
+    # get(i) = self.data[(i + self.head) % K]
+
     def print_general(self, print_item):
         print("[", end = "")
         for j in range(self.size):
@@ -57,6 +61,11 @@ class chunk:
             print_item(self.data[i])
             print(", ", end = "")
         print("]", end = "")
+
+     # TODO: print_view(self, view, print_item)
+     # print_general(self, print_item): implémenter avec 
+       # print_view(self, View(self.head, self.size), print_item)
+
 
     def clear(self):
         self.data = [0] * K

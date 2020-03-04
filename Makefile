@@ -79,3 +79,19 @@ stack_perf: $(MYPROG)
 list_perf: $(MYPROG)
 	$(PRUN) $< -n 500000,5000000 -length 500000 -seq stdlib_list -timeout 5
 	$(PPLOT) scatter --yzero --xlog -x n -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
+
+
+# Example command line
+# main.py -n 500000 -length 10 -seq pstack -chunk_capacity 32 
+
+
+# TODO 
+# 
+# t1 = time()
+# repeat n/length fois
+#    for i= 0 to length
+#        push i
+#    for i= 0 to length
+#        pop i
+# echo ("exectime " + (time() - t1))
+ 

@@ -32,6 +32,7 @@ class stack:
                 self.nb_tail -= 1
         return x
 
+    # TODO: remove pop_left
     def pop_left(self):
         if self.nb_tail == 0:
             self.tail.push(self.head)
@@ -50,6 +51,7 @@ class stack:
             #print()
         self.head.print_general(print_item)
 
+      # TODO: implement size() en utilisant nb_tail
 
     def print_(self):
         def f(x):
