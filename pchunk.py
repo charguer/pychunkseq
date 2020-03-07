@@ -63,7 +63,6 @@ class Pchunk:
     def pop_right(self):
         if self.is_empty():
             return self
-
         new_view = view.View(self.view.seg_head, self.view.seg_size - 1)
         new_pchunk = Pchunk(self.support, new_view)
         return new_pchunk # TODO return direct
@@ -73,21 +72,9 @@ class Pchunk:
     def pop_left(self):
         if self.is_empty():
             return self
-        
         new_view = view.View((self.view.seg_head + 1) % K, self.view.seg_size - 1)
         new_pchunk = Pchunk(self.support, new_view)
         return new_pchunk
 
-    def clear(self): # TODO: pas utile sur structures persistante
-        new_view = view.View(0, 0)
-        new_pchunk = Pchunk(self.support, new_view)
-        return new_pchunk
-
-     # TODO: plus propre : self.support.print_view(self.view)
     def print_general(self, print_item):
-        print("[", end = "")
-        for j in range(self.view.seg_size):
-            i = (self.view.seg_head + j) % K
-            print_item(self.support.data[i])
-            print(", ", end = "")
-        print("]", end = "")
+        self.support.print_view(self.view, print_item)
