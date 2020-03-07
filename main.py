@@ -64,8 +64,11 @@ def main():
     mychunk.push_right(3)
     mychunk.push_right(4)
 
-    mychunk.print_view(view.View(1, 2), print_item)
+    mychunk.print_general(print_item)
 
+    mychunk.pop_left()
+    print("get relatif 1er elt = ", mychunk.get(0))
+    print("get absolu 1er elt = ", mychunk.get_absolute(0))
 
 def print_item(item):
     print(item, end="")

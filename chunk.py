@@ -50,10 +50,14 @@ class chunk:
         self.size -= 1
         self.head = (self.head + 1) % K
         return x
+        
+    # get relatif
+    def get(self, index):
+        return self.data[(self.head + index) % K]
 
-    # TODO: ajouter
-    # get_absolute(i) = self.data[i]
-    # get(i) = self.data[(i + self.head) % K]
+    # get absolu
+    def get_absolute(self, index):
+        return self.data[index]
 
     def print_view(self, view, print_item):
         print("[", end = "")
