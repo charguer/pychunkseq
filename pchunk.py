@@ -17,47 +17,35 @@ class Pchunk:
         return self.view.seg_size == K
 
     def push_right(self, item):
+        # précondition: pchunk non rempli
         if self.is_full():
-            # TODO: message d'erreur?
-            return
-
-        # si la fin du view correspond à la fin du support càd si support vide après valeurs pointées par view
-        if self.view.seg_head + self.view.seg_size == self.support.head + self.support.size:
-        # TODO: ajouter modulo # ajouter la condition "et support pas full"
-            # on ajoute la valeur dans le même support
-            self.support.push_right(item)
-            # mais on crée une nouvelle vue
-            new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
-            new_pchunk = Pchunk(self.support, new_view)
-            # TODO: new_support = self.support
-            # TODO: factoriser  new_view = 
-            # et returnPchunk(new_support, new_view)
-            return new_pchunk
+            return self
+        # on crée la nouvelle vue
+        if ((self.view.seg_head + self.view.seg_size) % K) == ((self.support.head + self.support.size) % K) and (not self.support.is_full()):
+            # si il y a de la place dans le chunk on peut ajouter l'élément directement
+            new_support = self.support
         else:
-            # sinon on doit copier le chunk avec les valeurs qui nous interessent
-            new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
-            new_support = self.support.ncopy(self.view.seg_size) # TODO: passer self.view et copier que là
-            new_support.push_right(item)              
-            new_pchunk = Pchunk(new_support, new_view)
-            return new_pchunk
+            # sinon on fait une copie du support
+            new_support = self.support.ncopy(self.view)
+        # on ajoute l'élément et on renvoie le nouveau pchunk
+        new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
+        new_support.push_right(item)              
+        return Pchunk(new_support, new_view)
 
     def push_left(self, item):
+        # précondition: pchunk non rempli
         if self.is_full():
-            # TODO: message d'erreur?
-            return
-
-        # si la case head - 1 est vide on peut ajouter
-        if (self.view.seg_head - 1 - self.support.head) % K <= self.support.size:  # TODO: vérifier head alignés
-            self.support.push_left(item)
-            new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
-            new_pchunk = Pchunk(self.support, new_view)
-            return new_pchunk
+            return self
+        if self.support.head == self.view.seg_head and (not self.support.is_full()):
+            # si la case [head - 1] est vide on peut ajouter
+            new_support = self.support
         else:
-            new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
-            new_support = self.support.ncopy(self.view.seg_size)
-            new_support.push_left(item)
-            new_pchunk = Pchunk(new_support, new_view)
-            return new_pchunk
+            # sinon on doit copier le support
+            new_support = self.support.ncopy(self.view)
+        # on ajoute le nouveau élément et on renvoie le résultat
+        new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
+        new_support.push_left(item)
+        return Pchunk(new_support, new_view)
 
     # TODO: vérifier valeur de retour? (element ou nouveau obj?)
     def pop_right(self):

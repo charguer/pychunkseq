@@ -50,7 +50,7 @@ class chunk:
         self.size -= 1
         self.head = (self.head + 1) % K
         return x
-        
+
     # get relatif
     def get(self, index):
         return self.data[(self.head + index) % K]
@@ -75,11 +75,11 @@ class chunk:
         self.size = 0
 
     # créer une copie (partielle ou complete - size elts) d'un chunk
-    def ncopy(self, size):
+    def ncopy(self, view):
         new_chunk = chunk()
-        new_chunk.head = self.head
+        new_chunk.head = view.seg_head
         new_chunk.size = 0
         # copier size elements
-        for i in range(size):
-            new_chunk.push_right(self.data[(i + self.head) % K]) # copier item?
+        for i in range(view.seg_size):
+            new_chunk.push_right(self.data[(i + view.seg_head) % K]) # copier item?
         return new_chunk
