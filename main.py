@@ -3,6 +3,7 @@
 import chunk
 import pchunk
 import pstack
+import view
 
 def main():
     # mychunk = chunk.chunk()
@@ -39,23 +40,31 @@ def main():
     # print('\nempty chunk')
     # empty_chunk.print_general(print_item) # []
 
-    mystack = pstack.Pstack()
-    mystack = mystack.push(1)
-    mystack = mystack.push(2)
-    mystack = mystack.push(3)
-    mystack = mystack.push(4)
-    mystack = mystack.push(5)
-    mystack = mystack.push(6)
+    # mystack = pstack.Pstack()
+    # mystack = mystack.push(1)
+    # mystack = mystack.push(2)
+    # mystack = mystack.push(3)
+    # mystack = mystack.push(4)
+    # mystack = mystack.push(5)
+    # mystack = mystack.push(6)
 
-    print('stack')
-    mystack.print_general(print_item)
+    # print('stack')
+    # mystack.print_general(print_item)
 
-    mystack = mystack.pop()
-    mystack = mystack.pop()
-    mystack = mystack.pop()
+    # mystack = mystack.pop()
+    # mystack = mystack.pop()
+    # mystack = mystack.pop()
 
-    print('after pop 3 elts')
-    mystack.print_general(print_item)
+    # print('after pop 3 elts')
+    # mystack.print_general(print_item)
+
+    mychunk = chunk.chunk()
+    mychunk.push_right(1)
+    mychunk.push_right(2)
+    mychunk.push_right(3)
+    mychunk.push_right(4)
+
+    mychunk.print_view(view.View(1, 2), print_item)
 
 
 def print_item(item):

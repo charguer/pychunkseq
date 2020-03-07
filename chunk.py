@@ -1,4 +1,5 @@
 import ctypes
+import view
 
 global K
 K = 4
@@ -54,18 +55,15 @@ class chunk:
     # get_absolute(i) = self.data[i]
     # get(i) = self.data[(i + self.head) % K]
 
-    def print_general(self, print_item):
+    def print_view(self, view, print_item):
         print("[", end = "")
-        for j in range(self.size):
-            i = (self.head + j) % K
-            print_item(self.data[i])
+        for i in range(view.seg_size):
+            print_item(self.data[(i + view.seg_head) % K])
             print(", ", end = "")
-        print("]", end = "")
+        print("]")
 
-     # TODO: print_view(self, view, print_item)
-     # print_general(self, print_item): implémenter avec 
-       # print_view(self, View(self.head, self.size), print_item)
-
+    def print_general(self, print_item):
+        self.print_view(view.View(self.head, self.size), print_item)
 
     def clear(self):
         self.data = [0] * K
