@@ -47,22 +47,19 @@ class Pchunk:
         new_support.push_left(item)
         return Pchunk(new_support, new_view)
 
-    # TODO: vérifier valeur de retour? (element ou nouveau obj?)
     def pop_right(self):
         if self.is_empty():
-            return self
+            return (self, None)
+        element = self.support.get_absolute((self.view.seg_head + self.view.seg_size - 1) % K)
         new_view = view.View(self.view.seg_head, self.view.seg_size - 1)
-        new_pchunk = Pchunk(self.support, new_view)
-        return new_pchunk # TODO return direct
-        # TODO: self.support.get_absolute(self.view.seg_head);
-        # TODO return a pair [x;new_pchunk]
+        return (Pchunk(self.support, new_view), element)
 
     def pop_left(self):
         if self.is_empty():
-            return self
+            return (self, None)
+        element = self.support.get_absolute(self.view.seg_head)
         new_view = view.View((self.view.seg_head + 1) % K, self.view.seg_size - 1)
-        new_pchunk = Pchunk(self.support, new_view)
-        return new_pchunk
+        return (Pchunk(self.support, new_view), element)
 
     def print_general(self, print_item):
         self.support.print_view(self.view, print_item)

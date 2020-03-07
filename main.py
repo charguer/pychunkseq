@@ -21,24 +21,20 @@ def main():
     # print('\nmychunk2')
     # mychunk2.print_general(print)   # [2, 3]
 
-    # mychunk = pchunk.Pchunk()
-    # mychunk = mychunk.push_right(3)
-    # mychunk = mychunk.push_left(2)
-    # mychunk2 = mychunk.push_left(1)
-    # mychunk = mychunk.push_left(4)
-    # print('mychunk')
-    # mychunk.print_general(print_item)    # [4, 2, 3]
-    # print('\nmychunk2')
-    # mychunk2.print_general(print_item)   # [1, 2, 3]
+    mychunk = pchunk.Pchunk()
+    mychunk = mychunk.push_right(3)
+    mychunk = mychunk.push_left(2)
+    mychunk2 = mychunk.push_left(1)
+    mychunk = mychunk.push_left(4)
+    print('mychunk')
+    mychunk.print_general(print_item)    # [4, 2, 3]
+    print('\nmychunk2')
+    mychunk2.print_general(print_item)   # [1, 2, 3]
 
-    # mychunk = mychunk.pop_left()
-    # mychunk = mychunk.pop_right()
-    # print('\nmychunk')
-    # mychunk.print_general(print_item)    # [2]
-
-    # empty_chunk = mychunk.clear()
-    # print('\nempty chunk')
-    # empty_chunk.print_general(print_item) # []
+    mychunk, four  = mychunk.pop_left()
+    mychunk, three = mychunk.pop_right()
+    print('\nmychunk, enlevé', four , 'à gauche et', three, 'à droite')
+    mychunk.print_general(print_item)    # [2]
 
     # mystack = pstack.Pstack()
     # mystack = mystack.push(1)
@@ -58,17 +54,17 @@ def main():
     # print('after pop 3 elts')
     # mystack.print_general(print_item)
 
-    mychunk = chunk.chunk()
-    mychunk.push_right(1)
-    mychunk.push_right(2)
-    mychunk.push_right(3)
-    mychunk.push_right(4)
+    # mychunk = chunk.chunk()
+    # mychunk.push_right(1)
+    # mychunk.push_right(2)
+    # mychunk.push_right(3)
+    # mychunk.push_right(4)
 
-    mychunk.print_general(print_item)
+    # mychunk.print_general(print_item)
 
-    mychunk.pop_left()
-    print("get relatif 1er elt = ", mychunk.get(0))
-    print("get absolu 1er elt = ", mychunk.get_absolute(0))
+    # mychunk.pop_left()
+    # print("get relatif 1er elt = ", mychunk.get(0))
+    # print("get absolu 1er elt = ", mychunk.get_absolute(0))
 
 def print_item(item):
     print(item, end="")
