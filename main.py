@@ -8,8 +8,8 @@ import seq
 
 def main():
     # mychunk = chunk.chunk()
-    # mychunk.push_front(2)
-    # mychunk.push_front(3)
+    # mychunk.push('front', 2)
+    # mychunk.push('front', 3)
     # mychunk.pop_back()
     # mychunk.print_general(print)
     
@@ -56,10 +56,10 @@ def main():
     # mystack.print_general(print_item)
 
     # mychunk = chunk.chunk()
-    # mychunk.push_back(1)
-    # mychunk.push_back(2)
-    # mychunk.push_back(3)
-    # mychunk.push_back(4)
+    # mychunk.push('back', 1)
+    # mychunk.push('back', 2)
+    # mychunk.push('back', 3)
+    # mychunk.push('back', 4)
 
     # mychunk.print_general(print_item)
 

@@ -27,7 +27,7 @@ class Seq:
                     self.middle = Seq()
                 self.middle.push_front(self.front)
                 self.front = chunk.chunk() # TODO: utiliser free_front
-        self.front.push_front(item)
+        self.front.push('front', item)
 
     # TODO: fix print si on est dans middle
     def print_general(self, print_item):

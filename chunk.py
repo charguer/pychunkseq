@@ -25,14 +25,12 @@ class chunk:
     def is_full(self):
         return self.size == K
 
-    def push_back(self, item):
-        i = (self.head + self.size) % K
-        self.data[i] = item
-        self.size += 1
-
-    def push_front(self, item):
-        i = (self.head + K - 1) % K
-        self.head = i
+    def push(self, pov, item):
+        if (pov == 'front'):
+            i = (self.head + K - 1) % K
+            self.head = i
+        else:
+            i = (self.head + self.size) % K
         self.data[i] = item
         self.size += 1
 
@@ -81,5 +79,5 @@ class chunk:
         new_chunk.size = 0
         # copier size elements
         for i in range(view.seg_size):
-            new_chunk.push_back(self.data[(i + view.seg_head) % K]) # copier item?
+            new_chunk.push('back', self.data[(i + view.seg_head) % K]) # copier item?
         return new_chunk
