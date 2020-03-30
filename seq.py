@@ -12,6 +12,20 @@ class Seq:
     def is_empty(self):
         return self.front.is_empty() and self.back.is_empty() and (self.middle is None or self.middle.is_empty())
 
+    def get_both(self, pov):
+        if (pov == 'front'):
+            return self.front, self.back
+        elif (pov == 'back'):
+            return self.back, self.front
+
+    def populate(self, pov):
+        if (pov == 'front'):
+            assert self.front.is_empty()
+            self.front = self.middle.pop(pov)
+        elif (pov == 'back'):
+            assert self.back.is_empty()
+            self.back = self.middle.pop(pov)
+
     def push_front(self, item):
         if self.front.is_full():
             if self.back.is_empty():
@@ -28,6 +42,18 @@ class Seq:
                 self.middle.push_front(self.front)
                 self.front = chunk.chunk() # TODO: utiliser free_front
         self.front.push('front', item)
+
+    def pop(self, pov):
+        assert not self.is_empty()
+        this, that = self.get_both(pov)
+        if this.is_empty():
+            assert self.middle.is_empty()
+            x = that.pop(pov)
+        else:
+            x = this.pop(pov)
+            if this.is_empty():
+                self.populate(pov)
+        return x
 
     # TODO: fix print si on est dans middle
     def print_general(self, print_item):
