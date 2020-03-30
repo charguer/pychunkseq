@@ -23,7 +23,7 @@ class deque:
                 self.middle = deque()
             self.middle.push_right(self.right)
             self.right = chunk.chunk()
-        self.right.push_right(item)
+        self.right.push_back(item)
 
     def push_left(self, item):
         if self.left.is_full():
@@ -31,17 +31,17 @@ class deque:
                 self.middle = deque()
             self.middle.push_left(self.left)
             self.left = chunk.chunk()
-        self.left.push_left(item)
+        self.left.push_front(item)
 
     def pop_right(self):
         if self.right.is_empty():
             if self.middle != None and not self.middle.is_empty():
                 self.right = self.middle.pop_right()
             elif not self.left.is_empty():
-                return self.left.pop_right()
+                return self.left.pop_back()
             else:
                 raise IndexError("pop on empty")
-        x = self.right.pop_right()
+        x = self.right.pop_back()
 
         if self.right.is_empty() and self.middle != None and not self.middle.is_empty():
             self.right = self.middle.pop_right()
@@ -52,10 +52,10 @@ class deque:
             if self.middle != None and not self.middle.is_empty():
                 self.left = self.middle.pop_left()
             elif not self.right.is_empty():
-                return self.right.pop_left()
+                return self.right.pop_front()
             else:
                 raise IndexError("pop on empty")
-        x = self.left.pop_left()
+        x = self.left.pop_front()
         if self.left.is_empty() and self.middle != None and not self.middle.is_empty():
             self.left = self.middle.pop_left()
         return x

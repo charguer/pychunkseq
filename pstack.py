@@ -11,7 +11,7 @@ class Pstack:
         if self.head.is_full():
             self.tail.append(self.head) # TODO : 
             self.head = pchunk.Pchunk()
-        self.head = self.head.push_right(item)
+        self.head = self.head.push_back(item)
         return self # return Pstack(new_head, new_tail)
 
         # TODO: implémenter le module : https://dbader.org/blog/functional-linked-lists-in-python
@@ -26,7 +26,7 @@ class Pstack:
 
     # TODO: verifier valeur de retour, (renvoyer elt? persistent?)
     def pop(self):
-        self.head = self.head.pop_right()
+        self.head = self.head.pop_back()
         if (self.head.is_empty()):
             self.head = self.tail.pop()
         return self

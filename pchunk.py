@@ -16,7 +16,7 @@ class Pchunk:
     def is_full(self):
         return self.view.seg_size == K
 
-    def push_right(self, item):
+    def push_back(self, item):
         # précondition: pchunk non rempli
         if self.is_full():
             return self
@@ -29,10 +29,10 @@ class Pchunk:
             new_support = self.support.ncopy(self.view)
         # on ajoute l'élément et on renvoie le nouveau pchunk
         new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
-        new_support.push_right(item)              
+        new_support.push_back(item)              
         return Pchunk(new_support, new_view)
 
-    def push_left(self, item):
+    def push_front(self, item):
         # précondition: pchunk non rempli
         if self.is_full():
             return self
@@ -44,17 +44,17 @@ class Pchunk:
             new_support = self.support.ncopy(self.view)
         # on ajoute le nouveau élément et on renvoie le résultat
         new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
-        new_support.push_left(item)
+        new_support.push_front(item)
         return Pchunk(new_support, new_view)
 
-    def pop_right(self):
+    def pop_back(self):
         if self.is_empty():
             return (self, None)
         element = self.support.get_absolute((self.view.seg_head + self.view.seg_size - 1) % K)
         new_view = view.View(self.view.seg_head, self.view.seg_size - 1)
         return (Pchunk(self.support, new_view), element)
 
-    def pop_left(self):
+    def pop_front(self):
         if self.is_empty():
             return (self, None)
         element = self.support.get_absolute(self.view.seg_head)

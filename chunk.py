@@ -25,25 +25,25 @@ class chunk:
     def is_full(self):
         return self.size == K
 
-    def push_right(self, item):
+    def push_back(self, item):
         i = (self.head + self.size) % K
         self.data[i] = item
         self.size += 1
 
-    def push_left(self, item):
+    def push_front(self, item):
         i = (self.head + K - 1) % K
         self.head = i
         self.data[i] = item
         self.size += 1
 
-    def pop_right(self):
+    def pop_back(self):
         i = (self.head + self.size - 1) % K
         self.size -= 1
         x = self.data[i]
         self.data[i] = None #writing None is useful to release objects for garbage collection
         return x
 
-    def pop_left(self):
+    def pop_front(self):
         i = self.head
         x = self.data[i]
         self.data[i] = None
@@ -81,5 +81,5 @@ class chunk:
         new_chunk.size = 0
         # copier size elements
         for i in range(view.seg_size):
-            new_chunk.push_right(self.data[(i + view.seg_head) % K]) # copier item?
+            new_chunk.push_back(self.data[(i + view.seg_head) % K]) # copier item?
         return new_chunk

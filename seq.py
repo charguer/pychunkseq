@@ -15,20 +15,19 @@ class Seq:
     def push_front(self, item):
         if self.front.is_full():
             if self.back.is_empty():
-                if (self.middle is not None and not self.middle.is_empty()):
+                if (self.middle is not None or not self.middle.is_empty()): # TODO: assert
                     # erreur: conditions non respectées
                     return self
                 else:
                     f = self.front
                     self.front = self.back
                     self.back = f
-                    # self.front.push_left(item)
             else:
                 if self.middle is None:
                     self.middle = Seq()
                 self.middle.push_front(self.front)
                 self.front = chunk.chunk() # TODO: utiliser free_front
-        self.front.push_left(item)
+        self.front.push_front(item)
 
     # TODO: fix print si on est dans middle
     def print_general(self, print_item):
