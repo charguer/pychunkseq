@@ -29,24 +29,20 @@ class chunk:
         if (pov == 'front'):
             i = (self.head + K - 1) % K
             self.head = i
-        else:
+        elif (pov == 'back'):
             i = (self.head + self.size) % K
         self.data[i] = item
         self.size += 1
 
-    def pop_back(self):
-        i = (self.head + self.size - 1) % K
-        self.size -= 1
+    def pop(self, pov):
+        if (pov == 'front'):
+            i = self.head
+            self.head = (self.head + 1) % K
+        elif (pov == 'back'):
+            i = (self.head + self.size - 1) % K
         x = self.data[i]
         self.data[i] = None #writing None is useful to release objects for garbage collection
-        return x
-
-    def pop_front(self):
-        i = self.head
-        x = self.data[i]
-        self.data[i] = None
         self.size -= 1
-        self.head = (self.head + 1) % K
         return x
 
     # get relatif

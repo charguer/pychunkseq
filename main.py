@@ -10,7 +10,7 @@ def main():
     # mychunk = chunk.chunk()
     # mychunk.push('front', 2)
     # mychunk.push('front', 3)
-    # mychunk.pop_back()
+    # mychunk.pop('back')
     # mychunk.print_general(print)
     
     # mychunk = pchunk.Pchunk()
@@ -63,7 +63,7 @@ def main():
 
     # mychunk.print_general(print_item)
 
-    # mychunk.pop_front()
+    # mychunk.pop('front')
     # print("get relatif 1er elt = ", mychunk.get(0))
     # print("get absolu 1er elt = ", mychunk.get_absolute(0))
 

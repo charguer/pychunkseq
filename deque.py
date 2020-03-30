@@ -38,10 +38,10 @@ class deque:
             if self.middle != None and not self.middle.is_empty():
                 self.right = self.middle.pop_right()
             elif not self.left.is_empty():
-                return self.left.pop_back()
+                return self.left.pop('back')
             else:
                 raise IndexError("pop on empty")
-        x = self.right.pop_back()
+        x = self.right.pop('back')
 
         if self.right.is_empty() and self.middle != None and not self.middle.is_empty():
             self.right = self.middle.pop_right()
@@ -52,10 +52,10 @@ class deque:
             if self.middle != None and not self.middle.is_empty():
                 self.left = self.middle.pop_left()
             elif not self.right.is_empty():
-                return self.right.pop_front()
+                return self.right.pop('front')
             else:
                 raise IndexError("pop on empty")
-        x = self.left.pop_front()
+        x = self.left.pop('front')
         if self.left.is_empty() and self.middle != None and not self.middle.is_empty():
             self.left = self.middle.pop_left()
         return x
