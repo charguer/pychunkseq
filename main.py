@@ -69,7 +69,7 @@ def main():
 
     myseq = seq.Seq()
     for i in range(25):
-        myseq.push_front(i)
+        myseq.push('front', i)
     myseq.print_general(print_item)
 
 def print_item(item):

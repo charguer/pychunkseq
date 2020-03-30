@@ -10,13 +10,33 @@ class Seq:
         # self.free_back = chunk.chunk()
 
     def is_empty(self):
-        return self.front.is_empty() and self.back.is_empty() and (self.middle is None or self.middle.is_empty())
+        return self.front.is_empty() and self.back.is_empty()
+
+    def get_this(self, pov):
+        if (pov == 'front'):
+            return self.front
+        elif (pov == 'back'):
+            return self.back
 
     def get_both(self, pov):
         if (pov == 'front'):
             return self.front, self.back
         elif (pov == 'back'):
             return self.back, self.front
+
+    def set_this(self, pov, this):
+        if (pov == 'front'):
+            self.front = this
+        elif (pov == 'back'):
+            self.back = this
+
+    def set_both(self, pov, this, that):
+        if (pov == 'front'):
+            self.front = this
+            self.back = that
+        elif (pov == 'back'):
+            self.front = that
+            self.back = this
 
     def populate(self, pov):
         if (pov == 'front'):
@@ -26,22 +46,19 @@ class Seq:
             assert self.back.is_empty()
             self.back = self.middle.pop(pov)
 
-    def push_front(self, item):
-        if self.front.is_full():
-            if self.back.is_empty():
-                if (self.middle is not None or not self.middle.is_empty()): # TODO: assert
-                    # erreur: conditions non respectées
-                    return self
-                else:
-                    f = self.front
-                    self.front = self.back
-                    self.back = f
+    def push(self, pov, item):
+        this, that = self.get_both(pov)
+        if this.is_full():
+            if that.is_empty():
+                assert(self.middle is None or self.middle.is_empty())
+                self.set_both(pov, that, this)
             else:
                 if self.middle is None:
                     self.middle = Seq()
-                self.middle.push_front(self.front)
-                self.front = chunk.chunk() # TODO: utiliser free_front
-        self.front.push('front', item)
+                self.middle.push(pov, this)
+                self.set_this(pov, chunk.chunk())
+        this = self.get_this(pov)
+        this.push(pov, item)
 
     def pop(self, pov):
         assert not self.is_empty()
