@@ -1,3 +1,0 @@
-factoriser push_left, push_right dans chunk & pchunk
-
-seq - front & back empty - middle doit etre empty aussi '3e condition dans is_empty optionnelle
