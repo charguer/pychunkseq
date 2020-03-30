@@ -32,16 +32,6 @@ class stack:
                 self.nb_tail -= 1
         return x
 
-    # TODO: remove pop_left
-    def pop_left(self):
-        if self.nb_tail == 0:
-            self.tail.push(self.head)
-            self.head = chunk.chunk()
-            self.nb_tail += 1
-        x = self.tail.pop(0)
-        self.nb_tail -= 1
-        return x
-
     def print_general(self, print_item):
         def f(c):
             c.print_general(print_item)
