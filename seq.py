@@ -74,12 +74,11 @@ class Seq:
 
     # TODO: fix print si on est dans middle
     def print_general(self, print_item):
-        print("front = ", end="")
         self.front.print_general(print_item)
-        if self.middle is None:
-            print("middle = None")
+        print("")
+        if self.middle is not None:
+            self.middle.print_general(lambda c: c.print_general(print_item))
+            print("")
         else:
-            print("middle =", end="")
-            self.middle.print_general(chunk.chunk.print_general)
-        print("back = ", end="")
+            print(".")
         self.back.print_general(print_item)

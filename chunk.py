@@ -58,7 +58,7 @@ class chunk:
         for i in range(view.seg_size):
             print_item(self.data[(i + view.seg_head) % K])
             print(", ", end = "")
-        print("]")
+        print("]", end = "")
 
     def print_general(self, print_item):
         self.print_view(view.View(self.head, self.size), print_item)
