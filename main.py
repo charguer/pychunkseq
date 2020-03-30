@@ -32,8 +32,8 @@ def main():
     # print('\nmychunk2')
     # mychunk2.print_general(print_item)   # [1, 2, 3]
 
-    # mychunk, four  = mychunk.pop_front()
-    # mychunk, three = mychunk.pop_back()
+    # mychunk, four  = mychunk.pop('front')
+    # mychunk, three = mychunk.pop('back')
     # print('\nmychunk, enlevé', four , 'à gauche et', three, 'à droite')
     # mychunk.print_general(print_item)    # [2]
 

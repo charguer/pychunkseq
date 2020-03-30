@@ -35,18 +35,14 @@ class Pchunk:
         elif (pov == 'back'):
             return ((self.view.seg_head + self.view.seg_size) % K) == ((self.support.head + self.support.size) % K) and (not self.support.is_full())
 
-    def pop_back(self):
-        if self.is_empty():
-            return (self, None)
-        element = self.support.get_absolute((self.view.seg_head + self.view.seg_size - 1) % K)
-        new_view = view.View(self.view.seg_head, self.view.seg_size - 1)
-        return (Pchunk(self.support, new_view), element)
-
-    def pop_front(self):
-        if self.is_empty():
-            return (self, None)
-        element = self.support.get_absolute(self.view.seg_head)
-        new_view = view.View((self.view.seg_head + 1) % K, self.view.seg_size - 1)
+    def pop(self, pov):
+        assert not self.is_empty()
+        if (pov == 'front'):
+            element = self.support.get_absolute(self.view.seg_head)
+            new_view = view.View((self.view.seg_head + 1) % K, self.view.seg_size - 1)
+        elif (pov == 'back'):
+            element = self.support.get_absolute((self.view.seg_head + self.view.seg_size - 1) % K)
+            new_view = view.View(self.view.seg_head, self.view.seg_size - 1)
         return (Pchunk(self.support, new_view), element)
 
     def print_general(self, print_item):

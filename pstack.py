@@ -26,7 +26,7 @@ class Pstack:
 
     # TODO: verifier valeur de retour, (renvoyer elt? persistent?)
     def pop(self):
-        self.head = self.head.pop_back()
+        self.head = self.head.pop('back')
         if (self.head.is_empty()):
             self.head = self.tail.pop()
         return self
