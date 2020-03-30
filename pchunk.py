@@ -16,32 +16,24 @@ class Pchunk:
     def is_full(self):
         return self.view.seg_size == K
 
-    def push_back(self, item):
+    def push(self, pov, item):
         assert not self.is_full()
-        # on crée la nouvelle vue
-        if ((self.view.seg_head + self.view.seg_size) % K) == ((self.support.head + self.support.size) % K) and (not self.support.is_full()):
-            # si il y a de la place dans le chunk on peut ajouter l'élément directement
-            new_support = self.support
+        if (self.is_aligned(pov)):
+            new_support = self.support # if aligned we can use the same support
         else:
-            # sinon on fait une copie du support
             new_support = self.support.ncopy(self.view)
-        # on ajoute l'élément et on renvoie le nouveau pchunk
-        new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
-        new_support.push('back', item)              
+        new_support.push(pov, item)
+        if (pov == 'front'):
+            new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
+        elif (pov == 'back'):
+            new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
         return Pchunk(new_support, new_view)
 
-    def push_front(self, item):
-        assert not self.is_full()
-        if self.support.head == self.view.seg_head and (not self.support.is_full()):
-            # si la case [head - 1] est vide on peut ajouter
-            new_support = self.support
-        else:
-            # sinon on doit copier le support
-            new_support = self.support.ncopy(self.view)
-        # on ajoute le nouveau élément et on renvoie le résultat
-        new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
-        new_support.push('front', item)
-        return Pchunk(new_support, new_view)
+    def is_aligned(self, pov):
+        if (pov == 'front'):
+            return self.support.head == self.view.seg_head and (not self.support.is_full())
+        elif (pov == 'back'):
+            return ((self.view.seg_head + self.view.seg_size) % K) == ((self.support.head + self.support.size) % K) and (not self.support.is_full())
 
     def pop_back(self):
         if self.is_empty():

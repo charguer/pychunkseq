@@ -14,19 +14,19 @@ def main():
     # mychunk.print_general(print)
     
     # mychunk = pchunk.Pchunk()
-    # mychunk = mychunk.push_back(2)
-    # mychunk2 = mychunk.push_back(3)
-    # mychunk = mychunk.push_back(4)
+    # mychunk = mychunk.push('back', 2)
+    # mychunk2 = mychunk.push('back', 3)
+    # mychunk = mychunk.push('back', 4)
     # print('mychunk')
     # mychunk.print_general(print)    # [2, 4]
     # print('\nmychunk2')
     # mychunk2.print_general(print)   # [2, 3]
 
     # mychunk = pchunk.Pchunk()
-    # mychunk = mychunk.push_back(3)
-    # mychunk = mychunk.push_front(2)
-    # mychunk2 = mychunk.push_front(1)
-    # mychunk = mychunk.push_front(4)
+    # mychunk = mychunk.push('back', 3)
+    # mychunk = mychunk.push('front', 2)
+    # mychunk2 = mychunk.push('front', 1)
+    # mychunk = mychunk.push('front', 4)
     # print('mychunk')
     # mychunk.print_general(print_item)    # [4, 2, 3]
     # print('\nmychunk2')
