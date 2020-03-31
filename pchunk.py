@@ -25,11 +25,11 @@ class Pchunk:
         else:
             new_support = self.support.ncopy(self.view)
         new_support.push(pov, item)
-        # TODO: new_head factoriser code
         if (pov == FRONT):
-            new_view = view.View((self.view.seg_head - 1) % K, self.view.seg_size + 1)
+            new_head = (self.view.seg_head - 1) % K
         elif (pov == BACK):
-            new_view = view.View(self.view.seg_head, self.view.seg_size + 1)
+            new_head = self.view.seg_head
+        new_view = view.View(new_head, self.view.seg_size + 1)
         return Pchunk(new_support, new_view)
 
     def is_aligned(self, pov):
@@ -41,12 +41,13 @@ class Pchunk:
     def pop(self, pov):
         assert not self.is_empty()
         if (pov == FRONT):
-            # TODO: factoriser
-            element = self.support.get_absolute(self.view.seg_head)
-            new_view = view.View((self.view.seg_head + 1) % K, self.view.seg_size - 1)
+            index = self.view.seg_head
+            new_head = (self.view.seg_head + 1) % K
         elif (pov == BACK):
-            element = self.support.get_absolute((self.view.seg_head + self.view.seg_size - 1) % K)
-            new_view = view.View(self.view.seg_head, self.view.seg_size - 1)
+            index = (self.view.seg_head + self.view.seg_size - 1) % K
+            new_head = self.view.seg_head
+        element = self.support.get_absolute(index)
+        new_view = view.View(new_head, self.view.seg_size - 1)
         return (Pchunk(self.support, new_view), element)
 
     def print_general(self, print_item):
