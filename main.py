@@ -74,6 +74,11 @@ def main():
         myseq.push_back(i + 25)
     myseq.print_general(print_item)
 
+    for i in range(34):
+        myseq.pop_front()
+    print("after")
+    myseq.print_general(print_item)
+
 def print_item(item):
     print(item, end="")
 

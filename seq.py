@@ -40,15 +40,11 @@ class Seq:
             self.front = that
             self.back = this
 
-    # TODO: ajouter le if ici - doit ê appelé et fix si besoin
     def populate(self, pov):
-        # TODO: factoriser avec set_this get_this
-        if (pov == FRONT):
-            assert self.front.is_empty()
-            self.front = self.middle.pop(pov)
-        elif (pov == BACK):
-            assert self.back.is_empty()
-            self.back = self.middle.pop(pov)
+        this = self.get_this(pov)
+        if this.is_empty() and self.middle is not None and not self.middle.is_empty():
+            this = self.middle.pop(pov)
+            self.set_this(pov, this)
 
     def push(self, pov, item):
         this, that = self.get_both(pov)
@@ -68,15 +64,13 @@ class Seq:
         assert not self.is_empty()
         this, that = self.get_both(pov)
         if this.is_empty():
-            assert self.middle.is_empty()
+            assert self.middle is None or self.middle.is_empty()
             x = that.pop(pov)
         else:
             x = this.pop(pov)
-            if this.is_empty(): # TODO remove if and put in populate
-                self.populate(pov)
+            self.populate(pov)
         return x
 
-    # TODO: fix print si on est dans middle
     def print_general(self, print_item):
         self.front.print_general(print_item)
         print("")
