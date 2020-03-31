@@ -23,7 +23,7 @@ class deque:
                 self.middle = deque()
             self.middle.push_right(self.right)
             self.right = chunk.chunk()
-        self.right.push('back', item)
+        self.right.push_back(item)
 
     def push_left(self, item):
         if self.left.is_full():
@@ -31,7 +31,7 @@ class deque:
                 self.middle = deque()
             self.middle.push_left(self.left)
             self.left = chunk.chunk()
-        self.left.push('front', item)
+        self.left.push_front(item)
 
     def pop_right(self):
         if self.right.is_empty():

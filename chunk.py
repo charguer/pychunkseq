@@ -1,5 +1,7 @@
 import ctypes
 import view
+FRONT = __import__('direction').Direction.FRONT
+BACK = __import__('direction').Direction.BACK
 
 global K
 K = 4
@@ -26,19 +28,19 @@ class chunk:
         return self.size == K
 
     def push(self, pov, item):
-        if (pov == 'front'):
+        if (pov == FRONT):
             i = (self.head + K - 1) % K
             self.head = i
-        elif (pov == 'back'):
+        elif (pov == BACK):
             i = (self.head + self.size) % K
         self.data[i] = item
         self.size += 1
 
     def pop(self, pov):
-        if (pov == 'front'):
+        if (pov == FRONT):
             i = self.head
             self.head = (self.head + 1) % K
-        elif (pov == 'back'):
+        elif (pov == BACK):
             i = (self.head + self.size - 1) % K
         x = self.data[i]
         self.data[i] = None #writing None is useful to release objects for garbage collection
@@ -75,5 +77,17 @@ class chunk:
         new_chunk.size = 0
         # copier size elements
         for i in range(view.seg_size):
-            new_chunk.push('back', self.data[(i + view.seg_head) % K]) # copier item?
+            new_chunk.push(BACK, self.data[(i + view.seg_head) % K]) # copier item?
         return new_chunk
+
+    def push_front(self, item):
+        self.push(FRONT, item)
+
+    def push_back(self, item):
+        self.push(BACK, item)
+
+    def pop_front(self):
+        self.pop(FRONT)
+
+    def pop_back(self):
+        self.pop(BACK)

@@ -1,4 +1,6 @@
 import chunk
+FRONT = __import__('direction').Direction.FRONT
+BACK = __import__('direction').Direction.BACK
 
 class Seq:
     
@@ -13,36 +15,38 @@ class Seq:
         return self.front.is_empty() and self.back.is_empty()
 
     def get_this(self, pov):
-        if (pov == 'front'):
+        if (pov == FRONT):
             return self.front
-        elif (pov == 'back'):
+        elif (pov == BACK):
             return self.back
 
     def get_both(self, pov):
-        if (pov == 'front'):
+        if (pov == FRONT):
             return self.front, self.back
-        elif (pov == 'back'):
+        elif (pov == BACK):
             return self.back, self.front
 
     def set_this(self, pov, this):
-        if (pov == 'front'):
+        if (pov == FRONT):
             self.front = this
-        elif (pov == 'back'):
+        elif (pov == BACK):
             self.back = this
 
     def set_both(self, pov, this, that):
-        if (pov == 'front'):
+        if (pov == FRONT):
             self.front = this
             self.back = that
-        elif (pov == 'back'):
+        elif (pov == BACK):
             self.front = that
             self.back = this
 
+    # TODO: ajouter le if ici - doit ê appelé et fix si besoin
     def populate(self, pov):
-        if (pov == 'front'):
+        # TODO: factoriser avec set_this get_this
+        if (pov == FRONT):
             assert self.front.is_empty()
             self.front = self.middle.pop(pov)
-        elif (pov == 'back'):
+        elif (pov == BACK):
             assert self.back.is_empty()
             self.back = self.middle.pop(pov)
 
@@ -68,7 +72,7 @@ class Seq:
             x = that.pop(pov)
         else:
             x = this.pop(pov)
-            if this.is_empty():
+            if this.is_empty(): # TODO remove if and put in populate
                 self.populate(pov)
         return x
 
@@ -82,3 +86,15 @@ class Seq:
         else:
             print(".")
         self.back.print_general(print_item)
+
+    def push_front(self, item):
+        self.push(FRONT, item)
+
+    def push_back(self, item):
+        self.push(BACK, item)
+
+    def pop_front(self):
+        self.pop(FRONT)
+
+    def pop_back(self):
+        self.pop(BACK)

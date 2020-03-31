@@ -8,25 +8,25 @@ import seq
 
 def main():
     # mychunk = chunk.chunk()
-    # mychunk.push('front', 2)
-    # mychunk.push('front', 3)
+    # mychunk.push_front(2)
+    # mychunk.push_front(3)
     # mychunk.pop('back')
     # mychunk.print_general(print)
     
     # mychunk = pchunk.Pchunk()
-    # mychunk = mychunk.push('back', 2)
-    # mychunk2 = mychunk.push('back', 3)
-    # mychunk = mychunk.push('back', 4)
+    # mychunk = mychunk.push_back(2)
+    # mychunk2 = mychunk.push_back(3)
+    # mychunk = mychunk.push_back(4)
     # print('mychunk')
     # mychunk.print_general(print)    # [2, 4]
     # print('\nmychunk2')
     # mychunk2.print_general(print)   # [2, 3]
 
     # mychunk = pchunk.Pchunk()
-    # mychunk = mychunk.push('back', 3)
-    # mychunk = mychunk.push('front', 2)
-    # mychunk2 = mychunk.push('front', 1)
-    # mychunk = mychunk.push('front', 4)
+    # mychunk = mychunk.push_back(3)
+    # mychunk = mychunk.push_front(2)
+    # mychunk2 = mychunk.push_front(1)
+    # mychunk = mychunk.push_front(4)
     # print('mychunk')
     # mychunk.print_general(print_item)    # [4, 2, 3]
     # print('\nmychunk2')
@@ -56,10 +56,10 @@ def main():
     # mystack.print_general(print_item)
 
     # mychunk = chunk.chunk()
-    # mychunk.push('back', 1)
-    # mychunk.push('back', 2)
-    # mychunk.push('back', 3)
-    # mychunk.push('back', 4)
+    # mychunk.push_back(1)
+    # mychunk.push_back(2)
+    # mychunk.push_back(3)
+    # mychunk.push_back(4)
 
     # mychunk.print_general(print_item)
 
@@ -69,9 +69,9 @@ def main():
 
     myseq = seq.Seq()
     for i in range(25):
-        myseq.push('front', i)
+        myseq.push_front(i)
     for i in range(10):
-        myseq.push('back', i + 25)
+        myseq.push_back(i + 25)
     myseq.print_general(print_item)
 
 def print_item(item):
