@@ -44,9 +44,9 @@ elif arg_seq == "chunk_stack":
     q = seq.Seq()
     for i in range(R):
         for k in range(1, S):
-            q.push(k)
+            q.push_back(k)
         for _ in range(1, S):
-            q.pop_left()
+            q.pop_back()
 
 elif arg_seq == "stdlib_back":
     stack_test = []
