@@ -71,7 +71,8 @@ class Seq:
             self.populate(pov)
         return x
 
-    def print_general(self, print_item):
+    # print structure (front middle back)
+    def print_debug(self, print_item):
         self.front.print_general(print_item)
         print("")
         if self.middle is not None:
@@ -80,6 +81,30 @@ class Seq:
         else:
             print(".")
         self.back.print_general(print_item)
+        print("")
+
+    # general print of container [item1, item2, ..., itemN]
+    def print_general(self, print_item):
+        print("[", end="")
+        self.print_general_aux(print_item)
+        print("]")
+
+    # auxiliary function
+    def print_general_aux(self, print_item):
+        put_comma = False
+        if (not self.front.is_empty()):
+            self.front.print_content(print_item)
+            put_comma = True
+            
+        if self.middle is not None and not self.middle.is_empty():
+            if (put_comma):
+                print(", ", end="")
+            self.middle.print_general_aux(lambda c: c.print_content(print_item))
+
+        if (not self.back.is_empty()):
+            if (put_comma):
+                print(", ", end="")
+            self.back.print_content(print_item)
 
     def push_front(self, item):
         self.push(FRONT, item)

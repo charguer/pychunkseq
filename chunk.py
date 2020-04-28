@@ -65,6 +65,13 @@ class chunk:
     def print_general(self, print_item):
         self.print_view(view.View(self.head, self.size), print_item)
 
+    # print content, without []; used in seq
+    def print_content(self, print_item):
+        for i in range(self.size):
+            print_item(self.data[(i + self.head) % K])
+            if (i != self.size - 1):
+                print(", ", end = "")
+
     def clear(self):
         self.data = [0] * K
         self.head = 0
