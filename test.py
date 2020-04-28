@@ -23,26 +23,24 @@ global N, S, R
 N = args.n
 S = args.length
 R = N // S
-seq = args.seq
+arg_seq = args.seq
 chunk.set_capacity(args.chunk_capacity)
 """stack.set_capacity(args.chunk_capacity)"""
 
 t1 = time.time()
 
-if seq == "debug":
+if arg_seq == "debug":
     q = seq.Seq()
     q.print_general(print_item)
     for i in range (R):
         for k in range(1, S):
-            q.push(k)
+            q.push_back(k)
             q.print_general(print_item)
-        print()
         for _ in range(1, S):
-            q.pop_left()
+            q.pop_back()
             q.print_general(print_item)
-        print()
 
-elif seq == "chunk_stack":
+elif arg_seq == "chunk_stack":
     q = seq.Seq()
     for i in range(R):
         for k in range(1, S):
@@ -50,7 +48,7 @@ elif seq == "chunk_stack":
         for _ in range(1, S):
             q.pop_left()
 
-elif seq == "stdlib_back":
+elif arg_seq == "stdlib_back":
     stack_test = []
 
     for i in range(R):
@@ -61,7 +59,7 @@ elif seq == "stdlib_back":
             #if (x != S+1-k):
              #,   exit()
 
-elif seq == "stdlib_front":
+elif arg_seq == "stdlib_front":
     stack_test = []
 
     for i in range(R):
@@ -72,7 +70,7 @@ elif seq == "stdlib_front":
             #if (x != S+1-k):
              #,   exit()
 
-elif seq == "container_deque": # right
+elif arg_seq == "container_deque": # right
     deque_test = deque()
 
     for i in range(R):
@@ -81,7 +79,7 @@ elif seq == "container_deque": # right
         for _ in range(1, S):
             deque_test.pop()
 
-elif seq == "debug_stdlib":
+elif arg_seq == "debug_stdlib":
     stack_test = []
 
     for i in range(R):
