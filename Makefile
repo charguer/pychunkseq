@@ -73,7 +73,7 @@ stack_chunk_capacity: $(MYPROG)
 # PERFORMANCE
 
 stack_perf: $(MYPROG)
-	$(PRUN) $< -n 500000 -length 10,1000,10000,500000 -seq chunk_stack,stdlib_list,container_deque -chunk_capacity 32 -timeout 5
+	$(PRUN) $< -n 500000 -length 10,1000,10000,500000 -seq chunk_stack,stdlib_back,stdlib_front,container_deque -chunk_capacity 32 -timeout 5
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
 
 list_perf: $(MYPROG)
