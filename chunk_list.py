@@ -9,24 +9,35 @@ class ChunkList:
         self.data = []
         self.head = 0 # TODO: necessary?
 
+    def size(self):
+        return len(self.data) # O(1)
+
     def is_empty(self):
-        return len(self.data) == 0
+        return self.size() == 0
 
     def is_full(self):
-        return len(self.data) == K
+        return self.size() == K
 
     def push(self, pov, item):
+        assert not self.is_full()
         if (pov == FRONT):
             self.data.insert(0, item)
+            self.head = (self.head + K - 1) % K
         elif (pov == BACK):
             self.data.append(item)
 
     def pop(self, pov):
+        assert not self.is_empty()
         if (pov == FRONT):
             x = self.data.pop(0)
+            self.head = (self.head + K + 1) % K
         elif (pov == BACK):
             x = self.data.pop()
         return x
+
+    # get relatif
+    def get(self, index):
+        return self.data[(self.head + index) % K]
 
     # get absolu
     def get_absolute(self, index):
@@ -35,31 +46,33 @@ class ChunkList:
     def print_view(self, view, print_item):
         print("[", end = "")
         for i in range(view.seg_size):
-            print_item(self.data[(i + view.seg_head) % K])
+            print_item(self.data[(view.seg_head - self.head + i) % K])
             print(", ", end = "")
         print("]", end = "")
 
     def print_general(self, print_item):
-        self.print_view(view.View(0, len(self.data)), print_item)
+        self.print_view(view.View(self.head, self.size()), print_item)
 
     # print content, without []; used in seq
     def print_content(self, print_item):
-        size = len(self.data)
+        size = self.size()
         for i in range(size):
             # print_item(self.data[(i + self.head) % K])
-            print_item(self.data[(i) % K])
+            print_item(self.data[i])
             if (i != size - 1):
                 print(", ", end = "")
 
     def clear(self):
         self.data.clear()
+        self.head = 0
 
     # créer une copie (partielle ou complete - size elts) d'un chunk
     def ncopy(self, view):
         new_chunk = ChunkList()
         # copier size elements
         for i in range(view.seg_size):
-            new_chunk.push(BACK, self.data[(i) % K]) # copier item?
+            new_chunk.push(BACK, self.data[view.seg_head - self.head + i]) # copier item?
+            new_chunk.head = self.head
         return new_chunk
 
     def push_front(self, item):
