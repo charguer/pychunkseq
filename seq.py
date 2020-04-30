@@ -1,15 +1,15 @@
-import chunk
+import chunk_list
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 
 class Seq:
     
     def __init__(self):
-        self.front = chunk.chunk()
-        self.back = chunk.chunk()
+        self.front = chunk_list.ChunkList()
+        self.back = chunk_list.ChunkList()
         self.middle = None # appel au constructeur donne boucle infinie
-        # self.free_front = chunk.chunk()
-        # self.free_back = chunk.chunk()
+        # self.free_front = chunk_list.ChunkList()
+        # self.free_back = chunk_list.ChunkList()
 
     def is_empty(self):
         return self.front.is_empty() and self.back.is_empty()
@@ -56,7 +56,7 @@ class Seq:
                 if self.middle is None:
                     self.middle = Seq()
                 self.middle.push(pov, this)
-                self.set_this(pov, chunk.chunk())
+                self.set_this(pov, chunk_list.ChunkList())
         this = self.get_this(pov)
         this.push(pov, item)
 
