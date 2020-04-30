@@ -28,6 +28,7 @@ class chunk:
         return self.size == K
 
     def push(self, pov, item):
+        assert not self.is_full()
         if (pov == FRONT):
             i = (self.head + K - 1) % K
             self.head = i
@@ -37,6 +38,7 @@ class chunk:
         self.size += 1
 
     def pop(self, pov):
+        assert not self.is_empty()
         if (pov == FRONT):
             i = self.head
             self.head = (self.head + 1) % K
