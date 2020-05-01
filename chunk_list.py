@@ -1,7 +1,13 @@
 import view
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
+
+global K
 K = 4
+
+def set_capacity(chunk_capacity):
+    global K
+    K = chunk_capacity
 
 class ChunkList:
 
@@ -94,7 +100,11 @@ class ChunkList:
 
     # TODO: recursif?
     def peek_back(self):
+        if (self.size() == 0):
+            return []
         return self.data[self.size() - 1]
 
     def peek_front(self):
+        if (self.size() == 0):
+            return []
         return self.data[0]

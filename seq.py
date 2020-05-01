@@ -132,9 +132,9 @@ class Seq:
 
     def push_back_chunk_middle(self, smiddle, c):
         if not c.is_empty():
-            csize = c.size()
-            mbacksize = smiddle.peek_back().size()
-            if smiddle.is_empty() or smiddle is None or csize + mbacksize > K:
+            if smiddle is None or smiddle.is_empty() or c.size() + smiddle.peek_back().size() > K:
+                if smiddle is None:
+                    smiddle = Seq()
                 smiddle.push_back(c)
             else:
                 c2 = smiddle.pop_back()
@@ -158,12 +158,12 @@ class Seq:
 
             # push data to the outside to simplify small cases
             if s1.front.is_empty():
-                assert m1.is_empty()
+                assert m1 is None or m1.is_empty()
                 b = s1.back
                 s1.back = s1.front        
                 s1.front = b
             if s2.back.is_empty():
-                assert m2.is_empty()
+                assert m2 is None or m2.is_empty()
                 f = s2.front
                 s2.front = s2.back
                 s2.back = f
@@ -173,14 +173,17 @@ class Seq:
             if m1 is None or m1.is_empty():
                 s1.middle = m2
             elif m2 is not None and not m2.is_empty():
-                if m1.peek_back().size() + m2.peek_front().size() > K:
+                m1pbs = 0 if m1.peek_back() == [] else m1.peek_back().size()
+                m2pfs = 0 if m2.peek_front() == [] else m2.peek_front().size()
+                if m1pbs + m2pfs > K:
                     m1.concat_back(m2)
                 else:
                     p = m2.pop_front()
-                    self.push_back_chunk_middle(m1, p)
+                    m1 = self.push_back_chunk_middle(m1, p)
                     m1.concat_back(m2)
             
             s1.back = s2.back
+            s1.middle = m1
             s1.populate_sides()
             # s2.clear
                 

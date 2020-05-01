@@ -87,13 +87,13 @@ def main():
 
     print("====== SEQ 2")
     seq2 = seq.Seq()
-    for i in range(2):
+    for i in range(13):
         seq2.push_back(i + 13)
     seq2.print_debug(print_item)
 
     print("====== SEQ CONCAT")
     seq1.concat_back(seq2)
-    seq1.print_debug(print_item)
+    seq1.print_general(print_item)
     
 
 def print_item(item):
