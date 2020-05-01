@@ -86,3 +86,15 @@ class ChunkList:
 
     def pop_back(self):
         self.pop(BACK)
+
+    def concat(self, c2):
+        assert self.size() + c2.size() <= K
+        for i in range(c2.size()):
+            self.push_back(c2.get_absolute(i))
+
+    # TODO: recursif?
+    def peek_back(self):
+        return self.data[self.size() - 1]
+
+    def peek_front(self):
+        return self.data[0]

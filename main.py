@@ -67,17 +67,34 @@ def main():
     # print("get relatif 1er elt = ", mychunk.get(0))
     # print("get absolu 1er elt = ", mychunk.get_absolute(0))
 
-    myseq = seq.Seq()
-    for i in range(25):
-        myseq.push_front(i)
-    for i in range(10):
-        myseq.push_back(i + 25)
-    myseq.print_general(print_item)
+    # myseq = seq.Seq()
+    # for i in range(25):
+    #     myseq.push_front(i)
+    # for i in range(10):
+    #     myseq.push_back(i + 25)
+    # myseq.print_general(print_item)
 
-    for i in range(34):
-        myseq.pop_front()
-    print("after")
-    myseq.print_general(print_item)
+    # for i in range(34):
+    #     myseq.pop_front()
+    # print("after")
+    # myseq.print_general(print_item)
+
+    print("====== SEQ 1")
+    seq1 = seq.Seq()
+    for i in range(13):
+        seq1.push_back(i)
+    seq1.print_debug(print_item)
+
+    print("====== SEQ 2")
+    seq2 = seq.Seq()
+    for i in range(2):
+        seq2.push_back(i + 13)
+    seq2.print_debug(print_item)
+
+    print("====== SEQ CONCAT")
+    seq1.concat_back(seq2)
+    seq1.print_debug(print_item)
+    
 
 def print_item(item):
     print(item, end="")

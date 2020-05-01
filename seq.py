@@ -1,6 +1,7 @@
 import chunk_list
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
+K = __import__('chunk_list').K
 
 class Seq:
     
@@ -117,3 +118,69 @@ class Seq:
 
     def pop_back(self):
         return self.pop(BACK)
+
+    # TODO: verifier
+    def peek_back(self):
+        return self.back.peek_back()
+
+    def peek_front(self):
+        return self.front.peek_front()
+
+    def populate_sides(self):
+        self.populate(FRONT)
+        self.populate(BACK)
+
+    def push_back_chunk_middle(self, smiddle, c):
+        if not c.is_empty():
+            csize = c.size()
+            mbacksize = smiddle.peek_back().size()
+            if smiddle.is_empty() or smiddle is None or csize + mbacksize > K:
+                smiddle.push_back(c)
+            else:
+                c2 = smiddle.pop_back()
+                c3 = c2.concat(c)
+                smiddle.push_back(c3)
+        return smiddle
+
+    # puts data from s2 to the back of current object
+    def concat_back(self, s2):
+        s1 = self
+        if (s1.is_empty()):
+            s1.front = s2.front
+            s1.middle = s2.middle
+            s1.back = s2.back
+            return
+        elif (s2.is_empty()):
+            return
+        else:
+            m1 = s1.middle
+            m2 = s2.middle
+
+            # push data to the outside to simplify small cases
+            if s1.front.is_empty():
+                assert m1.is_empty()
+                b = s1.back
+                s1.back = s1.front        
+                s1.front = b
+            if s2.back.is_empty():
+                assert m2.is_empty()
+                f = s2.front
+                s2.front = s2.back
+                s2.back = f
+            m1 = self.push_back_chunk_middle(m1, s1.back)
+            m1 = self.push_back_chunk_middle(m1, s2.front)
+            
+            if m1 is None or m1.is_empty():
+                s1.middle = m2
+            elif m2 is not None and not m2.is_empty():
+                if m1.peek_back().size() + m2.peek_front().size() > K:
+                    m1.concat_back(m2)
+                else:
+                    p = m2.pop_front()
+                    self.push_back_chunk_middle(m1, p)
+                    m1.concat_back(m2)
+            
+            s1.back = s2.back
+            s1.populate_sides()
+            # s2.clear
+                
