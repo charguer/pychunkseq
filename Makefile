@@ -58,6 +58,8 @@ stack_debug: $(MYPROG)
 	$(MYPROG) -length 30 -n 30 -seq debug -chunk_capacity 8
 	$(MYPROG) -length 30 -n 30 -seq debug_stdlib -chunk_capacity 8
 
+concat_debug: $(MYPROG)
+	$(MYPROG) -length 1000 -seq debug_concat -chunk_capacity 8
 
 
 ################################################################
@@ -80,6 +82,9 @@ list_perf: $(MYPROG)
 	$(PRUN) $< -n 500000,5000000 -length 500000 -seq stdlib_list -timeout 5
 	$(PPLOT) scatter --yzero --xlog -x n -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
 
+concat_perf: $(MYPROG)
+	$(PRUN) $< -length 10000,50000,100000,500000 -seq concat_back -timeout 10
+	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_concat_perf.pdf
 
 # Example command line
 # main.py -n 500000 -length 10 -seq pstack -chunk_capacity 32 

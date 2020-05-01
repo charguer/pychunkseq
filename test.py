@@ -2,6 +2,7 @@
 
 import stack
 import chunk
+import chunk_list
 from collections import deque
 import time
 import argparse
@@ -25,6 +26,7 @@ S = args.length
 R = N // S
 arg_seq = args.seq
 chunk.set_capacity(args.chunk_capacity)
+chunk_list.set_capacity(args.chunk_capacity)
 """stack.set_capacity(args.chunk_capacity)"""
 
 t1 = time.time()
@@ -89,6 +91,27 @@ elif arg_seq == "debug_stdlib":
         for _ in range(1, S):
             stack_test.pop()
             print(stack_test)
+
+elif arg_seq == "debug_concat":
+    s1 = seq.Seq()
+    s2 = seq.Seq()
+    for k in range(1, S):
+        s1.push_back(k)
+        s2.push_back(k + S - 1)
+    s1.print_general(print_item)
+    s2.print_general(print_item)
+    s1.concat_back(s2)
+    print("=== CONCAT ===")
+    s1.print_general(print_item)
+
+elif arg_seq == "concat_back":
+    s1 = seq.Seq()
+    s2 = seq.Seq()
+    for k in range(1, S):
+        s1.push_back(k)
+        s2.push_back(k + S - 1)
+    t1 = time.time()
+    s1.concat_back(s2)
 
 print("exectime", time.time() - t1)
 
