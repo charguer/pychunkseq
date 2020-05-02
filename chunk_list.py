@@ -36,7 +36,7 @@ class ChunkList:
         assert not self.is_empty()
         if (pov == FRONT):
             x = self.data.pop(0)
-            self.head = (self.head + K + 1) % K
+            self.head = (self.head + 1) % K
         elif (pov == BACK):
             x = self.data.pop()
         return x
@@ -97,14 +97,12 @@ class ChunkList:
         assert self.size() + c2.size() <= K
         for i in range(c2.size()):
             self.push_back(c2.get_absolute(i))
+            # alternative: c2.pop() and then no clear on c2
 
-    # TODO: recursif?
     def peek_back(self):
-        if (self.size() == 0):
-            return []
+        assert not self.is_empty()
         return self.data[self.size() - 1]
 
     def peek_front(self):
-        if (self.size() == 0):
-            return []
+        assert not self.is_empty()
         return self.data[0]

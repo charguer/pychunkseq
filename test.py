@@ -30,6 +30,7 @@ chunk_list.set_capacity(args.chunk_capacity)
 """stack.set_capacity(args.chunk_capacity)"""
 
 t1 = time.time()
+s = 0
 
 if arg_seq == "debug":
     q = seq.Seq()
@@ -48,7 +49,7 @@ elif arg_seq == "chunk_stack":
         for k in range(1, S):
             q.push_back(k)
         for _ in range(1, S):
-            q.pop_back()
+            s += q.pop_back()
 
 elif arg_seq == "stdlib_back":
     stack_test = []
@@ -114,4 +115,4 @@ elif arg_seq == "concat_back":
     s1.concat_back(s2)
 
 print("exectime", time.time() - t1)
-
+print("result", s)
