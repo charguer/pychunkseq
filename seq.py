@@ -107,74 +107,60 @@ class Seq:
                 print(", ", end="")
             self.back.print_content(print_item)
 
-    def push_front(self, item):
-        self.push(FRONT, item)
-
-    def push_back(self, item):
-        self.push(BACK, item)
-
-    def pop_front(self):
-        return self.pop(FRONT)
-
-    def pop_back(self):
-        return self.pop(BACK)
-
-    # TODO: peek(self,pov)  follow the same structure as pop.
-    # TODO: verifier
-    def peek_back(self):
-        # assert (not self.is_empty())
-        # if not self.back.is_empty()
-        #    return self.back.peek_back()
-        # else
-        #    assert self.middle is None or self.middle.is_empty()
-        #    return self.front.peek_back()
-        return self.back.peek_back()
-
-    def peek_front(self):
-    #idem here.
-        return self.front.peek_front()
+    def peek(self, pov):
+        assert not self.is_empty()
+        this, that = self.get_both(pov)
+        if not this.is_empty():
+            return this.peek(pov)
+        else:
+            assert self.middle is None or self.middle.is_empty()
+            return that.peek(pov)
 
     def populate_sides(self):
         self.populate(FRONT)
         self.populate(BACK)
 
-    # push_back_chunk_middle(self, c)
-    #  m = self.middle
-    #  if c.is_empty():
-    #     return
-    #  if m is None:
-    #     self.middle = Seq()
-    #     m = self.middle
-    #  if smiddle.is_empty() or c.size() + m.peek_back().size() > K:
-    #     smiddle.push_back(c)
-    # ...
-    def push_back_chunk_middle(self, smiddle, c):
-        if not c.is_empty():
-            if smiddle is None or smiddle.is_empty() or c.size() + smiddle.peek_back().size() > K:
-                if smiddle is None:
-                    smiddle = Seq()
-                smiddle.push_back(c)
-            else:
-                c2 = smiddle.peek_back()
-                c2.concat(c)
-                # not needed cause peek:  smiddle.push_back(c2)
-        return smiddle
+    def push_back_chunk_middle(self, c):
+        m = self.middle
+        if c.is_empty():
+            return
+        if m is None:
+            self.middle = Seq()
+            m = self.middle
+
+        if m.is_empty() or c.size() + m.peek_back().size() > K:
+            m.push_back(c)
+        else:
+            c2 = m.peek_back()
+            c2.concat(c)
+
+    def swap(self, s2):
+        s1 = self
+        # save s1 to tmp
+        s1_front  = s1.front 
+        s1_middle = s1.middle
+        s1_back   = s1.back
+        # move from s2 to s1
+        s1.front  = s2.front
+        s1.middle = s2.middle
+        s1.back   = s2.back
+        # move from tmp to s2
+        s2.front  = s1_front
+        s2.middle = s1_middle
+        s2.back   = s1_back
+
 
     # puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
         s1 = self
         if (s1.is_empty()):
-            # s1.swap(s2)
-            s1.front = s2.front
-            s1.middle = s2.middle
-            s1.back = s2.back
+            s1.swap(s2)
             return
         elif (s2.is_empty()):
             return
         else:
             m1 = s1.middle
             m2 = s2.middle
-            # s1.front   m1   s1.back    s2.front    m2   s2.back
 
             # push data to the outside to simplify small cases
             if s1.front.is_empty():
@@ -187,26 +173,48 @@ class Seq:
                 f = s2.front
                 s2.front = s2.back
                 s2.back = f
-            m1 = self.push_back_chunk_middle(m1, s1.back)
-            m1 = self.push_back_chunk_middle(m1, s2.front)
+
+            # push s1.back and s2.front into s1.middle
+            s1.push_back_chunk_middle(s1.back)
+            s1.push_back_chunk_middle(s2.front)
+            m1 = s1.middle # because m1 != s1.middle
             
+            # if m1 is empty replace with m2
             if m1 is None or m1.is_empty():
                 s1.middle = m2
+            # else concatenate m1 and m2
             elif m2 is not None and not m2.is_empty():
-                # m1b = m1.peek_back()
-                # m2f = m2.peek_front()
-                # if m1b.size() + m2f + size() > K
-                m1pbs = 0 if m1.peek_back() == [] else m1.peek_back().size()
-                m2pfs = 0 if m2.peek_front() == [] else m2.peek_front().size()
-                if m1pbs + m2pfs <= K:
+                if m1.peek_back().size() + m2.peek_front().size() <= K:
                     p = m2.pop_front() # in fact, p = m2f
-                    self.push_back_chunk_middle(m1, p)
+                    s1.push_back_chunk_middle(p)
+                    m1 = s1.middle # TODO: necessary? same case as above?
                 m1.concat_back(m2)
             
+            # place s2 back into s1.back & populate
             s1.back = s2.back
-            # not needed: s1.middle = m1
             s1.populate_sides()
-            # TODO s2.front = chunk vide
+
+            # clear s2
+            s2.front = chunk_list.ChunkList()
             s2.middle = None
-            # TODO s2.back = chunk vide
-                
+            s2.back = chunk_list.ChunkList()
+
+
+    def push_front(self, item):
+        self.push(FRONT, item)
+
+    def push_back(self, item):
+        self.push(BACK, item)
+
+    def pop_front(self):
+        return self.pop(FRONT)
+
+    def pop_back(self):
+        return self.pop(BACK)
+
+    def peek_back(self):
+        return self.peek(BACK)
+
+    def peek_front(self):
+        return self.peek(FRONT)
+    

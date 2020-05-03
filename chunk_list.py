@@ -41,6 +41,23 @@ class ChunkList:
             x = self.data.pop()
         return x
 
+    def peek(self, pov):
+        assert not self.is_empty()
+        if pov == FRONT:
+            i = 0
+        elif pov == BACK:
+            i = self.size() - 1
+        return self.data[i]
+
+    def concat(self, c2):
+        assert self.size() + c2.size() <= K
+        for i in range(c2.size()):
+            self.push_back(c2.get_absolute(i))
+            # alternative: c2.pop() and then no clear on c2
+            # self.push_back(c2.pop_front())
+            # ou
+            # self.push_front(c2.pop_back()) ? optimisation?
+
     # get relatif
     def get(self, index):
         return self.data[(self.head + index) % K]
@@ -93,16 +110,9 @@ class ChunkList:
     def pop_back(self):
         self.pop(BACK)
 
-    def concat(self, c2):
-        assert self.size() + c2.size() <= K
-        for i in range(c2.size()):
-            self.push_back(c2.get_absolute(i))
-            # alternative: c2.pop() and then no clear on c2
+    def peek_front(self):
+        return self.peek(FRONT)
 
     def peek_back(self):
-        assert not self.is_empty()
-        return self.data[self.size() - 1]
-
-    def peek_front(self):
-        assert not self.is_empty()
-        return self.data[0]
+        return self.peek(BACK)
+        
