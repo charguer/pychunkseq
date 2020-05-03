@@ -79,21 +79,34 @@ def main():
     # print("after")
     # myseq.print_general(print_item)
 
-    print("====== SEQ 1")
-    seq1 = seq.Seq()
-    for i in range(13):
-        seq1.push_back(i)
-    seq1.print_debug(print_item)
+    # print("====== SEQ 1")
+    # seq1 = seq.Seq()
+    # for i in range(13):
+    #     seq1.push_back(i)
+    # seq1.print_debug(print_item)
 
-    print("====== SEQ 2")
-    seq2 = seq.Seq()
-    for i in range(13):
-        seq2.push_back(i + 13)
-    seq2.print_debug(print_item)
+    # print("====== SEQ 2")
+    # seq2 = seq.Seq()
+    # for i in range(13):
+    #     seq2.push_back(i + 13)
+    # seq2.print_debug(print_item)
 
-    print("====== SEQ CONCAT")
-    seq1.concat_back(seq2)
-    seq1.print_general(print_item)
+    # print("====== SEQ CONCAT")
+    # seq1.concat_back(seq2)
+    # seq1.print_general(print_item)
+
+    print("===== SEQ")
+    myseq = seq.Seq()
+    for i in range(10):
+        myseq.push_back(i + 1)
+    myseq.print_general(print_item)
+
+    myseq.rev()
+    print("===== SEQ.REV()")
+    myseq.print_general(print_item)
+
+
+
     
 
 def print_item(item):

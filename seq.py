@@ -149,6 +149,22 @@ class Seq:
         s2.middle = s1_middle
         s2.back   = s1_back
 
+    # auxilary function - use rev() instead
+    def rev_aux(self, rev_fun):
+        # TODO: can be refactored if return self in .rev() or chunk.swap()?
+        # swap front and back
+        tmp_front = self.front
+        self.front = self.back
+        self.back = tmp_front
+
+        # reverse front & back chunks and their chunks
+        self.front.rev_aux(rev_fun)
+        self.back.rev_aux(rev_fun)
+        
+        # recursive
+        if self.middle is not None and not self.middle.is_empty():
+            # self.middle.rev_aux(lambda c: rev_fun(c.rev()))
+            self.middle.rev_aux(lambda c: c.rev_aux(rev_fun))
 
     # puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
@@ -217,4 +233,8 @@ class Seq:
 
     def peek_front(self):
         return self.peek(FRONT)
+
+    # reverses element ordering
+    def rev(self):
+        self.rev_aux(lambda c: None)
     
