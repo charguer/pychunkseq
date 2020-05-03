@@ -14,7 +14,7 @@ class ChunkList:
     def __init__(self):
         self.data = []
         self.head = 0 # TODO: necessary?
-        self.dir  = FRONT # direction
+        self.dir  = 0 # direction (0: front, 1: back)
 
     def size(self):
         return len(self.data) # O(1)
@@ -67,24 +67,37 @@ class ChunkList:
     def get_absolute(self, index):
         return self.data[index]
 
+    # TODO: refactoring?
     def print_view(self, view, print_item):
         print("[", end = "")
-        for i in range(view.seg_size):
-            print_item(self.data[(view.seg_head - self.head + i) % K])
-            print(", ", end = "")
+        if self.dir == 0: # direction = front
+            for i in range(view.seg_size):
+                print_item(self.data[(view.seg_head - self.head + i) % K])
+                print(", ", end = "")
+        else: # direction = back
+            for i in reversed(range(view.seg_size)):
+                print_item(self.data[(view.seg_head - self.head + i) % K])
+                print(", ", end = "")
         print("]", end = "")
 
     def print_general(self, print_item):
         self.print_view(view.View(self.head, self.size()), print_item)
 
-    # print content, without []; used in seq
+    # print content, without '[',']'; used in seq
+    # TODO: refactoring?
     def print_content(self, print_item):
         size = self.size()
-        for i in range(size):
-            # print_item(self.data[(i + self.head) % K])
-            print_item(self.data[i])
-            if (i != size - 1):
-                print(", ", end = "")
+        if self.dir == 0: # direction = front
+            for i in range(size):
+                # print_item(self.data[(i + self.head) % K])
+                print_item(self.data[i])
+                if (i != size - 1):
+                    print(", ", end = "")
+        else: # direction = back
+            for i in reversed(range(size)):
+                print_item(self.data[i])
+                if (i != 0):
+                    print(", ", end = "")
 
     def clear(self):
         self.data.clear()
@@ -99,8 +112,19 @@ class ChunkList:
             new_chunk.head = self.head
         return new_chunk
 
-    def rev(self):
+    # auxilary function used by seq.rev() (and maybe chunk.rev()?)
+    def rev_aux(self, rev_fun):
         self.dir ^= 1
+        size = self.size()
+        for i in range(size):
+            rev_fun(self.data[i])
+
+    # reverse chunk order
+    # TODO: recursive?
+    def rev(self):
+        # self.rev_aux(lambda c: None)
+        self.dir ^= 1
+        return self
 
     def push_front(self, item):
         self.push(FRONT, item)
