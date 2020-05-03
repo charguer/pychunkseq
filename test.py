@@ -58,7 +58,7 @@ elif arg_seq == "stdlib_back":
         for k in range(1, S):
             stack_test.append(k)
         for k in range(1, S):
-            x = stack_test.pop()
+            s += stack_test.pop()
             #if (x != S+1-k):
              #,   exit()
 
@@ -69,7 +69,7 @@ elif arg_seq == "stdlib_front":
         for k in range(1, S):
             stack_test.insert(0, k)
         for k in range(1, S):
-            x = stack_test.pop(0)
+            s += stack_test.pop(0)
             #if (x != S+1-k):
              #,   exit()
 
@@ -80,7 +80,7 @@ elif arg_seq == "container_deque": # right
         for k in range(1, S):
             deque_test.append(k)
         for _ in range(1, S):
-            deque_test.pop()
+            s += deque_test.pop()
 
 elif arg_seq == "debug_stdlib":
     stack_test = []
