@@ -1,5 +1,5 @@
 from enum import Enum
 
 class Direction(Enum):
-    FRONT = 1
-    BACK = 2
+    FRONT = 0
+    BACK = 1

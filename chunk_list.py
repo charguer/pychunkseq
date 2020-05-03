@@ -14,6 +14,7 @@ class ChunkList:
     def __init__(self):
         self.data = []
         self.head = 0 # TODO: necessary?
+        self.dir  = FRONT # direction
 
     def size(self):
         return len(self.data) # O(1)
@@ -97,6 +98,9 @@ class ChunkList:
             new_chunk.push(BACK, self.data[view.seg_head - self.head + i]) # copier item?
             new_chunk.head = self.head
         return new_chunk
+
+    def rev(self):
+        self.dir ^= 1
 
     def push_front(self, item):
         self.push(FRONT, item)
