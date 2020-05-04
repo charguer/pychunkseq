@@ -166,6 +166,16 @@ class Seq:
             # self.middle.rev_aux(lambda c: rev_fun(c.rev()))
             self.middle.rev_aux(lambda c: c.rev_aux(rev_fun))
 
+    # iterate over elements and apply function fun
+    def iter(self, pov, fun):
+        this, that = self.get_both(pov)
+        if not this.is_empty():
+            this.iter(pov, fun)
+        if self.middle is not None and not self.middle.is_empty():
+            self.middle.iter(pov, lambda c: c.iter(pov, fun))
+        if not that.is_empty():
+            that.iter(pov, fun)
+
     # puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
         s1 = self

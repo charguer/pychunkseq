@@ -1,5 +1,8 @@
 # fichier pour faire des tests manuels
 
+FRONT = __import__('direction').Direction.FRONT
+BACK = __import__('direction').Direction.BACK
+
 import chunk
 import pchunk
 import pstack
@@ -95,21 +98,29 @@ def main():
     # seq1.concat_back(seq2)
     # seq1.print_general(print_item)
 
-    print("===== SEQ")
+    # ============= TEST REV
+
+    # print("===== SEQ")
+    # myseq = seq.Seq()
+    # for i in range(10):
+    #     myseq.push_back(i + 1)
+    # myseq.print_general(print_item)
+
+    # myseq.rev()
+    # print("===== SEQ.REV()")
+    # myseq.print_general(print_item)
+
     myseq = seq.Seq()
     for i in range(10):
         myseq.push_back(i + 1)
     myseq.print_general(print_item)
 
-    myseq.rev()
-    print("===== SEQ.REV()")
-    myseq.print_general(print_item)
+    print("=== ITER")
+    myseq.iter(FRONT, print_item) # OK
 
-
-
-    
 
 def print_item(item):
     print(item, end="")
+    
 
 main()

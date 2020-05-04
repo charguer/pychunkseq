@@ -119,6 +119,15 @@ class ChunkList:
         for i in range(size):
             rev_fun(self.data[i])
 
+    def iter(self, pov, fun):
+        size = self.size()
+        if (pov == FRONT and self.dir == 0) or (pov == BACK and self.dir == 1):
+            for i in range(size):
+                fun(self.data[i])
+        else:
+            for i in reversed(range(size)):
+                fun(self.data[i])
+
     # reverse chunk order
     # TODO: recursive?
     def rev(self):
