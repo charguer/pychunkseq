@@ -167,6 +167,7 @@ class Seq:
             self.middle.rev_aux(lambda c: c.rev_aux(rev_fun))
 
     # iterate over elements and apply function fun
+    # TODO: passing pov to fun
     def iter(self, pov, fun):
         this, that = self.get_both(pov)
         if not this.is_empty():
@@ -175,6 +176,18 @@ class Seq:
             self.middle.iter(pov, lambda c: c.iter(pov, fun))
         if not that.is_empty():
             that.iter(pov, fun)
+
+    # def iter(self, pov, fun)
+    #   this.iter(pov, lambda c dir: fun c)
+    #   if self.middle is not None
+    #      self.middle.iter(pov, lambda c dir: c.iter(pov.xor(dir), fun))
+    #   that.iter(pov, lambda c dir: fun c)
+
+    # to test iter on a sequence of integers:
+    # total = 0
+    # def f(x):
+    #   total += x
+    # s.iter(FRONT, f)
 
     # puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
