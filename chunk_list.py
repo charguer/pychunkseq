@@ -14,7 +14,7 @@ class ChunkList:
     def __init__(self):
         self.data = []
         self.head = 0 # TODO: necessary?
-        self.dir  = 0 # direction (0: front, 1: back)
+        self.dir  = FRONT
 
     def size(self):
         return len(self.data) # O(1)
@@ -84,7 +84,7 @@ class ChunkList:
     # TODO: refactoring?
     def print_content(self, print_item):
         size = self.size()
-        if self.dir == 0: # direction = front
+        if self.dir == FRONT: # direction = front
             for i in range(size):
                 # print_item(self.data[(i + self.head) % K])
                 print_item(self.data[i])
@@ -109,18 +109,11 @@ class ChunkList:
             new_chunk.head = self.head
         return new_chunk
 
-    # spec de iter(self, pov, fun): 
-    # iterate elements in direction pov,
-    # and call "fun(x, pov2)" on each element "x"
-    # where "pov2" is the direction to use for traversing "x"
-    # when it is a chunk in the same direction as pov.
+    # iterate over chunk elements and apply function
     def iter(self, pov, fun):
         size = self.size()
-        # dir = pov.xor(self.dir) 
-        # if dir == FRONT
-        if (pov == FRONT and self.dir == 0) or (pov == BACK and self.dir == 1):
+        if pov ^ self.dir == FRONT:
             for i in range(size):
-                # fun(self.data[i], dir)
                 fun(self.data[i])
         else:
             for i in reversed(range(size)):
@@ -128,8 +121,19 @@ class ChunkList:
 
     # reverse chunk order
     def rev(self):
-        self.dir ^= 1
+        self.dir ^= BACK
         return self
+
+    def swap(self, c2):
+        tmp_data = self.data
+        tmp_head = self.head
+        tmp_dir  = self.dir
+        self.data = c2.data
+        self.head = c2.head
+        self.dir  = c2.dir
+        c2.data = tmp_data
+        c2.head = tmp_head
+        c2.dir  = tmp_dir
 
     def push_front(self, item):
         self.push(FRONT, item)

@@ -151,39 +151,19 @@ class Seq:
 
     # reverses element ordering
     def rev(self):
-        # swap front and back chunks
-        tmp_front = self.front
-        self.front = self.back
-        self.back = tmp_front
-        # reverse front & back chunks
         self.front.rev()
         self.back.rev()
-        # recursive
+        self.front.swap(self.back)
         if self.middle is not None and not self.middle.is_empty():
             self.middle.rev()
 
-    # iterate over elements and apply function fun
-    # TODO: passing pov to fun
+    # iterate over seq and apply function
     def iter(self, pov, fun):
         this, that = self.get_both(pov)
-        if not this.is_empty():
-            this.iter(pov, fun)
-        if self.middle is not None and not self.middle.is_empty():
-            self.middle.iter(pov, lambda c: c.iter(pov, fun))
-        if not that.is_empty():
-            that.iter(pov, fun)
-
-    # def iter(self, pov, fun)
-    #   this.iter(pov, lambda c dir: fun c)
-    #   if self.middle is not None
-    #      self.middle.iter(pov, lambda c dir: c.iter(pov.xor(dir), fun))
-    #   that.iter(pov, lambda c dir: fun c)
-
-    # to test iter on a sequence of integers:
-    # total = 0
-    # def f(x):
-    #   total += x
-    # s.iter(FRONT, f)
+        this.iter(pov, fun)
+        if self.middle is not None:
+            self.middle.iter(pov, lambda c: c.iter(pov ^ this.dir, fun))
+        that.iter(pov, fun)
 
     # puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
