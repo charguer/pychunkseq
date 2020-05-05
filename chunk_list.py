@@ -116,10 +116,18 @@ class ChunkList:
         for i in range(size):
             rev_fun(self.data[i])
 
+    # spec de iter(self, pov, fun): 
+    # iterate elements in direction pov,
+    # and call "fun(x, pov2)" on each element "x"
+    # where "pov2" is the direction to use for traversing "x"
+    # when it is a chunk in the same direction as pov.
     def iter(self, pov, fun):
         size = self.size()
+        # dir = pov.xor(self.dir) 
+        # if dir == FRONT
         if (pov == FRONT and self.dir == 0) or (pov == BACK and self.dir == 1):
             for i in range(size):
+                # fun(self.data[i], dir)
                 fun(self.data[i])
         else:
             for i in reversed(range(size)):
