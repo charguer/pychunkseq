@@ -27,26 +27,26 @@ class ChunkList:
 
     def push(self, pov, item):
         assert not self.is_full()
-        if (pov == FRONT):
+        if (pov ^ self.dir == FRONT):
             self.data.insert(0, item)
             self.head = (self.head + K - 1) % K
-        elif (pov == BACK):
+        else:
             self.data.append(item)
 
     def pop(self, pov):
         assert not self.is_empty()
-        if (pov == FRONT):
+        if (pov ^ self.dir == FRONT):
             x = self.data.pop(0)
             self.head = (self.head + 1) % K
-        elif (pov == BACK):
+        else:
             x = self.data.pop()
         return x
 
     def peek(self, pov):
         assert not self.is_empty()
-        if pov == FRONT:
+        if pov ^ self.dir == FRONT:
             i = 0
-        elif pov == BACK:
+        else:
             i = self.size() - 1
         return self.data[i]
 

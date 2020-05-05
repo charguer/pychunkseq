@@ -110,15 +110,31 @@ def main():
     # print("===== SEQ.REV()")
     # myseq.print_general(print_item)
 
+    # ===== ITER
+    # myseq = seq.Seq()
+    # for i in range(100):
+    #     myseq.push_back(i + 1)
+    # myseq.print_general(print_item)
+
+    # myseq.rev()
+    # print("=== ITER")
+    # myseq.iter(BACK, print_item) # OK
+    # print("")
+
+    # ====== POP
     myseq = seq.Seq()
-    for i in range(100):
+    for i in range(10):
         myseq.push_back(i + 1)
-    myseq.print_general(print_item)
 
     myseq.rev()
-    print("=== ITER")
-    myseq.iter(BACK, print_item) # OK
-    print("")
+    print("==== PUSH & POP")
+    myseq.print_general(print_item)
+    x = myseq.pop_back()
+    print("pop back: ", x)
+    myseq.print_general(print_item)
+    print("push back: ", 100)
+    myseq.push_back(100)
+    myseq.print_general(print_item)
 
 
 def print_item(item):
