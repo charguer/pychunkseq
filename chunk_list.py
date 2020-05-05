@@ -109,13 +109,6 @@ class ChunkList:
             new_chunk.head = self.head
         return new_chunk
 
-    # auxilary function used by seq.rev() (and maybe chunk.rev()?)
-    def rev_aux(self, rev_fun):
-        self.dir ^= 1
-        size = self.size()
-        for i in range(size):
-            rev_fun(self.data[i])
-
     # spec de iter(self, pov, fun): 
     # iterate elements in direction pov,
     # and call "fun(x, pov2)" on each element "x"
@@ -134,9 +127,7 @@ class ChunkList:
                 fun(self.data[i])
 
     # reverse chunk order
-    # TODO: recursive?
     def rev(self):
-        # self.rev_aux(lambda c: None)
         self.dir ^= 1
         return self
 

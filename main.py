@@ -100,23 +100,23 @@ def main():
 
     # ============= TEST REV
 
-    # print("===== SEQ")
-    # myseq = seq.Seq()
-    # for i in range(10):
-    #     myseq.push_back(i + 1)
-    # myseq.print_general(print_item)
-
-    # myseq.rev()
-    # print("===== SEQ.REV()")
-    # myseq.print_general(print_item)
-
+    print("===== SEQ")
     myseq = seq.Seq()
     for i in range(10):
         myseq.push_back(i + 1)
     myseq.print_general(print_item)
 
-    print("=== ITER")
-    myseq.iter(FRONT, print_item) # OK
+    myseq.rev()
+    print("===== SEQ.REV()")
+    myseq.print_general(print_item)
+
+    # myseq = seq.Seq()
+    # for i in range(10):
+    #     myseq.push_back(i + 1)
+    # myseq.print_general(print_item)
+
+    # print("=== ITER")
+    # myseq.iter(FRONT, print_item) # OK
 
 
 def print_item(item):
