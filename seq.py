@@ -73,39 +73,27 @@ class Seq:
         return x
 
     # print structure (front middle back)
-    def print_debug(self, print_item):
-        self.front.print_general(print_item)
-        print("")
-        if self.middle is not None:
-            self.middle.print_general(lambda c: c.print_general(print_item))
-            print("")
+    def print_debug(self, print_item, indent):
+        def print_fun(item):
+            print_item(item)
+            print(" ", end="")
+        print(" " * indent, end="")
+        self.front.print_general(print_fun)
+        if self.middle is not None and not self.middle.is_empty():
+            self.middle.print_debug(lambda c: c.iter(FRONT, print_fun), indent + 2)
         else:
             print(".")
-        self.back.print_general(print_item)
-        print("")
+        print(" " * indent, end="")
+        self.back.print_general(print_fun)
 
-    # general print of container [item1, item2, ..., itemN]
+    # print seq using print_item
     def print_general(self, print_item):
+        def print_fun(item):
+            print_item(item)
+            print(", ", end="")
         print("[", end="")
-        self.print_general_aux(print_item)
-        print("]")
-
-    # auxiliary function
-    def print_general_aux(self, print_item):
-        put_comma = False
-        if (not self.front.is_empty()):
-            self.front.print_content(print_item)
-            put_comma = True
-            
-        if self.middle is not None and not self.middle.is_empty():
-            if (put_comma):
-                print(", ", end="")
-            self.middle.print_general_aux(lambda c: c.print_content(print_item))
-
-        if (not self.back.is_empty()):
-            if (put_comma):
-                print(", ", end="")
-            self.back.print_content(print_item)
+        self.iter(FRONT, print_fun)
+        print("\b\b]")
 
     def peek(self, pov):
         assert not self.is_empty()

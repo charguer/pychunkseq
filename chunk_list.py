@@ -64,37 +64,26 @@ class ChunkList:
     def get_absolute(self, index):
         return self.data[index]
 
-    # TODO: refactoring?
     def print_view(self, view, print_item):
+        def print_fun(item):
+            print_item(item)
+            print(", ", end="")
         print("[", end = "")
-        if self.dir == 0: # direction = front
+        if self.dir == FRONT:
             for i in range(view.seg_size):
-                print_item(self.data[(view.seg_head - self.head + i) % K])
-                print(", ", end = "")
-        else: # direction = back
+                print_fun(self.data[(view.seg_head - self.head + i) % K])
+                print(" ", end = "")
+        else:
             for i in reversed(range(view.seg_size)):
-                print_item(self.data[(view.seg_head - self.head + i) % K])
-                print(", ", end = "")
-        print("]", end = "")
+                print_fun(self.data[(view.seg_head - self.head + i) % K])
+                print(" ", end = "")
+        if self.size() == 0:
+            print("]")
+        else:
+            print("\b\b\b]")
 
     def print_general(self, print_item):
         self.print_view(view.View(self.head, self.size()), print_item)
-
-    # print content, without '[',']'; used in seq
-    # TODO: refactoring?
-    def print_content(self, print_item):
-        size = self.size()
-        if self.dir == FRONT: # direction = front
-            for i in range(size):
-                # print_item(self.data[(i + self.head) % K])
-                print_item(self.data[i])
-                if (i != size - 1):
-                    print(", ", end = "")
-        else: # direction = back
-            for i in reversed(range(size)):
-                print_item(self.data[i])
-                if (i != 0):
-                    print(", ", end = "")
 
     def clear(self):
         self.data.clear()

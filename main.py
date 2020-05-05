@@ -135,10 +135,11 @@ def main():
     print("push back: ", 100)
     myseq.push_back(100)
     myseq.print_general(print_item)
+    # myseq.print_debug(print_item, 0)
 
 
 def print_item(item):
-    print(item, " ", end="")
+    print(item, end="")
     
 
 main()
