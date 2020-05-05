@@ -54,10 +54,7 @@ class ChunkList:
         assert self.size() + c2.size() <= K
         for i in range(c2.size()):
             self.push_back(c2.get_absolute(i))
-            # alternative: c2.pop() and then no clear on c2
-            # self.push_back(c2.pop_front())
-            # ou
-            # self.push_front(c2.pop_back()) ? optimisation?
+            c2.clear()
 
     # get relatif
     def get(self, index):
