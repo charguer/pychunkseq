@@ -51,18 +51,22 @@ class Seq:
         assert not self.is_empty()
         return self.get_aux(i, 1)
 
+    # override [] operator
+    def __getitem__(self, i):
+        return self.get(i)
+
     def get_aux(self, i, level):
-        if i < self.front.deep_size(level):
+        front_size = self.front.deep_size(level) 
+        middle_size = 0 if self.middle is None else self.middle.size_aux(0, level+1)
+        # if it's in the front we get it from there
+        if i < front_size:
             return self.front.get_deep(i, level)
-        elif i >= self.size() - self.back.deep_size(level):
-            a = self.front.deep_size(level)
-            if self.middle is None:
-                b = 0
-            else:
-                b = self.middle.size_aux(0, level+1)
-            return self.back.get_deep(i - a - b, level)
+        # if it's in the back we get it from there
+        elif i >= front_size + middle_size:
+            return self.back.get_deep(i - front_size - middle_size, level)
+        # else we calculate index in middle and we look there
         else:
-            new_index = i - self.front.deep_size(level)
+            new_index = i - front_size
             return self.middle.get_aux(new_index, level + 1)
 
     def set_this(self, pov, this):

@@ -144,7 +144,7 @@ elif arg_test == "flatten":
         result = seq.Seq()
         t1 = time.time()
         for i in range(R):
-            result.concat_back(seqs.pop_front())
+            result.concat_back(seqs[i])
 
     if arg_seq == "stdlib":
         seqs = []

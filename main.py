@@ -123,7 +123,7 @@ def main():
 
     # ====== POP
     myseq = seq.Seq()
-    for i in range(25):
+    for i in range(50):
         myseq.push_back(i)
 
     # myseq.rev()
@@ -138,8 +138,8 @@ def main():
     myseq.print_debug(print_item, 0)
 
     # print("size = ", myseq.size())
-    index = 24
-    print("seq[", index, "] = ", myseq.get(index))
+    index = 41
+    print("seq[", index, "] = ", myseq[index])
 
 def print_item(item):
     print(item, end="")
