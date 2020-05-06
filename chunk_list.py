@@ -101,6 +101,26 @@ class ChunkList:
             new_chunk.head = self.head
         return new_chunk
 
+    # auxilary function used in seq - gets size of chunk (chunks of chunks)
+    def deep_size(self, level):
+        if level == 1:
+            return self.size()
+        else:
+            total = 0
+            for i in range(self.size()):
+                total += self.data[i].deep_size(level-1)
+            return total
+
+    # auxilary function used in seq (get from chunk of chunk)
+    def get_deep(self, i, level):
+        if level == 1:
+            assert i < self.size()
+            return self.data[i]
+        else:
+            bigindex = i // pow(K, level - 1)
+            newindex = i - bigindex * pow(K, level - 1)
+            return self.data[bigindex].get_deep(newindex, level-1)
+
     # iterate over chunk elements and apply function
     def iter(self, pov, fun):
         size = self.size()

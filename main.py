@@ -123,20 +123,23 @@ def main():
 
     # ====== POP
     myseq = seq.Seq()
-    for i in range(10):
-        myseq.push_back(i + 1)
+    for i in range(25):
+        myseq.push_back(i)
 
-    myseq.rev()
-    print("==== PUSH & POP")
-    myseq.print_general(print_item)
-    x = myseq.pop_back()
-    print("pop back: ", x)
-    myseq.print_general(print_item)
-    print("push back: ", 100)
-    myseq.push_back(100)
-    myseq.print_general(print_item)
-    # myseq.print_debug(print_item, 0)
+    # myseq.rev()
+    # print("==== PUSH & POP")
+    # myseq.print_general(print_item)
+    # x = myseq.pop_back()
+    # print("pop back: ", x)
+    # myseq.print_general(print_item)
+    # print("push back: ", 100)
+    # myseq.push_back(100)
+    # myseq.print_general(print_item)
+    myseq.print_debug(print_item, 0)
 
+    # print("size = ", myseq.size())
+    index = 24
+    print("seq[", index, "] = ", myseq.get(index))
 
 def print_item(item):
     print(item, end="")

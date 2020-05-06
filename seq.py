@@ -35,6 +35,36 @@ class Seq:
         elif (pov == BACK):
             return self.back, self.front
 
+    # get size of seq
+    def size(self):
+        return self.size_aux(0, 1)
+        
+    def size_aux(self, total, level):
+        total += self.front.deep_size(level)
+        total += self.back.deep_size(level)
+        if self.middle is not None:
+            total = self.middle.size_aux(total, level + 1)
+        return total
+
+    # get item at index i
+    def get(self, i):
+        assert not self.is_empty()
+        return self.get_aux(i, 1)
+
+    def get_aux(self, i, level):
+        if i < self.front.deep_size(level):
+            return self.front.get_deep(i, level)
+        elif i >= self.size() - self.back.deep_size(level):
+            a = self.front.deep_size(level)
+            if self.middle is None:
+                b = 0
+            else:
+                b = self.middle.size_aux(0, level+1)
+            return self.back.get_deep(i - a - b, level)
+        else:
+            new_index = i - self.front.deep_size(level)
+            return self.middle.get_aux(new_index, level + 1)
+
     def set_this(self, pov, this):
         if (pov == FRONT):
             self.front = this
