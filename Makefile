@@ -86,6 +86,10 @@ concat_perf: $(MYPROG)
 	$(PRUN) $< -test concat -length 10000,50000,100000,500000 -seq chunk_stack,stdlib -timeout 10
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_concat_perf.pdf
 
+flatten_perf: $(MYPROG)
+	$(PRUN) $< -test flatten -n 500000 -length 10,1000,10000,500000 -seq chunk_stack,stdlib -timeout 10
+	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_flatten_perf.pdf
+
 # Example command line
 # main.py -n 500000 -length 10 -seq pstack -chunk_capacity 32 
 

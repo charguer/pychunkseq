@@ -3,6 +3,14 @@ FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 K = __import__('chunk_list').K
 
+
+def init(size, fun):
+    result = Seq()
+    for i in range(size):
+        result.push_back(fun(i))
+    return result
+
+
 class Seq:
     
     def __init__(self):

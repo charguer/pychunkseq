@@ -129,14 +129,25 @@ elif arg_test == "concat":
        t1 = time.time()
        s3 = s1 + s2
 
-# elif arg_test == "flatten":
+elif arg_test == "flatten":
 
-#  seqs = []
-#  for i = range(R)
-#     seqs.push_back( sesq.init(S, lambda i: i) )
-#  result = seq.Seq
-#  for i = range(R)
-#     result.concat(seqs[i])
+    if arg_seq == "chunk_stack":
+        seqs = seq.Seq()
+        for i in range(R):
+            seqs.push_back(seq.init(S, lambda i: i))
+        result = seq.Seq()
+        t1 = time.time()
+        for i in range(R):
+            result.concat_back(seqs.pop_front())
+
+    if arg_seq == "stdlib":
+        seqs = []
+        for i in range(R):
+            seqs.append([i for i in range(S)])
+        result = []
+        t1 = time.time()
+        for i in range(R):
+            result += (seqs[i])
 
 else:
    raise ValueError("Test non existant")
