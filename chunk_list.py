@@ -62,7 +62,10 @@ class ChunkList:
 
     # get absolu
     def get_absolute(self, index):
-        return self.data[index]
+        if self.dir == FRONT:
+            return self.data[index]
+        else:
+            return self.data[self.size() - index - 1]
 
     def print_view(self, view, print_item):
         def print_fun(item):
