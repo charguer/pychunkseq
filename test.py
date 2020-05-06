@@ -112,15 +112,22 @@ if arg_test == "stack":
 elif arg_test == "concat":
 
    if arg_seq == "chunk_stack":
-       s1 = seq.Seq()
-       s2 = seq.Seq()
-       for k in range(1, S):
-           s1.push_back(k)
-           s2.push_back(k + S - 1)
-       t1 = time.time()
-       s1.concat_back(s2)
+        s1 = seq.Seq()
+        s2 = seq.Seq()
+        for k in range(1, S):
+            s1.push_back(k)
+            s2.push_back(k + S - 1)
+        t1 = time.time()
+        s1.concat_back(s2)
 
-   # TODO: list
+   if arg_seq == "stdlib":
+       s1 = []
+       s2 = []
+       for k in range(1, S):
+           s1.append(k)
+           s2.append(k + S - 1)
+       t1 = time.time()
+       s3 = s1 + s2
 
 # elif arg_test == "flatten":
 
@@ -131,8 +138,8 @@ elif arg_test == "concat":
 #  for i = range(R)
 #     result.concat(seqs[i])
 
-else
-   print("error")
+else:
+   raise ValueError("Test non existant")
 
 print("exectime", time.time() - t1)
 print("result", s)

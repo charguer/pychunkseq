@@ -83,7 +83,7 @@ list_perf: $(MYPROG)
 	$(PPLOT) scatter --yzero --xlog -x n -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
 
 concat_perf: $(MYPROG)
-	$(PRUN) $< -length 10000,50000,100000,500000 -seq concat_back -timeout 10
+	$(PRUN) $< -test concat -length 10000,50000,100000,500000 -seq chunk_stack,stdlib -timeout 10
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_concat_perf.pdf
 
 # Example command line
