@@ -112,14 +112,19 @@ class ChunkList:
             return total
 
     # auxilary function used in seq (get from chunk of chunk)
-    def get_deep(self, i, level):
+    def get_deep(self, i, level, pov):
         if level == 1:
             assert i < self.size()
-            return self.data[i]
+            if pov ^ self.dir == FRONT:
+                return self.data[i]
+            else:
+                return self.data[self.size() - i - 1]
         else:
             bigindex = i // pow(K, level - 1)
             newindex = i - bigindex * pow(K, level - 1)
-            return self.data[bigindex].get_deep(newindex, level-1)
+            if pov ^ self.dir == BACK:
+                bigindex = self.size() - bigindex - 1
+            return self.data[bigindex].get_deep(newindex, level-1, pov ^ self.dir)
 
     # iterate over chunk elements and apply function
     def iter(self, pov, fun):

@@ -60,10 +60,10 @@ class Seq:
         middle_size = 0 if self.middle is None else self.middle.size_aux(0, level+1)
         # if it's in the front we get it from there
         if i < front_size:
-            return self.front.get_deep(i, level)
+            return self.front.get_deep(i, level, FRONT)
         # if it's in the back we get it from there
         elif i >= front_size + middle_size:
-            return self.back.get_deep(i - front_size - middle_size, level)
+            return self.back.get_deep(i - front_size - middle_size, level, FRONT)
         # else we calculate index in middle and we look there
         else:
             new_index = i - front_size
