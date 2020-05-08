@@ -135,7 +135,10 @@ class Esek:
             print(", ", end="")
         print("[", end="")
         self.iter(FRONT, print_fun)
-        print("\b\b]")
+        if self.is_empty():
+            print("]")
+        else:
+            print("\b\b]")
 
     def peek(self, pov):
         assert not self.is_empty()

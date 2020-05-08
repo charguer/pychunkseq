@@ -38,15 +38,15 @@ class Schunk:
         if (pov == FRONT):
             return self.support.head == self.view.seg_head
         elif (pov == BACK):
-            return (self.view.seg_size - self.view.seg_head) == (self.support.size - self.support.head)
+            return (self.view.seg_size - self.view.seg_head) == (self.support.size() - self.support.head)
 
     def pop(self, pov):
         assert not self.is_empty()
         if (pov == FRONT):
-            index = self.support.head + self.view.seg_head
+            index = self.support.head - self.view.seg_head
             new_head = self.view.seg_head - 1
         elif (pov == BACK):
-            index = self.support.head + self.view.seg_head + self.view.seg_size - 1
+            index = self.support.head - self.view.seg_head + self.view.seg_size - 1
             new_head = self.view.seg_head
         element = self.support[index]
         new_view = view.View(new_head, self.view.seg_size - 1)
@@ -56,13 +56,13 @@ class Schunk:
         self.support.print_view(self.view, print_item)
 
     def push_front(self, item):
-        self.push(FRONT, item)
+        return self.push(FRONT, item)
 
     def push_back(self, item):
-        self.push(BACK, item)
+        return self.push(BACK, item)
 
     def pop_front(self):
-        self.pop(FRONT)
+        return self.pop(FRONT)
 
     def pop_back(self):
-        self.pop(BACK)
+        return self.pop(BACK)
