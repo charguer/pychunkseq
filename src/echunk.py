@@ -1,5 +1,4 @@
 import view
-import schunk
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = -1
@@ -10,16 +9,7 @@ K = 4
 def set_capacity(chunk_capacity):
     global K
     K = chunk_capacity
-
-# transform schunk into echunk
-def of_schunk(s, version):
-    if s.version == version:
-        # unique owner
-        assert s.view == s.support.view()
-        return s.support
-    else:
-        # copy elements into new echunk
-        return s.support.ncopy(s.view)
+    
         
 class Echunk:
 
@@ -146,6 +136,15 @@ class Echunk:
         else:
             for i in reversed(range(size)):
                 fun(self.data[i])
+
+    # iterate over chunk limited by view
+    def iter_view(self, pov, view, fun):
+        if pov ^ self.dir == FRONT:
+            for i in range(view.seg_size):
+                fun(self.data[self.head - view.seg_head + i])
+        else:
+            for i in reversed(range(view.seg_size)):
+                fun(self.data[self.head - view.seg_head + i])
 
     # reverse chunk order
     def rev(self):

@@ -94,6 +94,9 @@ class Schunk:
             c = self.support.ncopy(self.support.view())
             return c
 
+    def iter(self, pov, fun):
+        self.support.iter_view(pov, self.view, fun)
+
     def print_general(self, print_item):
         self.support.print_view(self.view, print_item)
 
