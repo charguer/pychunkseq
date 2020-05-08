@@ -1,4 +1,4 @@
-import chunk
+import echunk
 import view
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
@@ -6,9 +6,9 @@ BACK = __import__('direction').Direction.BACK
 global K
 K = 4
 
-class Pchunk:
+class Schunk:
 
-    def __init__(self, support = chunk.chunk(), view = view.View()):
+    def __init__(self, support = echunk.Echunk(), view = view.View()):
         self.support = support
         self.view = view
 
@@ -30,7 +30,7 @@ class Pchunk:
         elif (pov == BACK):
             new_head = self.view.seg_head
         new_view = view.View(new_head, self.view.seg_size + 1)
-        return Pchunk(new_support, new_view)
+        return Schunk(new_support, new_view)
 
     def is_aligned(self, pov):
         if (pov == FRONT):
@@ -48,7 +48,7 @@ class Pchunk:
             new_head = self.view.seg_head
         element = self.support.get_absolute(index)
         new_view = view.View(new_head, self.view.seg_size - 1)
-        return (Pchunk(self.support, new_view), element)
+        return (Schunk(self.support, new_view), element)
 
     def print_general(self, print_item):
         self.support.print_view(self.view, print_item)

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-import stack
-import chunk
-import chunk_list
+import echunk
 from collections import deque
 import time
 import argparse
-import seq
+import esek
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-test", type=str,
@@ -28,8 +26,7 @@ S = args.length
 R = N // S
 arg_test = args.test
 arg_seq = args.seq
-chunk.set_capacity(args.chunk_capacity)
-chunk_list.set_capacity(args.chunk_capacity)
+echunk.set_capacity(args.chunk_capacity)
 """stack.set_capacity(args.chunk_capacity)"""
 
 t1 = time.time()
@@ -38,7 +35,7 @@ s = 0
 
 if arg_test == "stack":
    if arg_seq == "debug":
-       q = seq.Seq()
+       q = esek.Esek()
        q.print_general(print_item)
        for i in range (R):
            for k in range(1, S):
@@ -49,7 +46,7 @@ if arg_test == "stack":
                q.print_general(print_item)
 
    elif arg_seq == "chunk_stack":
-       q = seq.Seq()
+       q = esek.Esek()
        for i in range(R):
            for k in range(1, S):
                q.push_back(k)
@@ -99,8 +96,8 @@ if arg_test == "stack":
                print(stack_test)
 
    elif arg_seq == "debug_concat":
-       s1 = seq.Seq()
-       s2 = seq.Seq()
+       s1 = esek.Esek()
+       s2 = esek.Esek()
        for k in range(1, S):
            s1.push_back(k)
            s2.push_back(k + S - 1)
@@ -113,12 +110,12 @@ if arg_test == "stack":
 elif arg_test == "concat":
 
     if arg_seq == "chunk_stack":
-        s2 = seq.Seq()
+        s2 = esek.Esek()
         t1 = time.time()
         for k in range(R):
             t2 = time.time()
             for j in range(1, S):
-                s1 = seq.Seq()
+                s1 = esek.Esek()
                 s1.push_back(j)
                 s2.push_back(j + S - 1)
             # remove time caused by recreating the sequences
@@ -138,10 +135,10 @@ elif arg_test == "concat":
 elif arg_test == "flatten":
 
     if arg_seq == "chunk_stack":
-        seqs = seq.Seq()
+        seqs = esek.Esek()
         for i in range(R):
-            seqs.push_back(seq.init(S, lambda i: i))
-        result = seq.Seq()
+            seqs.push_back(esek.init(S, lambda i: i))
+        result = esek.Esek()
         t1 = time.time()
         for i in range(R):
             result.concat_back(seqs[i])

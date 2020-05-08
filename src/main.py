@@ -3,20 +3,19 @@
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 
-import chunk
-import pchunk
-import pstack
+import echunk
+import schunk
 import view
-import seq
+import esek
 
 def main():
-    # mychunk = chunk.chunk()
+    # mychunk = echunk.Echunk()
     # mychunk.push_front(2)
     # mychunk.push_front(3)
     # mychunk.pop('back')
     # mychunk.print_general(print)
     
-    # mychunk = pchunk.Pchunk()
+    # mychunk = schunk.Schunk()
     # mychunk = mychunk.push_back(2)
     # mychunk2 = mychunk.push_back(3)
     # mychunk = mychunk.push_back(4)
@@ -25,7 +24,7 @@ def main():
     # print('\nmychunk2')
     # mychunk2.print_general(print)   # [2, 3]
 
-    # mychunk = pchunk.Pchunk()
+    # mychunk = schunk.Schunk()
     # mychunk = mychunk.push_back(3)
     # mychunk = mychunk.push_front(2)
     # mychunk2 = mychunk.push_front(1)
@@ -58,7 +57,7 @@ def main():
     # print('after pop 3 elts')
     # mystack.print_general(print_item)
 
-    # mychunk = chunk.chunk()
+    # mychunk = echunk.Echunk()
     # mychunk.push_back(1)
     # mychunk.push_back(2)
     # mychunk.push_back(3)
@@ -70,7 +69,7 @@ def main():
     # print("get relatif 1er elt = ", mychunk.get(0))
     # print("get absolu 1er elt = ", mychunk.get_absolute(0))
 
-    # myseq = seq.Seq()
+    # myseq = esek.Esek()
     # for i in range(25):
     #     myseq.push_front(i)
     # for i in range(10):
@@ -83,13 +82,13 @@ def main():
     # myseq.print_general(print_item)
 
     # print("====== SEQ 1")
-    # seq1 = seq.Seq()
+    # seq1 = esek.Esek()
     # for i in range(13):
     #     seq1.push_back(i)
     # seq1.print_debug(print_item)
 
     # print("====== SEQ 2")
-    # seq2 = seq.Seq()
+    # seq2 = esek.Esek()
     # for i in range(13):
     #     seq2.push_back(i + 13)
     # seq2.print_debug(print_item)
@@ -101,7 +100,7 @@ def main():
     # ============= TEST REV
 
     # print("===== SEQ")
-    # myseq = seq.Seq()
+    # myseq = esek.Esek()
     # for i in range(10):
     #     myseq.push_back(i + 1)
     # myseq.print_general(print_item)
@@ -111,7 +110,7 @@ def main():
     # myseq.print_general(print_item)
 
     # ===== ITER
-    # myseq = seq.Seq()
+    # myseq = esek.Esek()
     # for i in range(100):
     #     myseq.push_back(i + 1)
     # myseq.print_general(print_item)
@@ -122,7 +121,7 @@ def main():
     # print("")
 
     # ====== POP
-    myseq = seq.Seq()
+    myseq = esek.Esek()
     for i in reversed(range(50)):
         myseq.push_back(i)
 

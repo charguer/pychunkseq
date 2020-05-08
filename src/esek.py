@@ -1,24 +1,24 @@
-import chunk_list
+import echunk
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
-K = __import__('chunk_list').K
+K = __import__('echunk').K
 
 
 def init(size, fun):
-    result = Seq()
+    result = Esek()
     for i in range(size):
         result.push_back(fun(i))
     return result
 
 
-class Seq:
+class Esek:
     
     def __init__(self):
-        self.front = chunk_list.ChunkList()
-        self.back = chunk_list.ChunkList()
+        self.front = echunk.Echunk()
+        self.back = echunk.Echunk()
         self.middle = None # appel au constructeur donne boucle infinie
-        # self.free_front = chunk_list.ChunkList()
-        # self.free_back = chunk_list.ChunkList()
+        # self.free_front = echunk.Echunk()
+        # self.free_back = echunk.Echunk()
 
     def is_empty(self):
         return self.front.is_empty() and self.back.is_empty()
@@ -35,7 +35,7 @@ class Seq:
         elif (pov == BACK):
             return self.back, self.front
 
-    # get size of seq
+    # get size of esek
     def size(self):
         return self.size_aux(0, 1)
         
@@ -97,9 +97,9 @@ class Seq:
                 self.set_both(pov, that, this)
             else:
                 if self.middle is None:
-                    self.middle = Seq()
+                    self.middle = Esek()
                 self.middle.push(pov, this)
-                self.set_this(pov, chunk_list.ChunkList())
+                self.set_this(pov, echunk.Echunk())
         this = self.get_this(pov)
         this.push(pov, item)
 
@@ -155,7 +155,7 @@ class Seq:
         if c.is_empty():
             return
         if m is None:
-            self.middle = Seq()
+            self.middle = Esek()
             m = self.middle
 
         if m.is_empty() or c.size() + m.peek_back().size() > K:
@@ -240,9 +240,9 @@ class Seq:
             s1.populate_sides()
 
             # clear s2
-            s2.front = chunk_list.ChunkList()
+            s2.front = echunk.Echunk()
             s2.middle = None
-            s2.back = chunk_list.ChunkList()
+            s2.back = echunk.Echunk()
 
 
     def push_front(self, item):

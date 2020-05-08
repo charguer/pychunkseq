@@ -9,7 +9,7 @@ def set_capacity(chunk_capacity):
     global K
     K = chunk_capacity
 
-class ChunkList:
+class Echunk:
 
     def __init__(self):
         self.data = []
@@ -94,7 +94,7 @@ class ChunkList:
 
     # créer une copie (partielle ou complete - size elts) d'un chunk
     def ncopy(self, view):
-        new_chunk = ChunkList()
+        new_chunk = Echunk()
         # copier size elements
         for i in range(view.seg_size):
             new_chunk.push(BACK, self.data[view.seg_head - self.head + i]) # copier item?
