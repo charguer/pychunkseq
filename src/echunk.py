@@ -157,10 +157,10 @@ class Echunk:
         self.push(BACK, item)
 
     def pop_front(self):
-        self.pop(FRONT)
+        return self.pop(FRONT)
 
     def pop_back(self):
-        self.pop(BACK)
+        return self.pop(BACK)
 
     def peek_front(self):
         return self.peek(FRONT)
