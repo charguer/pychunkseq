@@ -74,12 +74,12 @@ class Echunk:
             for i in range(view.seg_size):
                 print_item(self.data[self.head - view.seg_head + i])
                 print(", ", end = "")
-            print("\b\b") # delete the ', ' after the last element
+            print("\b\b", end="") # delete the ', ' after the last element
         else:
             for i in reversed(range(view.seg_size)):
                 print_item(self.data[self.head - view.seg_head + i])
                 print(", ", end = "")
-            print("\b\b")
+            print("\b\b", end="")
         print("]")
 
     def print_general(self, print_item):
