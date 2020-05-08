@@ -1,4 +1,5 @@
 import view
+import schunk
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = -1
@@ -10,6 +11,16 @@ def set_capacity(chunk_capacity):
     global K
     K = chunk_capacity
 
+# transform schunk into echunk
+def of_schunk(s, version):
+    if s.version == version:
+        # unique owner
+        assert s.view == s.support.view()
+        return s.support
+    else:
+        # copy elements into new echunk
+        return s.support.ncopy(s.view)
+        
 class Echunk:
 
     def __init__(self, version = NO_VERSION):
