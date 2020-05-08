@@ -11,10 +11,11 @@ def set_capacity(chunk_capacity):
 
 class Echunk:
 
-    def __init__(self):
+    def __init__(self, version = -1):
         self.data = []
         self.head = 0
         self.dir  = FRONT
+        self.version = version
 
     def size(self):
         return len(self.data) # O(1)
@@ -149,6 +150,10 @@ class Echunk:
         c2.data = tmp_data
         c2.head = tmp_head
         c2.dir  = tmp_dir
+
+    # return view on complete echunk
+    def view(self):
+        return view.View(self.head, self.size())
 
     def push_front(self, item):
         self.push(FRONT, item)
