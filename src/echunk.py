@@ -13,7 +13,7 @@ class Echunk:
 
     def __init__(self):
         self.data = []
-        self.head = 0 # TODO: necessary?
+        self.head = 0
         self.dir  = FRONT
 
     def size(self):
@@ -29,7 +29,7 @@ class Echunk:
         assert not self.is_full()
         if (pov ^ self.dir == FRONT):
             self.data.insert(0, item)
-            self.head = (self.head + K - 1) % K
+            self.head += 1
         else:
             self.data.append(item)
 
@@ -37,7 +37,7 @@ class Echunk:
         assert not self.is_empty()
         if (pov ^ self.dir == FRONT):
             x = self.data.pop(0)
-            self.head = (self.head + 1) % K
+            self.head = max(0, self.head - 1)
         else:
             x = self.data.pop()
         return x
@@ -53,37 +53,34 @@ class Echunk:
     def concat(self, c2):
         assert self.size() + c2.size() <= K
         for i in range(c2.size()):
-            self.push_back(c2.get_absolute(i))
+            self.push_back(c2[i])
             c2.clear()
 
-    # get relatif
+    # get item at index
     def get(self, index):
-        return self.data[(self.head + index) % K]
-
-    # get absolu
-    def get_absolute(self, index):
+        assert index < self.size()
         if self.dir == FRONT:
             return self.data[index]
         else:
             return self.data[self.size() - index - 1]
 
+    # override [] operator
+    def __getitem__(self, index):
+        return self.get(index)
+
     def print_view(self, view, print_item):
-        def print_fun(item):
-            print_item(item)
-            print(", ", end="")
         print("[", end = "")
         if self.dir == FRONT:
             for i in range(view.seg_size):
-                print_fun(self.data[(view.seg_head - self.head + i) % K])
-                print(" ", end = "")
+                print_item(self.data[self.head - view.seg_head + i])
+                print(", ", end = "")
+            print("\b\b") # delete the ', ' after the last element
         else:
             for i in reversed(range(view.seg_size)):
-                print_fun(self.data[(view.seg_head - self.head + i) % K])
-                print(" ", end = "")
-        if self.size() == 0:
-            print("]")
-        else:
-            print("\b\b\b]")
+                print_item(self.data[self.head - view.seg_head + i])
+                print(", ", end = "")
+            print("\b\b")
+        print("]")
 
     def print_general(self, print_item):
         self.print_view(view.View(self.head, self.size()), print_item)
@@ -96,9 +93,10 @@ class Echunk:
     def ncopy(self, view):
         new_chunk = Echunk()
         # copier size elements
+        # TODO: copy function? for types
         for i in range(view.seg_size):
-            new_chunk.push(BACK, self.data[view.seg_head - self.head + i]) # copier item?
-            new_chunk.head = self.head
+            new_chunk.push_back(self.data[self.head - view.seg_head + i])
+            new_chunk.head = view.seg_head
         return new_chunk
 
     # auxilary function used in seq - gets size of chunk (chunks of chunks)

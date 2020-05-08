@@ -20,13 +20,15 @@ class Schunk:
 
     def push(self, pov, item):
         assert not self.is_full()
-        if (self.is_aligned(pov)):
-            new_support = self.support # if aligned we can use the same support
+        if (self.is_aligned(pov) and not self.support.is_full()):
+            # if aligned we can use the same support
+            new_support = self.support
         else:
+            # else we create a copy of the part of the support we need
             new_support = self.support.ncopy(self.view)
         new_support.push(pov, item)
         if (pov == FRONT):
-            new_head = (self.view.seg_head - 1) % K
+            new_head = self.view.seg_head + 1
         elif (pov == BACK):
             new_head = self.view.seg_head
         new_view = view.View(new_head, self.view.seg_size + 1)
@@ -34,19 +36,19 @@ class Schunk:
 
     def is_aligned(self, pov):
         if (pov == FRONT):
-            return self.support.head == self.view.seg_head and (not self.support.is_full())
+            return self.support.head == self.view.seg_head
         elif (pov == BACK):
-            return ((self.view.seg_head + self.view.seg_size) % K) == ((self.support.head + self.support.size) % K) and (not self.support.is_full())
+            return (self.view.seg_size - self.view.seg_head) == (self.support.size - self.support.head)
 
     def pop(self, pov):
         assert not self.is_empty()
         if (pov == FRONT):
-            index = self.view.seg_head
-            new_head = (self.view.seg_head + 1) % K
+            index = self.support.head + self.view.seg_head
+            new_head = self.view.seg_head - 1
         elif (pov == BACK):
-            index = (self.view.seg_head + self.view.seg_size - 1) % K
+            index = self.support.head + self.view.seg_head + self.view.seg_size - 1
             new_head = self.view.seg_head
-        element = self.support.get_absolute(index)
+        element = self.support[index]
         new_view = view.View(new_head, self.view.seg_size - 1)
         return (Schunk(self.support, new_view), element)
 
