@@ -77,10 +77,10 @@ class Ssek:
         this, that = self.get_both(pov)
         if this.is_empty():
             assert self.middle is None or self.middle.is_empty()
-            new_that, x = that.pop(pov)
+            new_that, x = that.pop(pov, version)
             new_ssek = create(pov, this, self.middle, new_that, self.version_max)
         else:
-            new_this, x = this.pop(pov)
+            new_this, x = this.pop(pov, version)
             new_ssek = create_and_populate(pov, new_this, self.middle, that,
                 self.version_max)
         return new_ssek, x

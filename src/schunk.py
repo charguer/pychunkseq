@@ -12,9 +12,19 @@ def create(version):
     return Schunk(echunk.Echunk(version), view.View(), version)
 
 # transform chunk into uniquely owned schunk with version
-def of_chunk(chunk, version):
+def schunk_of_chunk(chunk, version):
     chunk.version = version
     return Schunk(chunk, view.View(chunk.head, chunk.size()), version)
+
+# transfom schunk into chunk
+def chunk_of_schunk(s, version):
+    if s.version() == version:
+        # unique owner
+        assert s.view == s.support.view()
+        return s.support
+    else:
+        c = s.support.ncopy(s.support.view())
+        return c
 
 class Schunk:
 
@@ -59,7 +69,7 @@ class Schunk:
         else:
             return self.push_shared(pov, item, version)
 
-    def pop(self, pov):
+    def pop(self, pov, version):
         assert not self.is_empty()
         if (pov == FRONT):
             index = self.support.head - self.view.seg_head
@@ -69,7 +79,7 @@ class Schunk:
             new_head = self.view.seg_head
         element = self.support[index]
         new_view = view.View(new_head, self.view.seg_size - 1)
-        return (Schunk(self.support, new_view), element)
+        return (Schunk(self.support, new_view, version), element)
 
     def is_aligned(self, pov):
         if (pov == FRONT):
@@ -84,16 +94,6 @@ class Schunk:
     def version(self):
         return self.support.version
 
-    # corresponds to chunk_of_schunk
-    def get_chunk(self, version):
-        if self.version() == version:
-            # unique owner
-            assert self.view == self.support.view()
-            return self.support
-        else:
-            c = self.support.ncopy(self.support.view())
-            return c
-
     def iter(self, pov, fun):
         self.support.iter_view(pov, self.view, fun)
 
@@ -106,8 +106,8 @@ class Schunk:
     def push_back(self, item, version = NO_VERSION):
         return self.push(BACK, item, version)
 
-    def pop_front(self):
-        return self.pop(FRONT)
+    def pop_front(self, version = NO_VERSION):
+        return self.pop(FRONT, version)
 
-    def pop_back(self):
-        return self.pop(BACK)
+    def pop_back(self, version = NO_VERSION):
+        return self.pop(BACK, version)

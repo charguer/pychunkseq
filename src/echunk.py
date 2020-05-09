@@ -9,6 +9,9 @@ K = 4
 def set_capacity(chunk_capacity):
     global K
     K = chunk_capacity
+
+def create(version = NO_VERSION):
+    return Echunk(version)
     
         
 class Echunk:

@@ -1,8 +1,25 @@
 import echunk
+import schunk
 import ssek
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 K = __import__('echunk').K
+
+def ssek_to_esek(s):
+    # TODO: verify versions
+    front = schunk.chunk_of_schunk(s.front, s.version_max)
+    back  = schunk.chunk_of_schunk(s.back,  s.version_max)
+    middle = s.middle
+    version = s.version_max + 1
+    return esek.create(front, middle, back, version)
+
+def esek_to_ssek(e):
+    front = schunk.schunk_of_chunk(e.front, e.version)
+    back  = schunk.schunk_of_chunk(e.back,  e.version)
+    middle = e.middle
+    version_max = e.version
+    e.clear()
+    return ssek.create(FRONT, front, middle, back, version_max)
 
 
 def init(size, fun):
@@ -11,12 +28,15 @@ def init(size, fun):
         result.push_back(fun(i))
     return result
 
+def create(front, middle, back, version):
+    return Esek(front, middle, back, version)
+
 
 class Esek:
     
-    def __init__(self, version = 0):
-        self.front = echunk.Echunk(version)
-        self.back = echunk.Echunk(version)
+    def __init__(self, front = None, middle = None, back = None, version = 0):
+        self.front = echunk.create(version) if front == None else front
+        self.back = echunk.create(version) if back == None else back
         self.middle = ssek.Ssek()
         self.version = 0    # TODO: verify
         # self.free_front = echunk.Echunk()
@@ -194,6 +214,12 @@ class Esek:
         if self.middle is not None:
             self.middle.iter(pov, lambda c: c.iter(pov ^ this.dir, fun))
         that.iter(pov, fun)
+
+    def clear(self):
+        self.version = 0
+        self.front   = echunk.create()
+        self.back    = echunk.create()
+        self.middle  = None
 
     # puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):

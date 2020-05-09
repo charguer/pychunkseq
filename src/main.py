@@ -75,12 +75,24 @@ def main():
     myseq.print_general(print_item)
     print("")
 
-    print("### Test esek pop front & back")
-    for i in range(5):
-        myseq.pop_front()
-        myseq.pop_back()
+    # print("### Test esek pop front & back")
+    # for i in range(5):
+    #     myseq.pop_front()
+    #     myseq.pop_back()
+    # myseq.print_general(print_item)
+    # print("")
+
+    print("### Transform into ssek")
+    myssek = esek.esek_to_ssek(myseq)
+    myssek.print_general(print_item)
+    print("-- pop_front and pop_back elements")
+    myssek, x = myssek.pop_front(myssek.version_max)
+    myssek, x = myssek.pop_back(myssek.version_max)
+    myssek.print_general(print_item)
+    print("-- transforming into esek")
+    myseq = esek.ssek_to_esek(myssek)
     myseq.print_general(print_item)
-    print("")
+
 
     # print("### Test esek concat")
     # print("seq1 = ", end="")
