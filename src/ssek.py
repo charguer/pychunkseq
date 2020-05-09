@@ -20,8 +20,8 @@ class Ssek:
 
     def __init__(self, front = None, middle = None, back = None, version_max = 0):
         self.version_max = version_max
-        self.front = schunk.Schunk() if front == None else front
-        self.back = schunk.Schunk() if back == None else back
+        self.front = schunk.create(version_max) if front == None else front
+        self.back = schunk.create(version_max) if back == None else back
         self.middle = middle
 
     def is_empty(self):
