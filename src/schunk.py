@@ -9,12 +9,12 @@ K = 4
 
 # create a uniquely owned schunk
 def create(version):
-    return Schunk(echunk.Echunk(version), view.View())
+    return Schunk(echunk.Echunk(version), view.View(), version)
 
 # transform chunk into uniquely owned schunk with version
 def of_chunk(chunk, version):
     chunk.version = version
-    return Schunk(chunk, view.View(chunk.head, chunk.size()))
+    return Schunk(chunk, view.View(chunk.head, chunk.size()), version)
 
 class Schunk:
 
@@ -47,15 +47,15 @@ class Schunk:
         new_view = view.View(new_head, self.view.seg_size + 1)
         return Schunk(new_support, new_view, new_version)
 
-    def push_unique(self, pov, item):
+    def push_unique(self, pov, item, version):
         assert self.is_aligned(pov) and self.view == self.support.view()
         self.support.push(pov, item)
-        return Schunk(self.support, self.support.view())
+        return Schunk(self.support, self.support.view(), version)
 
     def push(self, pov, item, version):
         assert not self.is_full()
         if self.is_uniquely_owned(version):
-            return self.push_unique(pov, item)
+            return self.push_unique(pov, item, version)
         else:
             return self.push_shared(pov, item, version)
 

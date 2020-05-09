@@ -1,4 +1,5 @@
 import echunk
+import ssek
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 K = __import__('echunk').K
@@ -13,10 +14,11 @@ def init(size, fun):
 
 class Esek:
     
-    def __init__(self):
-        self.front = echunk.Echunk()
-        self.back = echunk.Echunk()
-        self.middle = None # appel au constructeur donne boucle infinie
+    def __init__(self, version = 0):
+        self.front = echunk.Echunk(version)
+        self.back = echunk.Echunk(version)
+        self.middle = ssek.Ssek()
+        self.version = 0    # TODO: verify
         # self.free_front = echunk.Echunk()
         # self.free_back = echunk.Echunk()
 
@@ -86,7 +88,7 @@ class Esek:
     def populate(self, pov):
         this = self.get_this(pov)
         if this.is_empty() and self.middle is not None and not self.middle.is_empty():
-            this = self.middle.pop(pov)
+            self.middle, this = self.middle.pop(pov, self.version)
             self.set_this(pov, this)
 
     def push(self, pov, item):
@@ -96,9 +98,7 @@ class Esek:
                 assert(self.middle is None or self.middle.is_empty())
                 self.set_both(pov, that, this)
             else:
-                if self.middle is None:
-                    self.middle = Esek()
-                self.middle.push(pov, this)
+                self.middle = self.middle.push(pov, this, self.version)
                 self.set_this(pov, echunk.Echunk())
         this = self.get_this(pov)
         this.push(pov, item)
@@ -157,9 +157,6 @@ class Esek:
         m = self.middle
         if c.is_empty():
             return
-        if m is None:
-            self.middle = Esek()
-            m = self.middle
 
         if m.is_empty() or c.size() + m.peek_back().size() > K:
             m.push_back(c)
