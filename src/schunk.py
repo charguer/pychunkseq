@@ -10,6 +10,9 @@ global K
 K = 4
 
 # TODO: utilité de cette fonction ?
+# je te propose de déplacer cette fonction dans le module Schunk
+# et de l'appeler create_empty.
+
 # create a uniquely owned schunk
 def create(version):
     return Schunk(echunk.Echunk(version), view.View(), version)
@@ -17,7 +20,8 @@ def create(version):
 # transform chunk into uniquely owned schunk with version
 # TODO: rename to schunk_of_echunk
 # TODO: je me demande s'il est possible de fixer le bon numéro de version
-# lors de la création du chunk, et de ne pas avoir besoin de le mettre à jour ici.
+# lors de la création du chunk, et de ne pas avoir besoin de le mettre à jour ici,
+# autrement dit, cette fonction n'aurais pas besoin de prendre "version" en argument.
 # TODO: utiliser la fonction chunk.view() pour créer la view
 def schunk_of_chunk(chunk, version):
     chunk.version = version

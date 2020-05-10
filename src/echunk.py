@@ -13,6 +13,8 @@ def set_capacity(chunk_capacity):
     K = chunk_capacity
 
 # TODO: pourquoi as-t-on besoin de cette fonction ?
+# si tu veux tu peux la mettre dans le module Echunk et de l'appeler create_empty.
+# mais je crois qu'en l'état tu peux appeler le constructeur directement ça ferait pareil.
 def create(version = NO_VERSION):
     return Echunk(version)
     

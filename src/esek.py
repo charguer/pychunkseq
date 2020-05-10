@@ -5,8 +5,12 @@ FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 K = __import__('echunk').K
 
+# TODO: peut être renommer K en CAPACITY, ça serait mieux pour la doc
+
 def ssek_to_esek(s):
     # TODO: verify versions
+    # TODO: pour front et back tu crées des chunks frais, 
+    # donc tu peux utiliser "version" que tu définis plus bas
     front = schunk.chunk_of_schunk(s.front, s.version_max)
     back  = schunk.chunk_of_schunk(s.back,  s.version_max)
     middle = s.middle
@@ -14,10 +18,22 @@ def ssek_to_esek(s):
     return esek.create(front, middle, back, version)
 
 def esek_to_ssek(e):
+    # TODO: j'ai un commentaire dans schunk qui dit qu'a priori
+    # les fonctions schunk_of_chunk n'ont pas besoin de numéro de 
+    # version en argument, car les chunk supports peuvent
+    # garder le numéro de version qu'ils stockent actuellement.
     front = schunk.schunk_of_chunk(e.front, e.version)
     back  = schunk.schunk_of_chunk(e.back,  e.version)
     middle = e.middle
     version_max = e.version
+    # TODO Ah non, il ne faut pas faire e.clear, sinon tu vas vider front et back
+    # alors qu'ils ont été transférés déjà. 
+    # Possibilité 1 : dire que e devient invalide, pour cela faire e.front = None,
+    # et pareil pour tous les autres champs.
+    # Possibilité 2 : allouer un nouveau front et un nouveau back vide, et mettre middle à vide.
+    # Le (1) est plus rapide, le (2) est moins dangereux pour le client.
+    # Tu peux faire (1) pour l'instant, ça te prend un petit peu moins de code.
+    # TODO: voir la suggestion de la fonction fonction "invalidate" dans le code de concat_back
     e.clear()
     return ssek.create(FRONT, front, middle, back, version_max)
 
@@ -31,16 +47,21 @@ def init(size, fun):
 def create(front, middle, back, version):
     return Esek(front, middle, back, version)
 
-
 class Esek:
+    # TODO: il faut décider si tu autorise middle à être None, ou bien s'il est toujours alloué.
+    # Dans ssek, on est obligé d'avoir None pour éviter la boucle infinie, mais ici je te
+    # suggère d'avoir jamais middle=None, ça simplifie pas mal le code.
     
+    # TODO je trouverai ça plus propre d'avoir une fonction avec aucun argument pour construire
+    # une séquence vide, et une fonction de construction qui prend tous les arguments explicitement.
+    # tu peux choisir celle que tu veux comme constructeur, et appeler l'autre create_empty ou
+    # bien init_fields; mais faire les deux en une seule fonction, ça donne du code un peu moche.
+    # note que le code de create_empty appelle init_aux.
     def __init__(self, front = None, middle = None, back = None, version = 0):
         self.front = echunk.create(version) if front == None else front
         self.back = echunk.create(version) if back == None else back
-        self.middle = ssek.Ssek()
-        self.version = 0    # TODO: verify
-        # self.free_front = echunk.Echunk()
-        # self.free_back = echunk.Echunk()
+        self.middle = ssek.Ssek() # TODO: problème à cette ligne, tu ignores l'argument middle
+        self.version = 0    # TODO: oui c'est bien de mettre version 0 au départ.
 
     def is_empty(self):
         return self.front.is_empty() and self.back.is_empty()
@@ -57,10 +78,24 @@ class Esek:
         elif (pov == BACK):
             return self.back, self.front
 
+    def set_this(self, pov, this):
+        if (pov == FRONT):
+            self.front = this
+        elif (pov == BACK):
+            self.back = this
+
+    def set_both(self, pov, this, that):
+        if (pov == FRONT):
+            self.front = this
+            self.back = that
+        elif (pov == BACK):
+            self.front = that
+            self.back = this
+
     # get size of esek
     def size(self):
         return self.size_aux(0, 1)
-        
+       
     def size_aux(self, total, level):
         total += self.front.deep_size(level)
         total += self.back.deep_size(level)
@@ -85,31 +120,26 @@ class Esek:
             return self.front.get_deep(i, level, FRONT)
         # if it's in the back we get it from there
         elif i >= front_size + middle_size:
-            return self.back.get_deep(i - front_size - middle_size, level, FRONT)
+            new_index = i - front_size - middle_size
+            return self.back.get_deep(new_index, level, FRONT)
         # else we calculate index in middle and we look there
         else:
             new_index = i - front_size
             return self.middle.get_aux(new_index, level + 1)
 
-    def set_this(self, pov, this):
-        if (pov == FRONT):
-            self.front = this
-        elif (pov == BACK):
-            self.back = this
-
-    def set_both(self, pov, this, that):
-        if (pov == FRONT):
-            self.front = this
-            self.back = that
-        elif (pov == BACK):
-            self.front = that
-            self.back = this
-
     def populate(self, pov):
         this = self.get_this(pov)
         if this.is_empty() and self.middle is not None and not self.middle.is_empty():
+            # TODO: tu as le droit d'écrire comme ça dans self.middle ? formidable !
             self.middle, this = self.middle.pop(pov, self.version)
             self.set_this(pov, this)
+         # LATER: populate pourrait renforcer l'invariant en disant que si
+         # front ou back est vide, alors middle doit devenir None,
+         # et pas juste satisfaire "self.middle.is_empty()"
+
+    def populate_sides(self):
+        self.populate(FRONT)
+        self.populate(BACK)
 
     def push(self, pov, item):
         this, that = self.get_both(pov)
@@ -133,6 +163,15 @@ class Esek:
             x = this.pop(pov)
             self.populate(pov)
         return x
+
+    def peek(self, pov):
+        assert not self.is_empty()
+        this, that = self.get_both(pov)
+        if this.is_empty():
+            assert self.middle is None or self.middle.is_empty()
+            return that.peek(pov)
+        else:
+            return this.peek(pov)
 
     # print structure (front middle back)
     def print_debug(self, print_item, indent):
@@ -160,30 +199,6 @@ class Esek:
         else:
             print("\b\b]")
 
-    def peek(self, pov):
-        assert not self.is_empty()
-        this, that = self.get_both(pov)
-        if not this.is_empty():
-            return this.peek(pov)
-        else:
-            assert self.middle is None or self.middle.is_empty()
-            return that.peek(pov)
-
-    def populate_sides(self):
-        self.populate(FRONT)
-        self.populate(BACK)
-
-    def push_back_chunk_middle(self, c):
-        m = self.middle
-        if c.is_empty():
-            return
-
-        if m.is_empty() or c.size() + m.peek_back().size() > K:
-            m.push_back(c)
-        else:
-            c2 = m.peek_back()
-            c2.concat(c)
-
     def swap(self, s2):
         s1 = self
         # save s1 to tmp
@@ -203,7 +218,11 @@ class Esek:
     def rev(self):
         self.front.rev()
         self.back.rev()
+        # TODO: ici tu fais un swap, mais je crois que tu peux tout aussi
+        # bien faire temp = self.front; self.front = self.back; self.back = tmp,
+        # ça échange moins de données.
         self.front.swap(self.back)
+        # TODO: normalement c'est pas utile de tester is is_empty(), car rev marchera quand même
         if self.middle is not None and not self.middle.is_empty():
             self.middle.rev()
 
@@ -221,14 +240,27 @@ class Esek:
         self.back    = echunk.create()
         self.middle  = None
 
+    def push_back_chunk_middle(self, c):
+        m = self.middle
+        if c.is_empty():
+            return
+        # TODO: bug si m = None. Mais je t'ai suggéré de faire en sorte que m<>None toujours
+        if m.is_empty() or c.size() + m.peek_back().size() > K:
+            m.push_back(c)
+        else:
+            c2 = m.peek_back()
+            c2.concat(c)
+
     # puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
         s1 = self
-        if (s1.is_empty()):
+        if (s2.is_empty()):
+            return
+        # TODO: ça pourrait être juste un "if"
+        elif (s1.is_empty()):
             s1.swap(s2)
             return
-        elif (s2.is_empty()):
-            return
+        # TODO: le else peut être enlevé
         else:
             m1 = s1.middle
             m2 = s2.middle
@@ -248,24 +280,33 @@ class Esek:
             # push s1.back and s2.front into s1.middle
             s1.push_back_chunk_middle(s1.back)
             s1.push_back_chunk_middle(s2.front)
-            m1 = s1.middle # because m1 != s1.middle
+            # TODO: en fait, la fonction "push_back_chunk_middle" pourrait prendre
+            # directement m1 en argument, et ne pas travailler sur "self" du tout.
+            m1 = s1.middle # s1 was just modified, thus m1 might not be s1.middle
             
+            # TODO: partout, tu pourras enlever les tests de la forme "m is None"
+
             # if m1 is empty replace with m2
             if m1 is None or m1.is_empty():
                 s1.middle = m2
             # else concatenate m1 and m2
             elif m2 is not None and not m2.is_empty():
                 if m1.peek_back().size() + m2.peek_front().size() <= K:
-                    p = m2.pop_front() # in fact, p = m2f
-                    s1.push_back_chunk_middle(p)
-                    m1 = s1.middle # TODO: necessary? same case as above?
+                    p = m2.pop_front()
+                    s1.push_back_chunk_middle(p) # TODO: could be push_back_chunk_middle(m1, p)
+                    m1 = s1.middle # TODO: necessary? same case as above? => a priori on pourra s'en passer
                 m1.concat_back(m2)
             
-            # place s2 back into s1.back & populate
+            # place s2 back into s1.back
             s1.back = s2.back
+            # restore the invariant
             s1.populate_sides()
 
             # clear s2
+            # TODO: ici on pourrait tout simplement invalider s2, ça serait plus 
+            # rapide, pour cela il suffit de mettre None dans front et back,
+            # pour cela ajouter une fonction "invalidate", qui fait ça, et qui
+            # serait aussi utilisée par esek_to_ssek
             s2.front = echunk.Echunk()
             s2.middle = None
             s2.back = echunk.Echunk()
