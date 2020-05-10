@@ -26,8 +26,6 @@ class Echunk:
         self.dir  = FRONT
         self.version = version
 
-    # TODO: ajouter une fonction "is_uniquely_owned_by(version)" 
-    # qui renvoie "version == self.version"
     # TODO: dans le code caml, "version" s'appelle "owner", si tu trouves ça plus clair
     # tu peux changer.
 
@@ -107,10 +105,7 @@ class Echunk:
         print("]")
 
     def print_general(self, print_item):
-      # view.View(self.head, self.size())
-      #  est un pattern qui apparaît plusieurs fois, le mieux c'est de faire
-      # une fonction appelée "view" (ou "complete_view") dans ce module, 
-      # et qui retourne cette vue de tous les objets
+      # view.View(self.head, self.size()) => c'est self.view()
         self.print_view(view.View(self.head, self.size()), print_item)
 
     def clear(self):
