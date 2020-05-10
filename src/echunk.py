@@ -4,15 +4,19 @@ BACK = __import__('direction').Direction.BACK
 NO_VERSION = -1
 
 global K
+
+# TODO: est-il possible d'enlever cette ligne qui risque de poser des problèmes ?
 K = 4
 
 def set_capacity(chunk_capacity):
     global K
     K = chunk_capacity
 
+# TODO: pourquoi as-t-on besoin de cette fonction ?
 def create(version = NO_VERSION):
     return Echunk(version)
     
+# TODO: documenter ici en 5 lignes quels sont les champs utilisés et ce qu'ils représentent.
         
 class Echunk:
 
@@ -21,6 +25,11 @@ class Echunk:
         self.head = 0
         self.dir  = FRONT
         self.version = version
+
+    # TODO: ajouter une fonction "is_uniquely_owned_by(version)" 
+    # qui renvoie "version == self.version"
+    # TODO: dans le code caml, "version" s'appelle "owner", si tu trouves ça plus clair
+    # tu peux changer.
 
     def size(self):
         return len(self.data) # O(1)
@@ -43,6 +52,7 @@ class Echunk:
         assert not self.is_empty()
         if (pov ^ self.dir == FRONT):
             x = self.data.pop(0)
+            # TODO: est-il possible de passer en pratique dans les négatifs sans le "max 0" ?
             self.head = max(0, self.head - 1)
         else:
             x = self.data.pop()
@@ -64,6 +74,7 @@ class Echunk:
 
     # get item at index
     def get(self, index):
+        # TODO: il manque la partie "0 <= index and" sur le assert
         assert index < self.size()
         if self.dir == FRONT:
             return self.data[index]
@@ -76,6 +87,13 @@ class Echunk:
 
     def print_view(self, view, print_item):
         print("[", end = "")
+        # LATER: réfléchir si print_view peut se coder à l'aide d'iter.
+        # NOTE : on aimerait bien factoriser le code en faisant :
+        #    r = range(view.seg_size):
+        #    if self.dir == BACK:
+        #      r = reserved(r)
+        #    for i in r: ...
+        # mais j'ai peur que Python ne soit pas capable d'optimiser le code aussi bien.
         if self.dir == FRONT:
             for i in range(view.seg_size):
                 print_item(self.data[self.head - view.seg_head + i])
@@ -89,6 +107,10 @@ class Echunk:
         print("]")
 
     def print_general(self, print_item):
+      # view.View(self.head, self.size())
+      #  est un pattern qui apparaît plusieurs fois, le mieux c'est de faire
+      # une fonction appelée "view" (ou "complete_view") dans ce module, 
+      # et qui retourne cette vue de tous les objets
         self.print_view(view.View(self.head, self.size()), print_item)
 
     def clear(self):
@@ -124,6 +146,7 @@ class Echunk:
             else:
                 return self.data[self.size() - i - 1]
         else:
+            # TODO: ce code ne fonctionne a priori que si les chunks sont toujours pleins.
             bigindex = i // pow(K, level - 1)
             newindex = i - bigindex * pow(K, level - 1)
             if pov ^ self.dir == BACK:
@@ -142,6 +165,8 @@ class Echunk:
 
     # iterate over chunk limited by view
     def iter_view(self, pov, view, fun):
+        # TODO: introduire d'abord : h = self.head - view.seg_head
+        # LATER: peut être faire : range(h, h + view.seg_size)
         if pov ^ self.dir == FRONT:
             for i in range(view.seg_size):
                 fun(self.data[self.head - view.seg_head + i])

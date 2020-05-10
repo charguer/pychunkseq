@@ -12,7 +12,7 @@ parser.add_argument("-test", type=str,
 parser.add_argument("-seq", type=str,
                     help="type of sequence", default="debug")
 parser.add_argument("-n", type=int, help="total number of pushes", default=80)
-parser.add_argument("-length", type=int, help="number of pushes in one cycle", default=80)
+parser.add_argument("-length", type=int, help="length of the sequence manipulated", default=80)
 parser.add_argument("-chunk_capacity", type=int, help="capacity of the chunk", default=4) # 128 pour tests
 args = parser.parse_args()
 
@@ -61,8 +61,6 @@ if arg_test == "stack":
                stack_test.append(k)
            for k in range(1, S):
                s += stack_test.pop()
-               #if (x != S+1-k):
-                #,   exit()
 
    elif arg_seq == "stdlib_front":
        stack_test = []
@@ -72,8 +70,6 @@ if arg_test == "stack":
                stack_test.insert(0, k)
            for k in range(1, S):
                s += stack_test.pop(0)
-               #if (x != S+1-k):
-                #,   exit()
 
    elif arg_seq == "container_deque": # right
        deque_test = deque()
@@ -96,6 +92,7 @@ if arg_test == "stack":
                print(stack_test)
 
    elif arg_seq == "debug_concat":
+   # TODO: déplacer dans la section "concat", et renommer en "debug"
        s1 = esek.Esek()
        s2 = esek.Esek()
        for k in range(1, S):
@@ -108,6 +105,7 @@ if arg_test == "stack":
        s1.print_general(print_item)
 
 elif arg_test == "concat":
+   # TODO: je ne comprends pas trop ce que font ces tests là, utiliser flatten suffit je crois
 
     if arg_seq == "chunk_stack":
         s2 = esek.Esek()
@@ -121,6 +119,7 @@ elif arg_test == "concat":
             # remove time caused by recreating the sequences
             tminus += time.time() - t2
             s1.concat_back(s2)
+        # TODO: ajouter à la fin une ligne du type "s = s1.size()", idem dans l'autre test
 
     if arg_seq == "stdlib":
         s1 = []
@@ -142,6 +141,7 @@ elif arg_test == "flatten":
         t1 = time.time()
         for i in range(R):
             result.concat_back(seqs[i])
+        # TODO: ajouter à la fin une ligne du type "s = result.size()", idem dans l'autre test
 
     if arg_seq == "stdlib":
         seqs = []
@@ -153,7 +153,10 @@ elif arg_test == "flatten":
             result += (seqs[i])
 
 else:
+   # TODO traduire les erreurs en anglais
    raise ValueError("Test non existant")
 
 print("exectime", time.time() - t1 - tminus)
+
+# TODO: renommer s en result, après avoir renommer result en s dans le test "flatten".
 print("result", s)
