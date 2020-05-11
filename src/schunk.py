@@ -49,39 +49,25 @@ class Schunk:
 
     def push_shared(self, pov, item, version):
         assert not self.is_full()
-        if (self.is_aligned(pov) and not self.support.is_full()):
-            # if aligned we can use the same support
-            new_support = self.support
-            # TODO: on pourra en parler, mais je crois qu'on n'a pas besoin de 
-            # se préoccuper du new_version dans le cas où l'on conserve le chunk 
-            # il suffit de faire dès ici un return  Schunk(new_support, new_view),
-            # en bougeant plus haut le code de new_view.
-            new_version = self.support.version
-        else:
-            # else we create a copy of the part of the support we need
-            new_support = self.support.ncopy(self.view)
-            new_version = version
-        new_support.push(pov, item)
         if (pov == FRONT):
             new_head = self.view.seg_head + 1
         elif (pov == BACK):
             new_head = self.view.seg_head
         new_view = view.View(new_head, self.view.seg_size + 1)
-        return Schunk(new_support, new_view, new_version)
+        if (self.is_aligned(pov) and not self.support.is_full()):
+            # if aligned we can use the same support
+            new_support = self.support
+        else:
+            # else we create a copy of the part of the support we need
+            new_support = self.support.ncopy(self.view)
+        new_support.push(pov, item)
+        return Schunk(new_support, new_view)
 
     def push_unique(self, pov, item, version):
-        # TODO: si les view sont égales, is_aligned est forcément vrai, 
-        # donc tu peux retirer la première partie du test.
-        # En fait, la fonction "is_aligned" en caml, c'est celle qui test
-        # si self.view == self.support.view(), c'est-à-dire si
-        # self.is_aligned(FRONT) and self.is_aligned(BACK),
-        # tout ça est équivalent.
-        assert self.is_aligned(pov) and self.view == self.support.view()
+        assert self.is_aligned()
         self.support.push(pov, item)
-        # TODO: ci-dessous, il ne faut pas construire un nouveau schunk, mais faire :
-        #   self.view <- self.support.view() 
-        #   return self
-        return Schunk(self.support, self.support.view(), version)
+        self.view = self.support.view()
+        return self
 
     def push(self, pov, item, version):
         assert not self.is_full()
@@ -103,11 +89,13 @@ class Schunk:
         new_view = view.View(new_head, self.view.seg_size - 1)
         return (Schunk(self.support, new_view, version), element)
 
-    def is_aligned(self, pov):
+    def is_aligned(self, pov = None):
         if (pov == FRONT):
             return self.support.head == self.view.seg_head
         elif (pov == BACK):
             return (self.view.seg_size - self.view.seg_head) == (self.support.size() - self.support.head)
+        else:
+            return self.view == self.support.view()
 
     def is_uniquely_owned(self, version):
         return version != NO_VERSION and self.version() == version
