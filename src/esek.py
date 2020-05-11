@@ -111,7 +111,7 @@ class Esek:
         if this.is_empty() and not self.middle.is_empty():
             # TODO: tu as le droit d'écrire comme ça dans self.middle ? formidable !
             self.middle, this = self.middle.pop(pov, self.version)
-            self.set_this(pov, this)
+            self.set_this(pov, schunk.echunk_of_schunk(this, self.version))
          # LATER: populate pourrait renforcer l'invariant en disant que si
          # front ou back est vide, alors middle doit devenir None,
          # et pas juste satisfaire "self.middle.is_empty()"
