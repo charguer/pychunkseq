@@ -1,5 +1,5 @@
+from view import View
 import echunk
-import view
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = __import__('echunk').NO_VERSION
@@ -24,9 +24,9 @@ def echunk_of_schunk(s, version):
 
 class Schunk:
 
-    def __init__(self, support = None, _view = None):
+    def __init__(self, support = None, view = None):
         self.support = echunk.Echunk() if support is None else support
-        self.view = view.View() if _view is None else _view
+        self.view = View() if view is None else view
 
     def is_empty(self):
         return self.view.seg_size == 0
@@ -40,7 +40,7 @@ class Schunk:
             new_head = self.view.seg_head + 1
         elif (pov == BACK):
             new_head = self.view.seg_head
-        new_view = view.View(new_head, self.view.seg_size + 1)
+        new_view = View(new_head, self.view.seg_size + 1)
         if (self.is_aligned(pov) and not self.support.is_full()):
             # if aligned we can use the same support
             new_support = self.support
@@ -72,7 +72,7 @@ class Schunk:
             index = self.support.head - self.view.seg_head + self.view.seg_size - 1
             new_head = self.view.seg_head
         x = self.support[index]
-        new_view = view.View(new_head, self.view.seg_size - 1)
+        new_view = View(new_head, self.view.seg_size - 1)
         return (Schunk(self.support, new_view), x)
 
     # TODO: verify

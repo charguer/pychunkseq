@@ -1,4 +1,4 @@
-import view
+from view import View
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = -1
@@ -129,13 +129,13 @@ class Echunk:
             return self.data[bigindex].get_deep(newindex, level-1, pov ^ self.dir)
 
     # iterate over chunk elements and apply function, view optional
-    def iter(self, pov, fun, _view = None):
-        if _view is None:
+    def iter(self, pov, fun, view = None):
+        if view is None:
             h = 0
             size = self.size()
         else:
-            h = self.head - _view.seg_head
-            size = _view.seg_size
+            h = self.head - view.seg_head
+            size = view.seg_size
         if pov ^ self.dir == FRONT:
             for i in range(size):
                 fun(self.data[h + i])
@@ -161,7 +161,7 @@ class Echunk:
 
     # return view on complete echunk
     def view(self):
-        return view.View(self.head, self.size())
+        return View(self.head, self.size())
 
     def push_front(self, item):
         self.push(FRONT, item)
