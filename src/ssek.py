@@ -1,6 +1,7 @@
 import schunk
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
+NO_VERSION = __import__('schunk').NO_VERSION
 
 def create(pov, this, middle, that, version_max):
     if pov == FRONT:
@@ -10,8 +11,7 @@ def create(pov, this, middle, that, version_max):
 
 def create_and_populate(pov, this, middle, that, version_max):
     if this.is_empty() and middle is not None and not middle.is_empty():
-        middle, this = middle.pop(pov, version_max) 
-        # TODO par symmétrie, on pourrait écrire pov ^ FRONT
+        middle, this = middle.pop(pov ^ FRONT, version_max) 
     if that.is_empty() and middle is not None and not middle.is_empty():
         middle, that = middle.pop(pov ^ BACK, version_max)
     return create(pov, this, middle, that, version_max)
@@ -19,11 +19,8 @@ def create_and_populate(pov, this, middle, that, version_max):
 
 class Ssek:
 
-    # TODO: en fait tu peux prendre version_max = NO_VERSION = -1, car au début tu
-    # n'auras que des chunks supports de version -1, donc ça marche.
-
     # TODO: comme dans Esek, peut être ça serait plus propre de couper cette fonction en deux.
-    def __init__(self, front = None, middle = None, back = None, version_max = 0):
+    def __init__(self, front = None, middle = None, back = None, version_max = NO_VERSION):
         self.version_max = version_max
         self.front = schunk.Schunk(version=version_max) if front is None else front
         self.back = schunk.Schunk(version=version_max) if back is None else back
@@ -61,10 +58,8 @@ class Ssek:
             if that.is_empty():
                 assert self.middle is None or self.middle.is_empty()
                 new_this = that.push(pov, item, version)
-                # TODO: faire pour clarifier : new_that = this
-                # TODO: tu peux utiliser : create(pov, new_this, None, new_that, self.version_max)
-                new_ssek = Ssek()   # TODO: avoid allocating if replacing
-                new_ssek.set_both(pov, new_this, this)
+                new_that = this
+                new_ssek = create(pov, new_this, None, new_that, self.version_max)
             else:
                 new_this = schunk.Schunk(version=version)
                 new_this = new_this.push(pov, item, version)
@@ -78,18 +73,10 @@ class Ssek:
                 # ici tu enchaînerais avec un middle.push, et pas un self.middle.push
                 new_middle = self.middle.push(pov, this, version)
                 # TODO: pour la fin, utiliser : create(pov, new_this, middle, that, self.version_max)
-                new_ssek = Ssek()   # TODO: avoid allocating if replacing
-                new_ssek.set_both(pov, new_this, that)
-                new_ssek.middle = new_middle
+                new_ssek = create(pov, new_this, new_middle, that, self.version_max)
         else:
             new_this = this.push(pov, item, version)
-            # TODO: le code ci-dessous alloue des chunks, pourtant ce n'est pas utile,
-            # et en plus il y a un bug car tu ne vas pas conserver le version_max
-            # alors que pourtant tu conserves le middle et tous ses chunks.
-            # Solution, je pense : create(pov, new_this, self.middle, that, self.version_max)
-            new_ssek = Ssek()
-            new_ssek.set_both(pov, new_this, that)
-            new_ssek.middle = self.middle
+            new_ssek = create(pov, new_this, self.middle, that, self.version_max)
         return new_ssek
 
     def pop(self, pov, version):
