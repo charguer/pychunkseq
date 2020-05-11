@@ -10,26 +10,21 @@ global K
 K = 4
 
 # transform chunk into uniquely owned schunk with version
-# TODO: rename to schunk_of_echunk
 # TODO: je me demande s'il est possible de fixer le bon numéro de version
 # lors de la création du chunk, et de ne pas avoir besoin de le mettre à jour ici,
 # autrement dit, cette fonction n'aurais pas besoin de prendre "version" en argument.
-# TODO: utiliser la fonction chunk.view() pour créer la view
-def schunk_of_chunk(chunk, version):
+def schunk_of_echunk(chunk, version):
     chunk.version = version
-    return Schunk(chunk, view.View(chunk.head, chunk.size()), version)
+    return Schunk(chunk, chunk.view(), version)
 
 # transfom schunk into chunk
-# TODO: rename to echunk_of_schunk
-def chunk_of_schunk(s, version):
+def echunk_of_schunk(s, version):
     if s.version() == version:
         # unique owner
-        assert s.view == s.support.view()
+        assert s.is_aligned()
         return s.support
     else:
-        # TODO: tu peux faire le return direct
-        c = s.support.ncopy(s.support.view())
-        return c
+        return s.support.ncopy(s.support.view())
 
 class Schunk:
 

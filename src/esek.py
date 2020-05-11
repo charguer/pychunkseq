@@ -11,19 +11,19 @@ def ssek_to_esek(s):
     # TODO: verify versions
     # TODO: pour front et back tu crées des chunks frais, 
     # donc tu peux utiliser "version" que tu définis plus bas
-    front = schunk.chunk_of_schunk(s.front, s.version_max)
-    back  = schunk.chunk_of_schunk(s.back,  s.version_max)
+    front = schunk.echunk_of_schunk(s.front, s.version_max)
+    back  = schunk.echunk_of_schunk(s.back,  s.version_max)
     middle = s.middle
     version = s.version_max + 1
     return create(front, middle, back, version)
 
 def esek_to_ssek(e):
     # TODO: j'ai un commentaire dans schunk qui dit qu'a priori
-    # les fonctions schunk_of_chunk n'ont pas besoin de numéro de 
+    # les fonctions schunk_of_echunk n'ont pas besoin de numéro de 
     # version en argument, car les chunk supports peuvent
     # garder le numéro de version qu'ils stockent actuellement.
-    front = schunk.schunk_of_chunk(e.front, e.version)
-    back  = schunk.schunk_of_chunk(e.back,  e.version)
+    front = schunk.schunk_of_echunk(e.front, e.version)
+    back  = schunk.schunk_of_echunk(e.back,  e.version)
     middle = e.middle
     version_max = e.version
     # TODO Ah non, il ne faut pas faire e.clear, sinon tu vas vider front et back
@@ -148,7 +148,7 @@ class Esek:
                 assert(self.middle is None or self.middle.is_empty())
                 self.set_both(pov, that, this)
             else:
-                sthis = schunk.schunk_of_chunk(this, self.version)
+                sthis = schunk.schunk_of_echunk(this, self.version)
                 self.middle = self.middle.push(pov, sthis, self.version)
                 self.set_this(pov, echunk.Echunk())
         this = self.get_this(pov)
