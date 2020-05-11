@@ -8,13 +8,10 @@ K = __import__('echunk').K
 # TODO: peut être renommer K en CAPACITY, ça serait mieux pour la doc
 
 def ssek_to_esek(s):
-    # TODO: verify versions
-    # TODO: pour front et back tu crées des chunks frais, 
-    # donc tu peux utiliser "version" que tu définis plus bas
-    front = schunk.echunk_of_schunk(s.front, s.version_max)
-    back  = schunk.echunk_of_schunk(s.back,  s.version_max)
-    middle = s.middle
     version = s.version_max + 1
+    front = schunk.echunk_of_schunk(s.front, version)
+    back  = schunk.echunk_of_schunk(s.back,  version)
+    middle = s.middle
     return create(front, middle, back, version)
 
 def esek_to_ssek(e):
