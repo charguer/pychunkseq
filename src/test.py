@@ -23,6 +23,10 @@ global N, S, R
 
 N = args.n
 S = args.length
+
+if N % S != 0:
+    raise ValueError("Invalid values: 'n' must be divisible by 'length'")
+
 R = N // S
 arg_test = args.test
 arg_seq = args.seq
@@ -91,8 +95,10 @@ if arg_test == "stack":
                stack_test.pop()
                print(stack_test)
 
-   elif arg_seq == "debug_concat":
-   # TODO: déplacer dans la section "concat", et renommer en "debug"
+elif arg_test == "concat":
+    # concatenation of two sequences
+
+    if arg_seq == "debug":
        s1 = esek.Esek()
        s2 = esek.Esek()
        for k in range(1, S):
@@ -103,9 +109,6 @@ if arg_test == "stack":
        s1.concat_back(s2)
        print("=== CONCAT ===")
        s1.print_general(print_item)
-
-elif arg_test == "concat":
-   # TODO: je ne comprends pas trop ce que font ces tests là, utiliser flatten suffit je crois
 
     if arg_seq == "chunk_stack":
         s2 = esek.Esek()
@@ -153,8 +156,7 @@ elif arg_test == "flatten":
             result += (seqs[i])
 
 else:
-   # TODO traduire les erreurs en anglais
-   raise ValueError("Test non existant")
+   raise ValueError("Test not found. Available tests: stack|concat|flatten")
 
 print("exectime", time.time() - t1 - tminus)
 
