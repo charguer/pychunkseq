@@ -11,12 +11,6 @@ K = 4
 def set_capacity(chunk_capacity):
     global K
     K = chunk_capacity
-
-# TODO: pourquoi as-t-on besoin de cette fonction ?
-# si tu veux tu peux la mettre dans le module Echunk et de l'appeler create_empty.
-# mais je crois qu'en l'état tu peux appeler le constructeur directement ça ferait pareil.
-def create(version = NO_VERSION):
-    return Echunk(version)
     
 # TODO: documenter ici en 5 lignes quels sont les champs utilisés et ce qu'ils représentent.
         
@@ -52,7 +46,6 @@ class Echunk:
         assert not self.is_empty()
         if (pov ^ self.dir == FRONT):
             x = self.data.pop(0)
-            # TODO: est-il possible de passer en pratique dans les négatifs sans le "max 0" ?
             self.head = max(0, self.head - 1)
         else:
             x = self.data.pop()
@@ -74,8 +67,7 @@ class Echunk:
 
     # get item at index
     def get(self, index):
-        # TODO: il manque la partie "0 <= index and" sur le assert
-        assert index < self.size()
+        assert 0 <= index and index < self.size()
         if self.dir == FRONT:
             return self.data[index]
         else:
@@ -87,37 +79,27 @@ class Echunk:
 
     def print_view(self, view, print_item):
         print("[", end = "")
-        # LATER: réfléchir si print_view peut se coder à l'aide d'iter.
-        # NOTE : on aimerait bien factoriser le code en faisant :
-        #    r = range(view.seg_size):
-        #    if self.dir == BACK:
-        #      r = reserved(r)
-        #    for i in r: ...
-        # mais j'ai peur que Python ne soit pas capable d'optimiser le code aussi bien.
+        # TODO: réfléchir si print_view peut se coder à l'aide d'iter.
         if self.dir == FRONT:
-            for i in range(view.seg_size):
-                print_item(self.data[self.head - view.seg_head + i])
-                print(", ", end = "")
-            print("\b\b", end="") # delete the ', ' after the last element
+            r = range(view.seg_size)
         else:
-            for i in reversed(range(view.seg_size)):
-                print_item(self.data[self.head - view.seg_head + i])
-                print(", ", end = "")
-            print("\b\b", end="")
-        print("]")
+            r = reversed(range(view.seg_size))
+        for i in r:
+            print_item(self.data[self.head - view.seg_head + i])
+            print(", ", end = "")
+        # if we printed elements we delete ', ' after the last element
+        print("\b\b]") if self.size() != 0 else print("]")
 
     def print_general(self, print_item):
-      # view.View(self.head, self.size()) => c'est self.view()
-        self.print_view(view.View(self.head, self.size()), print_item)
+        self.print_view(self.view(), print_item)
 
     def clear(self):
         self.data.clear()
         self.head = 0
 
-    # créer une copie (partielle ou complete - size elts) d'un chunk
+    # partial or complete copy of a chunk using view
     def ncopy(self, view):
         new_chunk = Echunk()
-        # copier size elements
         # TODO: copy function? for types
         for i in range(view.seg_size):
             new_chunk.push_back(self.data[self.head - view.seg_head + i])
@@ -162,14 +144,14 @@ class Echunk:
 
     # iterate over chunk limited by view
     def iter_view(self, pov, view, fun):
-        # TODO: introduire d'abord : h = self.head - view.seg_head
         # LATER: peut être faire : range(h, h + view.seg_size)
+        h = self.head - view.seg_head
         if pov ^ self.dir == FRONT:
             for i in range(view.seg_size):
-                fun(self.data[self.head - view.seg_head + i])
+                fun(self.data[h + i])
         else:
             for i in reversed(range(view.seg_size)):
-                fun(self.data[self.head - view.seg_head + i])
+                fun(self.data[h + i])
 
     # reverse chunk order
     def rev(self):

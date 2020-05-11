@@ -15,7 +15,7 @@ def ssek_to_esek(s):
     back  = schunk.chunk_of_schunk(s.back,  s.version_max)
     middle = s.middle
     version = s.version_max + 1
-    return esek.create(front, middle, back, version)
+    return create(front, middle, back, version)
 
 def esek_to_ssek(e):
     # TODO: j'ai un commentaire dans schunk qui dit qu'a priori
@@ -58,8 +58,8 @@ class Esek:
     # bien init_fields; mais faire les deux en une seule fonction, ça donne du code un peu moche.
     # note que le code de create_empty appelle init_aux.
     def __init__(self, front = None, middle = None, back = None, version = 0):
-        self.front = echunk.create(version) if front == None else front
-        self.back = echunk.create(version) if back == None else back
+        self.front = echunk.Echunk(version) if front == None else front
+        self.back = echunk.Echunk(version) if back == None else back
         self.middle = ssek.Ssek() # TODO: problème à cette ligne, tu ignores l'argument middle
         self.version = 0    # TODO: oui c'est bien de mettre version 0 au départ.
 
@@ -236,8 +236,8 @@ class Esek:
 
     def clear(self):
         self.version = 0
-        self.front   = echunk.create()
-        self.back    = echunk.create()
+        self.front   = echunk.Echunk()
+        self.back    = echunk.Echunk()
         self.middle  = None
 
     def push_back_chunk_middle(self, c):

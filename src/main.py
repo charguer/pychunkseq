@@ -75,6 +75,12 @@ def main():
     myseq.print_general(print_item)
     print("")
 
+    print("--- Popping front and back")
+    myseq.pop_front()
+    myseq.pop_back()
+    myseq.print_general(print_item)
+    print("")
+
     # print("### Test esek pop front & back")
     # for i in range(5):
     #     myseq.pop_front()
