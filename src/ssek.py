@@ -25,8 +25,8 @@ class Ssek:
     # TODO: comme dans Esek, peut être ça serait plus propre de couper cette fonction en deux.
     def __init__(self, front = None, middle = None, back = None, version_max = 0):
         self.version_max = version_max
-        self.front = schunk.create(version_max) if front == None else front
-        self.back = schunk.create(version_max) if back == None else back
+        self.front = schunk.Schunk(version=version_max) if front is None else front
+        self.back = schunk.Schunk(version=version_max) if back is None else back
         self.middle = middle
 
     def is_empty(self):
@@ -66,7 +66,7 @@ class Ssek:
                 new_ssek = Ssek()   # TODO: avoid allocating if replacing
                 new_ssek.set_both(pov, new_this, this)
             else:
-                new_this = schunk.create(version)
+                new_this = schunk.Schunk(version=version)
                 new_this = new_this.push(pov, item, version)
                 # TODO: ce n'est pas un bug, mais il faut mieux éviter de modifier self en place.
                 # Faire plutôt:

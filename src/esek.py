@@ -58,10 +58,10 @@ class Esek:
     # bien init_fields; mais faire les deux en une seule fonction, ça donne du code un peu moche.
     # note que le code de create_empty appelle init_aux.
     def __init__(self, front = None, middle = None, back = None, version = 0):
-        self.front = echunk.Echunk(version) if front == None else front
-        self.back = echunk.Echunk(version) if back == None else back
-        self.middle = ssek.Ssek() # TODO: problème à cette ligne, tu ignores l'argument middle
-        self.version = 0    # TODO: oui c'est bien de mettre version 0 au départ.
+        self.front = echunk.Echunk(version) if front is None else front
+        self.back = echunk.Echunk(version) if back is None else back
+        self.middle = ssek.Ssek() if middle is None else middle
+        self.version = version
 
     def is_empty(self):
         return self.front.is_empty() and self.back.is_empty()

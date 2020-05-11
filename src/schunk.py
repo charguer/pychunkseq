@@ -9,14 +9,6 @@ global K
 # TODO: retirer ça ?
 K = 4
 
-# TODO: utilité de cette fonction ?
-# je te propose de déplacer cette fonction dans le module Schunk
-# et de l'appeler create_empty.
-
-# create a uniquely owned schunk
-def create(version):
-    return Schunk(echunk.Echunk(version), view.View(), version)
-
 # transform chunk into uniquely owned schunk with version
 # TODO: rename to schunk_of_echunk
 # TODO: je me demande s'il est possible de fixer le bon numéro de version
@@ -41,13 +33,13 @@ def chunk_of_schunk(s, version):
 
 class Schunk:
 
-    def __init__(self, support = echunk.Echunk(), view = view.View(), version = NO_VERSION):
-        self.support = support
+    def __init__(self, support = None, _view = None, version = NO_VERSION):
+        self.support = echunk.Echunk() if support is None else support
         # TODO: idem, je me demande s'il est utile de fixer le numéro de version ici,
         # car si on fournit le support, on peut avoir déjà réglé le bon numéro de version,
         # et si on prend un echunk vide, alors il aura déjà NO_VERSION et c'est ce qu'on veut.
         self.support.version = version
-        self.view = view
+        self.view = view.View() if _view is None else _view
 
     def is_empty(self):
         return self.view.seg_size == 0
