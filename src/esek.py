@@ -148,7 +148,8 @@ class Esek:
                 assert(self.middle is None or self.middle.is_empty())
                 self.set_both(pov, that, this)
             else:
-                self.middle = self.middle.push(pov, this, self.version)
+                sthis = schunk.schunk_of_chunk(this, self.version)
+                self.middle = self.middle.push(pov, sthis, self.version)
                 self.set_this(pov, echunk.Echunk())
         this = self.get_this(pov)
         this.push(pov, item)
