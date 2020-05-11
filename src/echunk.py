@@ -78,17 +78,13 @@ class Echunk:
         return self.get(index)
 
     def print_view(self, view, print_item):
-        print("[", end = "")
-        # TODO: réfléchir si print_view peut se coder à l'aide d'iter.
-        if self.dir == FRONT:
-            r = range(view.seg_size)
-        else:
-            r = reversed(range(view.seg_size))
-        for i in r:
-            print_item(self.data[self.head - view.seg_head + i])
-            print(", ", end = "")
-        # if we printed elements we delete ', ' after the last element
+        def print_fun(item):
+            print_item(item)
+            print(", ", end="")
+        print("[", end="")
+        self.iter(FRONT, print_fun, view)
         print("\b\b]") if self.size() != 0 else print("]")
+        
 
     def print_general(self, print_item):
         self.print_view(self.view(), print_item)
@@ -132,25 +128,19 @@ class Echunk:
                 bigindex = self.size() - bigindex - 1
             return self.data[bigindex].get_deep(newindex, level-1, pov ^ self.dir)
 
-    # iterate over chunk elements and apply function
-    def iter(self, pov, fun):
-        size = self.size()
+    # iterate over chunk elements and apply function, view optional
+    def iter(self, pov, fun, _view = None):
+        if _view is None:
+            h = 0
+            size = self.size()
+        else:
+            h = self.head - _view.seg_head
+            size = _view.seg_size
         if pov ^ self.dir == FRONT:
             for i in range(size):
-                fun(self.data[i])
-        else:
-            for i in reversed(range(size)):
-                fun(self.data[i])
-
-    # iterate over chunk limited by view
-    def iter_view(self, pov, view, fun):
-        # LATER: peut être faire : range(h, h + view.seg_size)
-        h = self.head - view.seg_head
-        if pov ^ self.dir == FRONT:
-            for i in range(view.seg_size):
                 fun(self.data[h + i])
         else:
-            for i in reversed(range(view.seg_size)):
+            for i in reversed(range(size)):
                 fun(self.data[h + i])
 
     # reverse chunk order

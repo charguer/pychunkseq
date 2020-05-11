@@ -105,7 +105,7 @@ class Schunk:
         return self.support.version
 
     def iter(self, pov, fun):
-        self.support.iter_view(pov, self.view, fun)
+        self.support.iter(pov, fun, self.view)
 
     def print_general(self, print_item):
         self.support.print_view(self.view, print_item)
