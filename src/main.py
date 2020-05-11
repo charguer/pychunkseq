@@ -140,28 +140,30 @@ def main():
     # myseq.print_general(print_item)
     # print("")
 
-    # ssek_size = 10
-    # print("### Test ssek push front & back")
-    # myssek = ssek.Ssek()
-    # for i in reversed(range(ssek_size)):
-    #     myssek = myssek.push_front(i, 0)
-    # for i in range(ssek_size):
-    #     myssek = myssek.push_back(ssek_size + i, 0)
-    # myssek.print_general(print_item)
-    # myssek2 = myssek.push_front(100, 0)
-    # myssek = myssek.push_front(999, 0)
-    # print("myssek2 = myssek.push_front(100, 0)")
-    # myssek2.print_general(print_item)
-    # print("myssek = myssek.push_front(999, 0)")
-    # myssek.print_general(print_item)
-    # print("myssek.pop_front()")
-    # myssek, x = myssek.pop_front(0)
-    # myssek.print_general(print_item)
-    # print("popped elt =", x)
-    # print("myssek.pop_back()")
-    # myssek, x = myssek.pop_back(0)
-    # myssek.print_general(print_item)
-    # print("popped elt =", x)
+    from esek import ssek
+    ssek_size = 10
+    print("")
+    print("### Test ssek push front & back")
+    myssek = ssek.Ssek()
+    for i in reversed(range(ssek_size)):
+        myssek = myssek.push_front(i)
+    for i in range(ssek_size):
+        myssek = myssek.push_back(ssek_size + i)
+    myssek.print_general(print_item)
+    myssek2 = myssek.push_front(100)
+    myssek = myssek.push_front(999)
+    print("myssek2 = myssek.push_front(100)")
+    myssek2.print_general(print_item)
+    print("myssek = myssek.push_front(999)")
+    myssek.print_general(print_item)
+    print("myssek.pop_front()")
+    myssek, x = myssek.pop_front()
+    myssek.print_general(print_item)
+    print("popped elt =", x)
+    print("myssek.pop_back()")
+    myssek, x = myssek.pop_back()
+    myssek.print_general(print_item)
+    print("popped elt =", x)
     
 
 def print_item(item):

@@ -114,7 +114,7 @@ class Ssek:
         return self.push(FRONT, item, version)
 
     def push_back(self, item, version = NO_VERSION):
-        return self.push(FRONT, item, version)
+        return self.push(BACK, item, version)
 
     def pop_front(self, version = NO_VERSION):
         return self.pop(FRONT, version)
