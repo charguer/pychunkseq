@@ -3,11 +3,8 @@ import echunk
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = __import__('echunk').NO_VERSION
+CAPACITY = __import__('echunk').CAPACITY
 
-global K
-
-# TODO: retirer ça ?
-K = 4
 
 # transform chunk into uniquely owned schunk with version
 def schunk_of_echunk(chunk):
@@ -32,7 +29,7 @@ class Schunk:
         return self.view.seg_size == 0
 
     def is_full(self):
-        return self.view.seg_size == K
+        return self.view.seg_size == CAPACITY
 
     def push_shared(self, pov, item, version):
         assert not self.is_full()

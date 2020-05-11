@@ -3,14 +3,14 @@ FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = -1
 
-global K
-
+global CAPACITY
 # TODO: est-il possible d'enlever cette ligne qui risque de poser des problèmes ?
-K = 4
+CAPACITY = 4
+
 
 def set_capacity(chunk_capacity):
-    global K
-    K = chunk_capacity
+    global CAPACITY
+    CAPACITY = chunk_capacity
     
 # TODO: documenter ici en 5 lignes quels sont les champs utilisés et ce qu'ils représentent.
         
@@ -32,7 +32,7 @@ class Echunk:
         return self.size() == 0
 
     def is_full(self):
-        return self.size() == K
+        return self.size() == CAPACITY
 
     def push(self, pov, item):
         assert not self.is_full()
@@ -60,7 +60,7 @@ class Echunk:
         return self.data[i]
 
     def concat(self, c2):
-        assert self.size() + c2.size() <= K
+        assert self.size() + c2.size() <= CAPACITY
         for i in range(c2.size()):
             self.push_back(c2[i])
             c2.clear()
@@ -122,8 +122,8 @@ class Echunk:
                 return self.data[self.size() - i - 1]
         else:
             # TODO: ce code ne fonctionne a priori que si les chunks sont toujours pleins.
-            bigindex = i // pow(K, level - 1)
-            newindex = i - bigindex * pow(K, level - 1)
+            bigindex = i // pow(CAPACITY, level - 1)
+            newindex = i - bigindex * pow(CAPACITY, level - 1)
             if pov ^ self.dir == BACK:
                 bigindex = self.size() - bigindex - 1
             return self.data[bigindex].get_deep(newindex, level-1, pov ^ self.dir)

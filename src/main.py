@@ -9,6 +9,8 @@ import view
 import esek
 from esek import Esek
 
+echunk.set_capacity(8)
+
 def main():
     # Test echunk push & pop
     print("### Test echunk push and pop")

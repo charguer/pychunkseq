@@ -3,9 +3,8 @@ import schunk
 from ssek import Ssek
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
-K = __import__('echunk').K
+CAPACITY = __import__('echunk').CAPACITY
 
-# TODO: peut être renommer K en CAPACITY, ça serait mieux pour la doc
 
 def ssek_to_esek(s):
     version = s.version_max + 1
@@ -240,7 +239,7 @@ class Esek:
         m = self.middle
         if c.is_empty():
             return
-        if m.is_empty() or c.size() + m.peek_back().size() > K:
+        if m.is_empty() or c.size() + m.peek_back().size() > CAPACITY:
             m.push_back(c)
         else:
             c2 = m.peek_back()
@@ -282,7 +281,7 @@ class Esek:
             s1.middle = m2
         # else concatenate m1 and m2
         elif not m2.is_empty():
-            if m1.peek_back().size() + m2.peek_front().size() <= K:
+            if m1.peek_back().size() + m2.peek_front().size() <= CAPACITY:
                 p = m2.pop_front()
                 s1.push_back_chunk_middle(p) # TODO: could be push_back_chunk_middle(m1, p)
                 m1 = s1.middle # TODO: necessary? same case as above? => a priori on pourra s'en passer
