@@ -63,7 +63,7 @@ class Schunk:
         new_support.push(pov, item)
         return Schunk(new_support, new_view)
 
-    def push_unique(self, pov, item, version):
+    def push_unique(self, pov, item):
         assert self.is_aligned()
         self.support.push(pov, item)
         self.view = self.support.view()
@@ -72,12 +72,11 @@ class Schunk:
     def push(self, pov, item, version):
         assert not self.is_full()
         if self.is_uniquely_owned(version):
-            return self.push_unique(pov, item, version)
+            return self.push_unique(pov, item)
         else:
             return self.push_shared(pov, item, version)
 
-    # TODO: séparer pop_unique et pop_shared comme dans le code caml.
-    def pop(self, pov, version):
+    def pop_shared(self, pov, version):
         assert not self.is_empty()
         if (pov == FRONT):
             index = self.support.head - self.view.seg_head
@@ -85,9 +84,23 @@ class Schunk:
         elif (pov == BACK):
             index = self.support.head - self.view.seg_head + self.view.seg_size - 1
             new_head = self.view.seg_head
-        element = self.support[index]
+        x = self.support[index]
         new_view = view.View(new_head, self.view.seg_size - 1)
-        return (Schunk(self.support, new_view, version), element)
+        return (Schunk(self.support, new_view, version), x)
+
+    # TODO: verify
+    def pop_unique(self, pov, version):
+        assert self.is_aligned()
+        x = self.support.pop(pov)
+        self.view = self.support.view()
+        return self, x
+
+    def pop(self, pov, version):
+        assert not self.is_empty()
+        if self.is_uniquely_owned(version):
+            return self.pop_unique(pov, version)
+        else:
+            return self.pop_shared(pov, version)
 
     def is_aligned(self, pov = None):
         if (pov == FRONT):
