@@ -201,15 +201,15 @@ class Esek:
 
     # reverses element ordering
     def rev(self):
+        # reverse front & back
         self.front.rev()
         self.back.rev()
-        # TODO: ici tu fais un swap, mais je crois que tu peux tout aussi
-        # bien faire temp = self.front; self.front = self.back; self.back = tmp,
-        # ça échange moins de données.
-        self.front.swap(self.back)
-        # TODO: normalement c'est pas utile de tester is is_empty(), car rev marchera quand même
-        if not self.middle.is_empty():
-            self.middle.rev()
+        # swap front and back
+        tmp = self.front
+        self.front = self.back
+        self.back = tmp
+        # recursive reverse
+        self.middle.rev()
 
     # iterate over seq and apply function
     def iter(self, pov, fun):
@@ -246,50 +246,48 @@ class Esek:
         s1 = self
         if (s2.is_empty()):
             return
-        # TODO: ça pourrait être juste un "if"
-        elif (s1.is_empty()):
+        if (s1.is_empty()):
             s1.swap(s2)
             return
-        # TODO: le else peut être enlevé
-        else:
-            m1 = s1.middle
-            m2 = s2.middle
 
-            # push data to the outside to simplify small cases
-            if s1.front.is_empty():
-                assert m1.is_empty()
-                b = s1.back
-                s1.back = s1.front        
-                s1.front = b
-            if s2.back.is_empty():
-                assert m2.is_empty()
-                f = s2.front
-                s2.front = s2.back
-                s2.back = f
+        m1 = s1.middle
+        m2 = s2.middle
 
-            # push s1.back and s2.front into s1.middle
-            s1.push_back_chunk_middle(s1.back)
-            s1.push_back_chunk_middle(s2.front)
-            # TODO: en fait, la fonction "push_back_chunk_middle" pourrait prendre
-            # directement m1 en argument, et ne pas travailler sur "self" du tout.
-            m1 = s1.middle # s1 was just modified, thus m1 might not be s1.middle
-            
-            # if m1 is empty replace with m2
-            if m1.is_empty():
-                s1.middle = m2
-            # else concatenate m1 and m2
-            elif not m2.is_empty():
-                if m1.peek_back().size() + m2.peek_front().size() <= K:
-                    p = m2.pop_front()
-                    s1.push_back_chunk_middle(p) # TODO: could be push_back_chunk_middle(m1, p)
-                    m1 = s1.middle # TODO: necessary? same case as above? => a priori on pourra s'en passer
-                m1.concat_back(m2)
-            
-            # place s2 back into s1.back
-            s1.back = s2.back
-            # restore the invariant
-            s1.populate_sides()
-            s2.empty()
+        # push data to the outside to simplify small cases
+        if s1.front.is_empty():
+            assert m1.is_empty()
+            b = s1.back
+            s1.back = s1.front        
+            s1.front = b
+        if s2.back.is_empty():
+            assert m2.is_empty()
+            f = s2.front
+            s2.front = s2.back
+            s2.back = f
+
+        # push s1.back and s2.front into s1.middle
+        s1.push_back_chunk_middle(s1.back)
+        s1.push_back_chunk_middle(s2.front)
+        # TODO: en fait, la fonction "push_back_chunk_middle" pourrait prendre
+        # directement m1 en argument, et ne pas travailler sur "self" du tout.
+        m1 = s1.middle # s1 was just modified, thus m1 might not be s1.middle
+        
+        # if m1 is empty replace with m2
+        if m1.is_empty():
+            s1.middle = m2
+        # else concatenate m1 and m2
+        elif not m2.is_empty():
+            if m1.peek_back().size() + m2.peek_front().size() <= K:
+                p = m2.pop_front()
+                s1.push_back_chunk_middle(p) # TODO: could be push_back_chunk_middle(m1, p)
+                m1 = s1.middle # TODO: necessary? same case as above? => a priori on pourra s'en passer
+            m1.concat_back(m2)
+        
+        # place s2 back into s1.back
+        s1.back = s2.back
+        # restore the invariant
+        s1.populate_sides()
+        s2.empty()
 
 
     def push_front(self, item):
