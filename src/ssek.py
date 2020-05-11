@@ -22,8 +22,9 @@ class Ssek:
     # TODO: comme dans Esek, peut être ça serait plus propre de couper cette fonction en deux.
     def __init__(self, front = None, middle = None, back = None, version_max = NO_VERSION):
         self.version_max = version_max
-        self.front = schunk.Schunk(version=version_max) if front is None else front
-        self.back = schunk.Schunk(version=version_max) if back is None else back
+        # TODO: verifier - schunk tjrs créé avec version = NO_VERSION
+        self.front = schunk.Schunk() if front is None else front
+        self.back = schunk.Schunk() if back is None else back
         self.middle = middle
 
     def is_empty(self):
@@ -49,10 +50,7 @@ class Ssek:
             self.front = that
             self.back = this
 
-    # TODO: pour toutes les fonctions ci-dessous qui prennent version en argument, 
-    # mettre version=NO_VERSION comme argument par défaut.
-
-    def push(self, pov, item, version):
+    def push(self, pov, item, version = NO_VERSION):
         this, that = self.get_both(pov)
         if this.is_full():
             if that.is_empty():
@@ -61,7 +59,7 @@ class Ssek:
                 new_that = this
                 new_ssek = create(pov, new_this, None, new_that, self.version_max)
             else:
-                new_this = schunk.Schunk(version=version)
+                new_this = schunk.Schunk()
                 new_this = new_this.push(pov, item, version)
                 # TODO: ce n'est pas un bug, mais il faut mieux éviter de modifier self en place.
                 # Faire plutôt:
@@ -79,7 +77,7 @@ class Ssek:
             new_ssek = create(pov, new_this, self.middle, that, self.version_max)
         return new_ssek
 
-    def pop(self, pov, version):
+    def pop(self, pov, version = NO_VERSION):
         assert not self.is_empty()
         this, that = self.get_both(pov)
         if this.is_empty():
@@ -112,14 +110,14 @@ class Ssek:
         else:
             print("\b\b]")
 
-    def push_front(self, item, version):
+    def push_front(self, item, version = NO_VERSION):
         return self.push(FRONT, item, version)
 
-    def push_back(self, item, version):
+    def push_back(self, item, version = NO_VERSION):
         return self.push(FRONT, item, version)
 
-    def pop_front(self, version):
+    def pop_front(self, version = NO_VERSION):
         return self.pop(FRONT, version)
 
-    def pop_back(self, version):
+    def pop_back(self, version = NO_VERSION):
         return self.pop(BACK, version)

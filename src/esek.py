@@ -15,17 +15,12 @@ def ssek_to_esek(s):
     return create(front, middle, back, version)
 
 def esek_to_ssek(e):
-    # TODO: j'ai un commentaire dans schunk qui dit qu'a priori
-    # les fonctions schunk_of_echunk n'ont pas besoin de numéro de 
-    # version en argument, car les chunk supports peuvent
-    # garder le numéro de version qu'ils stockent actuellement.
-    front = schunk.schunk_of_echunk(e.front, e.version)
-    back  = schunk.schunk_of_echunk(e.back,  e.version)
+    front = schunk.schunk_of_echunk(e.front)
+    back  = schunk.schunk_of_echunk(e.back)
     middle = e.middle
     version_max = e.version
     e.empty()
     return ssek.create(FRONT, front, middle, back, version_max)
-
 
 def init(size, fun):
     result = Esek()
@@ -132,7 +127,7 @@ class Esek:
                 assert self.middle.is_empty()
                 self.set_both(pov, that, this)
             else:
-                sthis = schunk.schunk_of_echunk(this, self.version)
+                sthis = schunk.schunk_of_echunk(this)
                 self.middle = self.middle.push(pov, sthis, self.version)
                 self.set_this(pov, echunk.Echunk())
         this = self.get_this(pov)

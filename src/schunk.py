@@ -10,12 +10,8 @@ global K
 K = 4
 
 # transform chunk into uniquely owned schunk with version
-# TODO: je me demande s'il est possible de fixer le bon numéro de version
-# lors de la création du chunk, et de ne pas avoir besoin de le mettre à jour ici,
-# autrement dit, cette fonction n'aurais pas besoin de prendre "version" en argument.
-def schunk_of_echunk(chunk, version):
-    chunk.version = version
-    return Schunk(chunk, chunk.view(), version)
+def schunk_of_echunk(chunk):
+    return Schunk(chunk, chunk.view())
 
 # transfom schunk into chunk
 def echunk_of_schunk(s, version):
@@ -28,12 +24,8 @@ def echunk_of_schunk(s, version):
 
 class Schunk:
 
-    def __init__(self, support = None, _view = None, version = NO_VERSION):
+    def __init__(self, support = None, _view = None):
         self.support = echunk.Echunk() if support is None else support
-        # TODO: idem, je me demande s'il est utile de fixer le numéro de version ici,
-        # car si on fournit le support, on peut avoir déjà réglé le bon numéro de version,
-        # et si on prend un echunk vide, alors il aura déjà NO_VERSION et c'est ce qu'on veut.
-        self.support.version = version
         self.view = view.View() if _view is None else _view
 
     def is_empty(self):
@@ -81,7 +73,7 @@ class Schunk:
             new_head = self.view.seg_head
         x = self.support[index]
         new_view = view.View(new_head, self.view.seg_size - 1)
-        return (Schunk(self.support, new_view, version), x)
+        return (Schunk(self.support, new_view), x)
 
     # TODO: verify
     def pop_unique(self, pov, version):
