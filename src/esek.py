@@ -12,7 +12,7 @@ def ssek_to_esek(s):
     front = schunk.echunk_of_schunk(s.front, version)
     back  = schunk.echunk_of_schunk(s.back,  version)
     middle = s.middle
-    return create(front, middle, back, version)
+    return Esek.create(front, middle, back, version)
 
 def esek_to_ssek(e):
     front = schunk.schunk_of_echunk(e.front)
@@ -23,25 +23,35 @@ def esek_to_ssek(e):
     return ssek.create(FRONT, front, middle, back, version_max)
 
 def init(size, fun):
-    result = Esek()
+    result = Esek.create_empty()
     for i in range(size):
         result.push_back(fun(i))
     return result
 
-def create(front, middle, back, version):
-    return Esek(front, middle, back, version)
 
 class Esek:
-    # TODO je trouverai ça plus propre d'avoir une fonction avec aucun argument pour construire
-    # une séquence vide, et une fonction de construction qui prend tous les arguments explicitement.
-    # tu peux choisir celle que tu veux comme constructeur, et appeler l'autre create_empty ou
-    # bien init_fields; mais faire les deux en une seule fonction, ça donne du code un peu moche.
-    # note que le code de create_empty appelle init_aux.
-    def __init__(self, front = None, middle = None, back = None, version = 0):
-        self.front = echunk.Echunk(version) if front is None else front
-        self.back = echunk.Echunk(version) if back is None else back
-        self.middle = ssek.Ssek() if middle is None else middle
+    # constructor - use create_empty or create class methods
+    def __init__(self, front, middle, back, version):
+        self.front = front
+        self.middle = middle
+        self.back = back
         self.version = version
+        
+    # class method - create empty esek
+    @classmethod
+    def create_empty(cls, version = 0):
+        front = echunk.Echunk(version)
+        back = echunk.Echunk(version)
+        middle = ssek.Ssek()
+        return cls(front, middle, back, version)
+
+    # class method - create esek with parameters
+    @classmethod
+    def create(cls, front, middle, back, version = 0):
+        front = front
+        middle = middle
+        back = back
+        return cls(front, middle, back, version)
 
     def is_empty(self):
         return self.front.is_empty() and self.back.is_empty()

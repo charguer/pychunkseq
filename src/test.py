@@ -4,7 +4,7 @@ import echunk
 from collections import deque
 import time
 import argparse
-import esek
+from esek import Esek
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-test", type=str,
@@ -39,7 +39,7 @@ s = 0
 
 if arg_test == "stack":
    if arg_seq == "debug":
-       q = esek.Esek()
+       q = Esek.create_empty()
        q.print_general(print_item)
        for i in range (R):
            for k in range(1, S):
@@ -50,7 +50,7 @@ if arg_test == "stack":
                q.print_general(print_item)
 
    elif arg_seq == "chunk_stack":
-       q = esek.Esek()
+       q = Esek.create_empty()
        for i in range(R):
            for k in range(1, S):
                q.push_back(k)
@@ -99,8 +99,8 @@ elif arg_test == "concat":
     # concatenation of two sequences
 
     if arg_seq == "debug":
-       s1 = esek.Esek()
-       s2 = esek.Esek()
+       s1 = Esek.create_empty()
+       s2 = Esek.create_empty()
        for k in range(1, S):
            s1.push_back(k)
            s2.push_back(k + S - 1)
@@ -111,12 +111,12 @@ elif arg_test == "concat":
        s1.print_general(print_item)
 
     if arg_seq == "chunk_stack":
-        s2 = esek.Esek()
+        s2 = Esek.create_empty()
         t1 = time.time()
         for k in range(R):
             t2 = time.time()
             for j in range(1, S):
-                s1 = esek.Esek()
+                s1 = Esek.create_empty()
                 s1.push_back(j)
                 s2.push_back(j + S - 1)
             # remove time caused by recreating the sequences
@@ -137,10 +137,10 @@ elif arg_test == "concat":
 elif arg_test == "flatten":
 
     if arg_seq == "chunk_stack":
-        seqs = esek.Esek()
+        seqs = Esek.create_empty()
         for i in range(R):
             seqs.push_back(esek.init(S, lambda i: i))
-        result = esek.Esek()
+        result = Esek.create_empty()
         t1 = time.time()
         for i in range(R):
             result.concat_back(seqs[i])
