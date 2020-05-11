@@ -7,14 +7,21 @@ global CAPACITY
 # TODO: est-il possible d'enlever cette ligne qui risque de poser des problèmes ?
 CAPACITY = 4
 
-
+# Set capacity of chunks
 def set_capacity(chunk_capacity):
     global CAPACITY
     CAPACITY = chunk_capacity
     
-# TODO: documenter ici en 5 lignes quels sont les champs utilisés et ce qu'ils représentent.
+# Class Echunk:
+#   data: list containing chunk elements, limited by CAPACITY
+#   head: index of the original first element - used for views
+#   dir:  direction of the chunk (FRONT, BACK)
+#   version: integer used to keep track of ownership
         
 class Echunk:
+
+    # ------------------------------------------------------------------------ #
+    # Constructor
 
     def __init__(self, version = NO_VERSION):
         self.data = []
@@ -22,8 +29,9 @@ class Echunk:
         self.dir  = FRONT
         self.version = version
 
-    # TODO: dans le code caml, "version" s'appelle "owner", si tu trouves ça plus clair
-    # tu peux changer.
+
+    # ------------------------------------------------------------------------ #
+    # Basic utility functions 
 
     def size(self):
         return len(self.data) # O(1)
@@ -33,6 +41,10 @@ class Echunk:
 
     def is_full(self):
         return self.size() == CAPACITY
+
+
+    # ------------------------------------------------------------------------ #
+    # Insert & remove elements
 
     def push(self, pov, item):
         assert not self.is_full()
@@ -51,6 +63,117 @@ class Echunk:
             x = self.data.pop()
         return x
 
+    def push_front(self, item):
+        self.push(FRONT, item)
+
+    def push_back(self, item):
+        self.push(BACK, item)
+
+    def pop_front(self):
+        return self.pop(FRONT)
+
+    def pop_back(self):
+        return self.pop(BACK)
+
+
+    # ------------------------------------------------------------------------ #
+    # Operations on chunks
+
+    # Concatenate two echunks - add elements of c2 to the back of echunk
+    def concat(self, c2):
+        assert self.size() + c2.size() <= CAPACITY
+        for i in range(c2.size()):
+            self.push_back(c2[i])
+            c2.clear()
+
+    # Reverse order of elements
+    def rev(self):
+        self.dir ^= BACK
+        return self
+
+    # Iterate over elements and apply function, area can be limited by view
+    def iter(self, pov, fun, view = None):
+        if view is None:
+            h = 0
+            size = self.size()
+        else:
+            h = self.head - view.seg_head
+            size = view.seg_size
+        if pov ^ self.dir == FRONT:
+            for i in range(size):
+                fun(self.data[h + i])
+        else:
+            for i in reversed(range(size)):
+                fun(self.data[h + i])
+
+    # Swap data of two echunks
+    def swap(self, c2):
+        tmp_data = self.data
+        tmp_head = self.head
+        tmp_dir  = self.dir
+        self.data = c2.data
+        self.head = c2.head
+        self.dir  = c2.dir
+        c2.data = tmp_data
+        c2.head = tmp_head
+        c2.dir  = tmp_dir
+
+    # Clear echunk data
+    def clear(self):
+        self.data.clear()
+        self.head = 0
+
+    # Copy complete echunk or area as defined by view
+    def ncopy(self, view):
+        new_chunk = Echunk()
+        # TODO: copy function? for types
+        for i in range(view.seg_size):
+            new_chunk.push_back(self.data[self.head - view.seg_head + i])
+            new_chunk.head = view.seg_head
+        return new_chunk
+
+
+    # ------------------------------------------------------------------------ #
+    # Printing
+
+    # Print entire chunk
+    def print_general(self, print_item):
+        self.print_view(self.view(), print_item)
+
+    # Print chunk area as defined by view
+    def print_view(self, view, print_item):
+        def print_fun(item):
+            print_item(item)
+            print(", ", end="")
+        print("[", end="")
+        self.iter(FRONT, print_fun, view)
+        print("\b\b]") if self.size() != 0 else print("]")
+
+
+    # ------------------------------------------------------------------------ #
+    # Access elements
+
+    # Override [] operator
+    def __getitem__(self, index):
+        return self.get(index)
+
+    # Get item at index
+    def get(self, index):
+        assert 0 <= index and index < self.size()
+        if self.dir == FRONT:
+            return self.data[index]
+        else:
+            return self.data[self.size() - index - 1]
+        
+    
+    # ------------------------------------------------------------------------ #
+    # Auxiliary methods
+
+    # Get view on complete echunk
+    def view(self):
+        return View(self.head, self.size())
+
+    # Take a peek at the element on the extremity of the echunk (front/back)
     def peek(self, pov):
         assert not self.is_empty()
         if pov ^ self.dir == FRONT:
@@ -59,48 +182,11 @@ class Echunk:
             i = self.size() - 1
         return self.data[i]
 
-    def concat(self, c2):
-        assert self.size() + c2.size() <= CAPACITY
-        for i in range(c2.size()):
-            self.push_back(c2[i])
-            c2.clear()
+    def peek_front(self):
+        return self.peek(FRONT)
 
-    # get item at index
-    def get(self, index):
-        assert 0 <= index and index < self.size()
-        if self.dir == FRONT:
-            return self.data[index]
-        else:
-            return self.data[self.size() - index - 1]
-
-    # override [] operator
-    def __getitem__(self, index):
-        return self.get(index)
-
-    def print_view(self, view, print_item):
-        def print_fun(item):
-            print_item(item)
-            print(", ", end="")
-        print("[", end="")
-        self.iter(FRONT, print_fun, view)
-        print("\b\b]") if self.size() != 0 else print("]")
-        
-
-    def print_general(self, print_item):
-        self.print_view(self.view(), print_item)
-
-    def clear(self):
-        self.data.clear()
-        self.head = 0
-
-    # partial or complete copy of a chunk using view
-    def ncopy(self, view):
-        new_chunk = Echunk()
-        # TODO: copy function? for types
-        for i in range(view.seg_size):
-            new_chunk.push_back(self.data[self.head - view.seg_head + i])
-            new_chunk.head = view.seg_head
-        return new_chunk
+    def peek_back(self):
+        return self.peek(BACK)
 
     # auxilary function used in seq - gets size of chunk (chunks of chunks)
     def deep_size(self, level):
@@ -127,57 +213,3 @@ class Echunk:
             if pov ^ self.dir == BACK:
                 bigindex = self.size() - bigindex - 1
             return self.data[bigindex].get_deep(newindex, level-1, pov ^ self.dir)
-
-    # iterate over chunk elements and apply function, view optional
-    def iter(self, pov, fun, view = None):
-        if view is None:
-            h = 0
-            size = self.size()
-        else:
-            h = self.head - view.seg_head
-            size = view.seg_size
-        if pov ^ self.dir == FRONT:
-            for i in range(size):
-                fun(self.data[h + i])
-        else:
-            for i in reversed(range(size)):
-                fun(self.data[h + i])
-
-    # reverse chunk order
-    def rev(self):
-        self.dir ^= BACK
-        return self
-
-    def swap(self, c2):
-        tmp_data = self.data
-        tmp_head = self.head
-        tmp_dir  = self.dir
-        self.data = c2.data
-        self.head = c2.head
-        self.dir  = c2.dir
-        c2.data = tmp_data
-        c2.head = tmp_head
-        c2.dir  = tmp_dir
-
-    # return view on complete echunk
-    def view(self):
-        return View(self.head, self.size())
-
-    def push_front(self, item):
-        self.push(FRONT, item)
-
-    def push_back(self, item):
-        self.push(BACK, item)
-
-    def pop_front(self):
-        return self.pop(FRONT)
-
-    def pop_back(self):
-        return self.pop(BACK)
-
-    def peek_front(self):
-        return self.peek(FRONT)
-
-    def peek_back(self):
-        return self.peek(BACK)
-        
