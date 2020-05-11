@@ -141,11 +141,11 @@ def main():
     # myseq.print_general(print_item)
     # print("")
 
-    from esek import ssek
+    from ssek import Ssek
     ssek_size = 10
     print("")
     print("### Test ssek push front & back")
-    myssek = ssek.Ssek()
+    myssek = Ssek.create_empty()
     for i in reversed(range(ssek_size)):
         myssek = myssek.push_front(i)
     for i in range(ssek_size):

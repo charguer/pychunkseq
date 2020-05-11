@@ -1,6 +1,6 @@
 import echunk
 import schunk
-import ssek
+from ssek import Ssek
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 K = __import__('echunk').K
@@ -20,7 +20,7 @@ def esek_to_ssek(e):
     middle = e.middle
     version_max = e.version
     e.empty()
-    return ssek.create(FRONT, front, middle, back, version_max)
+    return Ssek.create(front, middle, back, version_max)
 
 def init(size, fun):
     result = Esek.create_empty()
@@ -42,7 +42,7 @@ class Esek:
     def create_empty(cls, version = 0):
         front = echunk.Echunk(version)
         back = echunk.Echunk(version)
-        middle = ssek.Ssek()
+        middle = Ssek.create_empty()
         return cls(front, middle, back, version)
 
     # class method - create esek with parameters
@@ -227,7 +227,7 @@ class Esek:
         self.version = 0
         self.front   = echunk.Echunk()
         self.back    = echunk.Echunk()
-        self.middle  = ssek.Ssek()
+        self.middle  = Ssek.create_empty()
 
     def invalidate(self):
         self.version = 0
