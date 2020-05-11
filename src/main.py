@@ -7,6 +7,7 @@ import echunk
 import schunk
 import view
 import esek
+from esek import Esek
 
 def main():
     # Test echunk push & pop
@@ -67,7 +68,7 @@ def main():
     # HERE: change value for testing 
     esek_size = 10
     print("### Test esek push front & back")
-    myseq = esek.Esek()
+    myseq = Esek.create_empty()
     for i in reversed(range(esek_size)):
         myseq.push_front(i)
     for i in range(esek_size):
@@ -102,12 +103,12 @@ def main():
 
     # print("### Test esek concat")
     # print("seq1 = ", end="")
-    # seq1 = esek.Esek()
+    # seq1 = Esek.create_empty()
     # for i in range(esek_size):
     #     seq1.push_back(i)
     # seq1.print_general(print_item)
     # print("seq2 = ", end="")
-    # seq2 = esek.Esek()
+    # seq2 = Esek.create_empty()
     # for i in range(esek_size):
     #     seq2.push_back(i + esek_size)
     # seq2.print_general(print_item)
