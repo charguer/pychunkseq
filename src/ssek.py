@@ -61,16 +61,10 @@ class Ssek:
             else:
                 new_this = schunk.Schunk()
                 new_this = new_this.push(pov, item, version)
-                # TODO: ce n'est pas un bug, mais il faut mieux éviter de modifier self en place.
-                # Faire plutôt:
-                #    middle = self.middle 
-                #    if middle is None:
-                #         middle = Ssek()
-                if self.middle is None:
-                    self.middle = Ssek()
-                # ici tu enchaînerais avec un middle.push, et pas un self.middle.push
-                new_middle = self.middle.push(pov, this, version)
-                # TODO: pour la fin, utiliser : create(pov, new_this, middle, that, self.version_max)
+                middle = self.middle
+                if middle is None:
+                    middle = Ssek()
+                new_middle = middle.push(pov, this, version)
                 new_ssek = create(pov, new_this, new_middle, that, self.version_max)
         else:
             new_this = this.push(pov, item, version)
