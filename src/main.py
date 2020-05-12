@@ -36,6 +36,9 @@ def main():
     myschunk.print_general(print_item)    # [2, 4]
     print("myschunk2 = ", end="")
     myschunk2.print_general(print_item)   # [2, 3]
+    print("concat = ", end="")
+    myconcat = myschunk.concat(myschunk2)
+    myconcat.print_general(print_item)   # [2, 4, 2, 3]
     print("")
 
     print("### Test schunk push_back and push_front")

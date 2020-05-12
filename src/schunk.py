@@ -134,6 +134,14 @@ class Schunk:
     # ------------------------------------------------------------------------ #
     # Operations on schunks
 
+    # Concatenate two schunks - add elements of c2 to the back of schunk
+    def concat(self, c2):
+        c = self
+        assert c.size() + c2.size() <= CAPACITY
+        for i in range(c2.size()):
+            c = c.push_back(c2[i])
+        return c
+
     def iter(self, pov, fun):
         self.support.iter(pov, fun, self.view)
 
@@ -143,6 +151,19 @@ class Schunk:
 
     def print_general(self, print_item):
         self.support.print_view(self.view, print_item)
+
+
+    # ------------------------------------------------------------------------ #
+    # Access elements
+
+    # Override [] operator
+    def __getitem__(self, index):
+        return self.get(index)
+
+    # Get item at index
+    def get(self, index):
+        assert 0 <= index and index < self.size()
+        return self.support[self.support.head - self.head() + index]
 
 
     # ------------------------------------------------------------------------ #
