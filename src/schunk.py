@@ -6,11 +6,11 @@ NO_VERSION = __import__('echunk').NO_VERSION
 CAPACITY = __import__('echunk').CAPACITY
 
 
-# transform chunk into uniquely owned schunk with version
+# Transform echunk into uniquely owned schunk with version
 def schunk_of_echunk(chunk):
     return Schunk(chunk, chunk.view())
 
-# transfom schunk into chunk
+# Transfom schunk into echunk
 def echunk_of_schunk(s, version):
     if s.version() == version:
         # unique owner
@@ -19,11 +19,22 @@ def echunk_of_schunk(s, version):
     else:
         return s.support.ncopy(s.support.view())
 
+# Class Schunk:
+#   support: Echunk containing elements
+#   view: (head, size) allowing us to define an area of the support
+
 class Schunk:
+
+    # ------------------------------------------------------------------------ #
+    # Constructor
 
     def __init__(self, support = None, view = None):
         self.support = echunk.Echunk() if support is None else support
         self.view = View() if view is None else view
+
+
+    # ------------------------------------------------------------------------ #
+    # Basic utility functions 
 
     def is_empty(self):
         return self.view.seg_size == 0
@@ -31,6 +42,19 @@ class Schunk:
     def is_full(self):
         return self.view.seg_size == CAPACITY
 
+
+    # ------------------------------------------------------------------------ #
+    # Push elements into schunk
+
+    # Push function deciding which function to call depending on ownership
+    def push(self, pov, item, version):
+        assert not self.is_full()
+        if self.is_uniquely_owned(version):
+            return self.push_unique(pov, item)
+        else:
+            return self.push_shared(pov, item, version)
+
+    # Push element if support is shared
     def push_shared(self, pov, item, version):
         assert not self.is_full()
         if (pov == FRONT):
@@ -47,65 +71,12 @@ class Schunk:
         new_support.push(pov, item)
         return Schunk(new_support, new_view)
 
+    # Push element if unique ownership over support echunk
     def push_unique(self, pov, item):
         assert self.is_aligned()
         self.support.push(pov, item)
         self.view = self.support.view()
         return self
-
-    def push(self, pov, item, version):
-        assert not self.is_full()
-        if self.is_uniquely_owned(version):
-            return self.push_unique(pov, item)
-        else:
-            return self.push_shared(pov, item, version)
-
-    def pop_shared(self, pov, version):
-        assert not self.is_empty()
-        if (pov == FRONT):
-            index = self.support.head - self.view.seg_head
-            new_head = self.view.seg_head - 1
-        elif (pov == BACK):
-            index = self.support.head - self.view.seg_head + self.view.seg_size - 1
-            new_head = self.view.seg_head
-        x = self.support[index]
-        new_view = View(new_head, self.view.seg_size - 1)
-        return (Schunk(self.support, new_view), x)
-
-    # TODO: verify
-    def pop_unique(self, pov, version):
-        assert self.is_aligned()
-        x = self.support.pop(pov)
-        self.view = self.support.view()
-        return self, x
-
-    def pop(self, pov, version):
-        assert not self.is_empty()
-        if self.is_uniquely_owned(version):
-            return self.pop_unique(pov, version)
-        else:
-            return self.pop_shared(pov, version)
-
-    def is_aligned(self, pov = None):
-        if (pov == FRONT):
-            return self.support.head == self.view.seg_head
-        elif (pov == BACK):
-            return (self.view.seg_size - self.view.seg_head) == (self.support.size() - self.support.head)
-        else:
-            return self.view == self.support.view()
-
-    def is_uniquely_owned(self, version):
-        return version != NO_VERSION and self.version() == version
-
-    # get version (of support)
-    def version(self):
-        return self.support.version
-
-    def iter(self, pov, fun):
-        self.support.iter(pov, fun, self.view)
-
-    def print_general(self, print_item):
-        self.support.print_view(self.view, print_item)
 
     def push_front(self, item, version = NO_VERSION):
         return self.push(FRONT, item, version)
@@ -113,8 +84,79 @@ class Schunk:
     def push_back(self, item, version = NO_VERSION):
         return self.push(BACK, item, version)
 
+
+    # ------------------------------------------------------------------------ #
+    # Pop elements from schunk
+
+    # Pop function deciding which function to call depending on ownership
+    def pop(self, pov, version):
+        assert not self.is_empty()
+        if self.is_uniquely_owned(version):
+            return self.pop_unique(pov, version)
+        else:
+            return self.pop_shared(pov, version)
+
+    # Pop element from support with shared ownership
+    def pop_shared(self, pov, version):
+        assert not self.is_empty()
+        h = self.support.head - self.view.seg_head
+        if (pov == FRONT):
+            index = h
+            new_head = self.view.seg_head - 1
+        elif (pov == BACK):
+            index = h + self.view.seg_size - 1
+            new_head = self.view.seg_head
+        x = self.support[index]
+        new_view = View(new_head, self.view.seg_size - 1)
+        return (Schunk(self.support, new_view), x)
+
+    # Pop element from support with unique ownership
+    def pop_unique(self, pov, version):
+        # TODO: verify
+        assert self.is_aligned()
+        x = self.support.pop(pov)
+        self.view = self.support.view()
+        return self, x
+
     def pop_front(self, version = NO_VERSION):
         return self.pop(FRONT, version)
 
     def pop_back(self, version = NO_VERSION):
         return self.pop(BACK, version)
+
+
+    # ------------------------------------------------------------------------ #
+    # Operations on schunks
+
+    def iter(self, pov, fun):
+        self.support.iter(pov, fun, self.view)
+
+
+    # ------------------------------------------------------------------------ #
+    # Printing
+
+    def print_general(self, print_item):
+        self.support.print_view(self.view, print_item)
+
+
+    # ------------------------------------------------------------------------ #
+    # Auxiliary functions
+
+    # Get version from support
+    def version(self):
+        return self.support.version
+
+    # Check if view is aligned with chunk on a side, or both sides
+    def is_aligned(self, pov = None):
+        if (pov == FRONT):
+            return self.support.head == self.view.seg_head
+        elif (pov == BACK):
+            view_index = self.view.seg_size - self.view.seg_head
+            supp_index = self.support.size() - self.support.head
+            return (view_index == supp_index)
+        else:
+            return self.view == self.support.view()
+
+    # Check if schunk is the unique owner of a support echunk
+    def is_uniquely_owned(self, version):
+        return version != NO_VERSION and self.version() == version
