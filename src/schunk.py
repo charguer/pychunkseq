@@ -191,7 +191,7 @@ class Schunk:
     # Take a peek at the element on the extremity of the echunk (front/back)
     def peek(self, pov):
         assert not self.is_empty()
-        if pov ^ self.support.dir == FRONT:
+        if pov == FRONT:
             i = 0
         else:
             i = self.size() - 1
