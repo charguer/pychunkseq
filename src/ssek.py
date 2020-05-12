@@ -3,9 +3,18 @@ FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = __import__('schunk').NO_VERSION
 
+# class Ssek:
+#   front: schunk containing first elements
+#   back: schunk containing last elements 
+#   middle: ssek containing the rest of the elements
+#   version_max: number indicating the max version number
 
 class Ssek:
-    # class constructor - use class methods to create ssek
+
+    # ------------------------------------------------------------------------ #
+    # Constructors
+
+    # Constructor - used internally by create and create_empty functions
     def __init__(self, front, middle, back, version_max):
         self.front = front
         self.back = back
@@ -13,7 +22,7 @@ class Ssek:
         # TODO: verifier - schunk tjrs créé avec version = NO_VERSION
         self.version_max = version_max
 
-    # class method - create empty ssek
+    # Class method - creates & returns empty ssek
     @classmethod
     def create_empty(cls, version_max = 0):
         front = schunk.Schunk()
@@ -21,7 +30,7 @@ class Ssek:
         middle = None
         return cls(front, middle, back, version_max)
 
-    # class method - create ssek with parameters
+    # Class method - create ssek with given parameters
     @classmethod
     def create(cls, front, middle, back, version_max = 0, pov = FRONT):
         if (pov == FRONT):
@@ -29,6 +38,7 @@ class Ssek:
         else:
             return cls(back, middle, front, version_max)
 
+    # Class method - create ssek with given parameters and populate
     @classmethod
     def create_and_populate(cls, this, middle, that, version_max, pov = FRONT):
         if this.is_empty() and middle is not None and not middle.is_empty():
@@ -37,28 +47,16 @@ class Ssek:
             middle, that = middle.pop(pov ^ BACK, version_max)
         return Ssek.create(this, middle, that, version_max, pov)
 
+
+    # ------------------------------------------------------------------------ #
+    # Basic utility functions
+
     def is_empty(self):
         return self.front.is_empty() and self.back.is_empty()
 
-    def get_this(self, pov):
-        if (pov == FRONT):
-            return self.front
-        elif (pov == BACK):
-            return self.back
 
-    def get_both(self, pov):
-        if (pov == FRONT):
-            return self.front, self.back
-        elif (pov == BACK):
-            return self.back, self.front
-
-    def set_both(self, pov, this, that):
-        if (pov == FRONT):
-            self.front = this
-            self.back = that
-        else:
-            self.front = that
-            self.back = this
+    # ------------------------------------------------------------------------ #
+    # Push & pop elements
 
     def push(self, pov, item, version = NO_VERSION):
         this, that = self.get_both(pov)
@@ -67,7 +65,8 @@ class Ssek:
                 assert self.middle is None or self.middle.is_empty()
                 new_this = that.push(pov, item, version)
                 new_that = this
-                new_ssek = Ssek.create(new_this, None, new_that, self.version_max, pov)
+                new_ssek = Ssek.create(new_this, None, new_that,
+                                        self.version_max, pov)
             else:
                 new_this = schunk.Schunk()
                 new_this = new_this.push(pov, item, version)
@@ -75,10 +74,12 @@ class Ssek:
                 if middle is None:
                     middle = Ssek.create_empty()
                 new_middle = middle.push(pov, this, version)
-                new_ssek = Ssek.create(new_this, new_middle, that, self.version_max, pov)
+                new_ssek = Ssek.create(new_this, new_middle, that,
+                                        self.version_max, pov)
         else:
             new_this = this.push(pov, item, version)
-            new_ssek = Ssek.create(new_this, self.middle, that, self.version_max, pov)
+            new_ssek = Ssek.create(new_this, self.middle, that,
+                                    self.version_max, pov)
         return new_ssek
 
     def pop(self, pov, version = NO_VERSION):
@@ -87,32 +88,13 @@ class Ssek:
         if this.is_empty():
             assert self.middle is None or self.middle.is_empty()
             new_that, x = that.pop(pov, version)
-            new_ssek = Ssek.create(this, self.middle, new_that, self.version_max, pov)
+            new_ssek = Ssek.create(this, self.middle, new_that,
+                                    self.version_max, pov)
         else:
             new_this, x = this.pop(pov, version)
             new_ssek = Ssek.create_and_populate(new_this, self.middle, that,
-                self.version_max, pov)
+                                                self.version_max, pov)
         return new_ssek, x
-
-    # iterate over ssek and apply function
-    def iter(self, pov, fun):
-        this, that = self.get_both(pov)
-        this.iter(pov, fun)
-        if self.middle is not None:
-            self.middle.iter(pov, lambda c: c.iter(pov ^ this.support.dir, fun))
-        that.iter(pov, fun)
-
-    # print ssek using print_item
-    def print_general(self, print_item):
-        def print_fun(item):
-            print_item(item)
-            print(", ", end="")
-        print("[", end="")
-        self.iter(FRONT, print_fun)
-        if self.is_empty():
-            print("]")
-        else:
-            print("\b\b]")
 
     def push_front(self, item, version = NO_VERSION):
         return self.push(FRONT, item, version)
@@ -125,3 +107,56 @@ class Ssek:
 
     def pop_back(self, version = NO_VERSION):
         return self.pop(BACK, version)
+
+
+    # ------------------------------------------------------------------------ #
+    # Operations on ssek
+
+    # Iterate over elements and apply function
+    def iter(self, pov, fun):
+        this, that = self.get_both(pov)
+        this.iter(pov, fun)
+        if self.middle is not None:
+            self.middle.iter(pov, lambda c: c.iter(pov ^ this.support.dir, fun))
+        that.iter(pov, fun)
+
+
+    # ------------------------------------------------------------------------ #
+    # Printing
+
+    # Print ssek using print_item function
+    def print_general(self, print_item):
+        def print_fun(item):
+            print_item(item)
+            print(", ", end="")
+        print("[", end="")
+        self.iter(FRONT, print_fun)
+        if self.is_empty():
+            print("]")
+        else:
+            print("\b\b]")
+
+    # ------------------------------------------------------------------------ #
+    # Auxiliary methods
+
+    # Access front/back elements depending on pov
+    def get_this(self, pov):
+        if (pov == FRONT):
+            return self.front
+        elif (pov == BACK):
+            return self.back
+
+    def get_both(self, pov):
+        if (pov == FRONT):
+            return self.front, self.back
+        elif (pov == BACK):
+            return self.back, self.front
+
+    # Set front/back elements depending on pov
+    def set_both(self, pov, this, that):
+        if (pov == FRONT):
+            self.front = this
+            self.back = that
+        else:
+            self.front = that
+            self.back = this
