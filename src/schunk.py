@@ -36,11 +36,14 @@ class Schunk:
     # ------------------------------------------------------------------------ #
     # Basic utility functions 
 
+    def size(self):
+        return self.view.seg_size
+
     def is_empty(self):
-        return self.view.seg_size == 0
+        return self.size() == 0
 
     def is_full(self):
-        return self.view.seg_size == CAPACITY
+        return self.size() == CAPACITY
 
 
     # ------------------------------------------------------------------------ #
@@ -61,7 +64,7 @@ class Schunk:
             new_head = self.view.seg_head + 1
         elif (pov == BACK):
             new_head = self.view.seg_head
-        new_view = View(new_head, self.view.seg_size + 1)
+        new_view = View(new_head, self.size() + 1)
         if (self.is_aligned(pov) and not self.support.is_full()):
             # if aligned we can use the same support
             new_support = self.support
@@ -104,10 +107,10 @@ class Schunk:
             index = h
             new_head = self.view.seg_head - 1
         elif (pov == BACK):
-            index = h + self.view.seg_size - 1
+            index = h + self.size() - 1
             new_head = self.view.seg_head
         x = self.support[index]
-        new_view = View(new_head, self.view.seg_size - 1)
+        new_view = View(new_head, self.size() - 1)
         return (Schunk(self.support, new_view), x)
 
     # Pop element from support with unique ownership
@@ -151,7 +154,7 @@ class Schunk:
         if (pov == FRONT):
             return self.support.head == self.view.seg_head
         elif (pov == BACK):
-            view_index = self.view.seg_size - self.view.seg_head
+            view_index = self.size() - self.view.seg_head
             supp_index = self.support.size() - self.support.head
             return (view_index == supp_index)
         else:
