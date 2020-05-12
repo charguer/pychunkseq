@@ -71,7 +71,7 @@ def main():
     print("")
 
     # HERE: change value for testing 
-    esek_size = 10
+    esek_size = 20
     print("### Test esek push front & back")
     myseq = Esek.create_empty()
     for i in reversed(range(esek_size)):
@@ -106,25 +106,25 @@ def main():
     myseq.print_general(print_item)
 
 
-    # print("### Test esek concat")
-    # print("seq1 = ", end="")
-    # seq1 = Esek.create_empty()
-    # for i in range(esek_size):
-    #     seq1.push_back(i)
-    # seq1.print_general(print_item)
-    # print("seq2 = ", end="")
-    # seq2 = Esek.create_empty()
-    # for i in range(esek_size):
-    #     seq2.push_back(i + esek_size)
-    # seq2.print_general(print_item)
+    print("### Test esek concat")
+    print("seq1 = ", end="")
+    seq1 = Esek.create_empty()
+    for i in range(esek_size):
+        seq1.push_back(i)
+    seq1.print_general(print_item)
+    print("seq2 = ", end="")
+    seq2 = Esek.create_empty()
+    for i in range(esek_size):
+        seq2.push_back(i + esek_size)
+    seq2.print_general(print_item)
 
-    # print("Concatenation...")
-    # seq1.concat_back(seq2)
-    # print("seq1 = ", end="")
-    # seq1.print_general(print_item)
-    # print("seq2 = ", end="")
-    # seq2.print_general(print_item)
-    # print("")
+    print("Concatenation...")
+    seq1.concat_back(seq2)
+    print("seq1 = ", end="")
+    seq1.print_general(print_item)
+    print("seq2 = ", end="")
+    seq2.print_general(print_item)
+    print("")
 
     # print("### Test reverse sequence")
     # myseq = esek.Esek()
@@ -170,7 +170,21 @@ def main():
     myssek, x = myssek.pop_back()
     myssek.print_general(print_item)
     print("popped elt =", x)
-    
+    print("")
+
+    print("### Test concat ssek")
+    print("myssek1 = ", end="")
+    myssek.print_general(print_item)
+    print("myssek2 = ", end="")
+    myssek2.print_general(print_item)
+    print("concat: ")
+    ssekconcat = myssek.concat_back(myssek2)
+    ssekconcat.print_general(print_item)
+    print("original ssek:")
+    print("myssek1 = ", end="")
+    myssek.print_general(print_item)
+    print("myssek2 = ", end="")
+    myssek2.print_general(print_item)
 
 def print_item(item):
     print(item, end="")

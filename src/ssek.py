@@ -2,6 +2,7 @@ import schunk
 FRONT = __import__('direction').Direction.FRONT
 BACK = __import__('direction').Direction.BACK
 NO_VERSION = __import__('schunk').NO_VERSION
+CAPACITY = __import__('echunk').CAPACITY
 
 # class Ssek:
 #   front: schunk containing first elements
@@ -160,3 +161,86 @@ class Ssek:
         else:
             self.front = that
             self.back = this
+
+    # Peek elements on the extremities of the esek (front/back)
+    def peek(self, pov):
+        assert not self.is_empty()
+        this, that = self.get_both(pov)
+        if this.is_empty():
+            assert self.middle is None or self.middle.is_empty()
+            return that.peek(pov)
+        else:
+            return this.peek(pov)
+
+    def peek_back(self):
+        return self.peek(BACK)
+
+    def peek_front(self):
+        return self.peek(FRONT)
+
+    # Push back chunk by either push or concat to existing chunk
+    # Used in concat
+    def push_back_concat(self, c):
+        m = self
+        if c.is_empty():
+            return m
+        if m.is_empty() or c.size() + m.peek_back().size() > CAPACITY:
+            return m.push_back(c)
+        else:
+            m, last_chunk = m.pop_back()
+            new_chunk = last_chunk.concat(c)
+            return m.push_back(new_chunk)
+
+
+    # ------------------------------------------------------------------------ #
+    # Concatenation
+
+    # Puts data from s2 to the back of current object, and clears s2
+    def concat_back(self, s2):
+        s1 = self
+        if (s2.is_empty()):
+            return s1
+        if (s1.is_empty()):
+            return s2
+
+        m1 = Ssek.create_empty() if s1.middle is None else s1.middle 
+        m2 = Ssek.create_empty() if s2.middle is None else s2.middle
+
+        # Set back and front of new ssek
+        if s1.front.is_empty():
+            assert m1.is_empty()
+            front = s1.back
+            s1_back = s1.front
+        else:
+            front = s1.front
+            s1_back = s1.back
+
+        if s2.back.is_empty():
+            assert m2.is_empty()
+            back = s2.front
+            s2_front = s2.back
+        else:
+            back = s2.back
+            s2_front = s2.front
+
+        # push s1.back and s2.front into s1.middle
+        m1 = m1.push_back_concat(s1_back)
+        m1 = m1.push_back_concat(s2_front)
+        # TODO: en fait, la fonction "push_back_chunk_middle" pourrait prendre
+        # directement m1 en argument, et ne pas travailler sur "self" du tout.
+        
+        if m1.is_empty():
+            # if m1 is empty m2 is the new middle
+            middle = m2
+        elif not m2.is_empty():
+            # else concatenate m1 and m2
+            if m1.peek_back().size() + m2.peek_front().size() <= CAPACITY:
+                m2, p = m2.pop_front()
+                m1 = m1.push_back_concat(p) # TODO: could be push_back_chunk_middle(m1, p)
+            middle = m1.concat_back(m2)
+        else:
+            middle = m1
+
+
+        # TODO: check version!!!
+        return Ssek.create_and_populate(front, middle, back, self.version_max)

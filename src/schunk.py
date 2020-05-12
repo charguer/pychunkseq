@@ -187,3 +187,18 @@ class Schunk:
     # Check if schunk is the unique owner of a support echunk
     def is_uniquely_owned(self, version):
         return version != NO_VERSION and self.version() == version
+
+    # Take a peek at the element on the extremity of the echunk (front/back)
+    def peek(self, pov):
+        assert not self.is_empty()
+        if pov ^ self.support.dir == FRONT:
+            i = 0
+        else:
+            i = self.size() - 1
+        return self.get(i)
+
+    def peek_front(self):
+        return self.peek(FRONT)
+
+    def peek_back(self):
+        return self.peek(BACK)

@@ -59,7 +59,7 @@ stack_debug: $(MYPROG)
 	$(MYPROG) -length 30 -n 30 -seq debug_stdlib -chunk_capacity 8
 
 concat_debug: $(MYPROG)
-	$(MYPROG) -length 1000 -seq debug_concat -chunk_capacity 8
+	$(MYPROG) -test concat -length 1000 -n 1000 -seq debug -chunk_capacity 4
 
 
 ################################################################

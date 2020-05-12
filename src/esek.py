@@ -295,18 +295,6 @@ class Esek:
     def peek_front(self):
         return self.peek(FRONT)
 
-    # Push chunk into middle by either push or concat to existing chunk
-    # Used in concat
-    def push_back_chunk_middle(self, c):
-        m = self.middle
-        if c.is_empty():
-            return
-        if m.is_empty() or c.size() + m.peek_back().size() > CAPACITY:
-            m.push_back(c)
-        else:
-            c2 = m.peek_back()
-            c2.concat(c)
-
 
     # ------------------------------------------------------------------------ #
     # Concatenation
@@ -327,7 +315,7 @@ class Esek:
         if s1.front.is_empty():
             assert m1.is_empty()
             b = s1.back
-            s1.back = s1.front        
+            s1.back = s1.front
             s1.front = b
         if s2.back.is_empty():
             assert m2.is_empty()
@@ -336,24 +324,25 @@ class Esek:
             s2.back = f
 
         # push s1.back and s2.front into s1.middle
-        s1.push_back_chunk_middle(s1.back)
-        s1.push_back_chunk_middle(s2.front)
+        m1 = m1.push_back_concat(schunk.schunk_of_echunk(s1.back))
+        m1 = m1.push_back_concat(schunk.schunk_of_echunk(s2.front))
         # TODO: en fait, la fonction "push_back_chunk_middle" pourrait prendre
         # directement m1 en argument, et ne pas travailler sur "self" du tout.
-        m1 = s1.middle # s1 was just modified, thus m1 might not be s1.middle
         
-        # if m1 is empty replace with m2
         if m1.is_empty():
-            s1.middle = m2
-        # else concatenate m1 and m2
+            # if m1 is empty m2 is the new middle
+            new_middle = m2
         elif not m2.is_empty():
+            # else concatenate m1 and m2
             if m1.peek_back().size() + m2.peek_front().size() <= CAPACITY:
-                p = m2.pop_front()
-                s1.push_back_chunk_middle(p) # TODO: could be push_back_chunk_middle(m1, p)
-                m1 = s1.middle # TODO: necessary? same case as above? => a priori on pourra s'en passer
-            m1.concat_back(m2)
+                m2, p = m2.pop_front()
+                m1 = m1.push_back_concat(p) # TODO: could be push_back_chunk_middle(m1, p)
+            new_middle = m1.concat_back(m2)
+        else:
+            new_middle = m1
         
-        # place s2 back into s1.back
+        # place new_middle in s1.middle and s2.back into s1.back
+        s1.middle = new_middle
         s1.back = s2.back
         # restore the invariant
         s1.populate_sides()
