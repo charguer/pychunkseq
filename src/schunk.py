@@ -36,6 +36,9 @@ class Schunk:
     # ------------------------------------------------------------------------ #
     # Basic utility functions 
 
+    def head(self):
+        return self.view.seg_head
+
     def size(self):
         return self.view.seg_size
 
@@ -61,9 +64,9 @@ class Schunk:
     def push_shared(self, pov, item, version):
         assert not self.is_full()
         if (pov == FRONT):
-            new_head = self.view.seg_head + 1
+            new_head = self.head() + 1
         elif (pov == BACK):
-            new_head = self.view.seg_head
+            new_head = self.head()
         new_view = View(new_head, self.size() + 1)
         if (self.is_aligned(pov) and not self.support.is_full()):
             # if aligned we can use the same support
@@ -102,13 +105,13 @@ class Schunk:
     # Pop element from support with shared ownership
     def pop_shared(self, pov, version):
         assert not self.is_empty()
-        h = self.support.head - self.view.seg_head
+        h = self.support.head - self.head()
         if (pov == FRONT):
             index = h
-            new_head = self.view.seg_head - 1
+            new_head = self.head() - 1
         elif (pov == BACK):
             index = h + self.size() - 1
-            new_head = self.view.seg_head
+            new_head = self.head()
         x = self.support[index]
         new_view = View(new_head, self.size() - 1)
         return (Schunk(self.support, new_view), x)
@@ -152,9 +155,9 @@ class Schunk:
     # Check if view is aligned with chunk on a side, or both sides
     def is_aligned(self, pov = None):
         if (pov == FRONT):
-            return self.support.head == self.view.seg_head
+            return self.support.head == self.head()
         elif (pov == BACK):
-            view_index = self.size() - self.view.seg_head
+            view_index = self.size() - self.head()
             supp_index = self.support.size() - self.support.head
             return (view_index == supp_index)
         else:
