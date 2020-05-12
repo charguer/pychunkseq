@@ -141,12 +141,12 @@ class Echunk:
         self.print_view(self.view(), print_item)
 
     # Print chunk area as defined by view
-    def print_view(self, view, print_item):
+    def print_view(self, view, print_item, pov = FRONT):
         def print_fun(item):
             print_item(item)
             print(", ", end="")
         print("[", end="")
-        self.iter(FRONT, print_fun, view)
+        self.iter(pov, print_fun, view)
         print("\b\b]") if self.size() != 0 else print("]")
 
 

@@ -28,9 +28,10 @@ class Schunk:
     # ------------------------------------------------------------------------ #
     # Constructor
 
-    def __init__(self, support = None, view = None):
+    def __init__(self, support = None, view = None, direction = FRONT):
         self.support = echunk.Echunk() if support is None else support
         self.view = View() if view is None else view
+        self.dir = direction
 
 
     # ------------------------------------------------------------------------ #
@@ -63,9 +64,9 @@ class Schunk:
     # Push element if support is shared
     def push_shared(self, pov, item, version):
         assert not self.is_full()
-        if (pov == FRONT):
+        if (pov ^ self.dir == FRONT):
             new_head = self.head() + 1
-        elif (pov == BACK):
+        else:
             new_head = self.head()
         new_view = View(new_head, self.size() + 1)
         if (self.is_aligned(pov) and not self.support.is_full()):
@@ -74,13 +75,13 @@ class Schunk:
         else:
             # else we create a copy of the part of the support we need
             new_support = self.support.ncopy(self.view)
-        new_support.push(pov, item)
-        return Schunk(new_support, new_view)
+        new_support.push(pov ^ self.dir, item)
+        return Schunk(new_support, new_view, self.dir)
 
     # Push element if unique ownership over support echunk
     def push_unique(self, pov, item):
         assert self.is_aligned()
-        self.support.push(pov, item)
+        self.support.push(pov ^ self.dir, item)
         self.view = self.support.view()
         return self
 
@@ -106,21 +107,21 @@ class Schunk:
     def pop_shared(self, pov, version):
         assert not self.is_empty()
         h = self.support.head - self.head()
-        if (pov == FRONT):
+        if (pov ^ self.dir == FRONT):
             index = h
             new_head = self.head() - 1
-        elif (pov == BACK):
+        else:
             index = h + self.size() - 1
             new_head = self.head()
         x = self.support[index]
         new_view = View(new_head, self.size() - 1)
-        return (Schunk(self.support, new_view), x)
+        return (Schunk(self.support, new_view, self.dir), x)
 
     # Pop element from support with unique ownership
     def pop_unique(self, pov, version):
         # TODO: verify
         assert self.is_aligned()
-        x = self.support.pop(pov)
+        x = self.support.pop(pov ^ self.dir)
         self.view = self.support.view()
         return self, x
 
@@ -142,15 +143,20 @@ class Schunk:
             c = c.push_back(c2[i])
         return c
 
+    # Iterate over schunk and apply given function
     def iter(self, pov, fun):
-        self.support.iter(pov, fun, self.view)
+        self.support.iter(pov ^ self.dir, fun, self.view)
+        
+    # Reverse order of elements in schunk
+    def rev(self):
+        return Schunk(self.support, self.view, self.dir ^ BACK)
 
 
     # ------------------------------------------------------------------------ #
     # Printing
 
     def print_general(self, print_item):
-        self.support.print_view(self.view, print_item)
+        self.support.print_view(self.view, print_item, self.dir)
 
 
     # ------------------------------------------------------------------------ #
@@ -163,7 +169,11 @@ class Schunk:
     # Get item at index
     def get(self, index):
         assert 0 <= index and index < self.size()
-        return self.support[self.support.head - self.head() + index]
+        h = self.support.head - self.head()
+        if (self.dir == FRONT):
+            return self.support[h + index]
+        else:
+            return self.support[h + self.size() - 1 - index]
 
 
     # ------------------------------------------------------------------------ #
@@ -175,9 +185,9 @@ class Schunk:
 
     # Check if view is aligned with chunk on a side, or both sides
     def is_aligned(self, pov = None):
-        if (pov == FRONT):
+        if (pov ^ self.dir == FRONT):
             return self.support.head == self.head()
-        elif (pov == BACK):
+        elif (pov ^ self.dir == BACK):
             view_index = self.size() - self.head()
             supp_index = self.support.size() - self.support.head
             return (view_index == supp_index)
