@@ -12,12 +12,12 @@ def schunk_of_echunk(chunk):
 
 # Transfom schunk into echunk
 def echunk_of_schunk(s, version):
-    if s.version() == version:
+    if s.is_uniquely_owned(version):
         # unique owner
         assert s.is_aligned()
         return s.support
     else:
-        return s.support.ncopy(s.support.view())
+        return s.support.ncopy(s.view)
 
 # Class Schunk:
 #   support: Echunk containing elements
