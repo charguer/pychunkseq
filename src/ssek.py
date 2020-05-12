@@ -69,7 +69,7 @@ class Ssek:
                 new_ssek = Ssek.create(new_this, None, new_that,
                                         self.version_max, pov)
             else:
-                new_this = schunk.Schunk()
+                new_this = schunk.Schunk(direction=this.dir)
                 new_this = new_this.push(pov, item, version)
                 middle = self.middle
                 if middle is None:
@@ -118,8 +118,18 @@ class Ssek:
         this, that = self.get_both(pov)
         this.iter(pov, fun)
         if self.middle is not None:
-            self.middle.iter(pov, lambda c: c.iter(pov ^ this.support.dir, fun))
+            self.middle.iter(pov, lambda c: c.iter(pov ^ this.dir, fun))
         that.iter(pov, fun)
+
+    # Reverse order of elements
+    def rev(self):
+        # reverse front & back and swap them
+        front = self.back.rev()
+        back = self.front.rev()
+        # recursive reverse
+        middle = self.middle.rev() if self.middle is not None else None
+        # TODO: check version!!!
+        return Ssek.create(front, middle, back, self.version_max)
 
 
     # ------------------------------------------------------------------------ #

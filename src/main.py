@@ -240,6 +240,30 @@ def main():
     print("myschunk = ", end="")
     myschunk.print_general(print_item)
     print("myschunk[0] =", myschunk[0], ", myschunk[3] =", myschunk[3])
+    print("")
+
+    # Test ssek rev
+    ssek_size = 30
+    print("### Test ssek rev")
+    myssek = Ssek.create_empty()
+    for i in range(ssek_size):
+        myssek = myssek.push_back(i + 1)
+    print("myssek = ", end="")
+    myssek.print_general(print_item)
+    print("Reversing..")
+    revsek = myssek.rev()
+    print("revsek = ", end="")
+    revsek.print_general(print_item)
+    print("myssek = ", end="")
+    myssek.print_general(print_item)
+    print("Push 100 in front of revsek and -100 in back")
+    # revsek = revsek.push_front(100)
+    revsek = revsek.push_back(-100)
+    print("revsek = ", end="")
+    revsek.print_general(print_item)
+    revsek = revsek.push_front(100)
+    print("revsek = ", end="")
+    revsek.print_general(print_item)
 
 
 def print_item(item):

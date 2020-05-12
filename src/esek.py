@@ -134,7 +134,7 @@ class Esek:
         self.front = self.back
         self.back = tmp
         # recursive reverse
-        self.middle.rev()
+        self.middle = self.middle.rev()
 
     # Swap data with another esek
     def swap(self, s2):
