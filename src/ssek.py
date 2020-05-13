@@ -33,6 +33,7 @@ class Ssek:
 
     # Class method - create ssek with given parameters
     @classmethod
+    # TODO: je crois qu'il faut renommer front->this, back->that dans les arguments
     def create(cls, front, middle, back, version_max = 0, pov = FRONT):
         if (pov == FRONT):
             return cls(front, middle, back, version_max)
@@ -42,11 +43,17 @@ class Ssek:
     # Class method - create ssek with given parameters and populate
     @classmethod
     def create_and_populate(cls, this, middle, that, version_max, pov = FRONT):
+        # TODO: bug: il faut passer NO_VERSION à middle.pop,
+        # la valeur de version_max ne doit jamais être passée à aucune fonction,
+        # elle ne sert que pour pour la conversion vers esek.
         if this.is_empty() and middle is not None and not middle.is_empty():
             middle, this = middle.pop(pov ^ FRONT, version_max) 
         if that.is_empty() and middle is not None and not middle.is_empty():
             middle, that = middle.pop(pov ^ BACK, version_max)
         return Ssek.create(this, middle, that, version_max, pov)
+        # LATER: populate pourrait renforcer l'invariant en disant que si
+        # front ou back est vide, alors middle doit devenir None,
+        # et pas juste satisfaire "self.middle.is_empty()"
 
 
     # ------------------------------------------------------------------------ #
@@ -189,6 +196,7 @@ class Ssek:
         return self.peek(FRONT)
 
     # Push back chunk by either push or concat to existing chunk
+    # TODO: renommer chunk en schunk ici, et idem pour last_chunk
     # Used in concat
     def push_back_concat(self, c):
         m = self
@@ -197,6 +205,10 @@ class Ssek:
         if m.is_empty() or c.size() + m.peek_back().size() > CAPACITY:
             return m.push_back(c)
         else:
+            # TODO: essayer de faire: 
+            #   p = m.peek_back();
+            #   p.concat(c)
+            # pour éviter de faire pop puis push du même objet.
             m, last_chunk = m.pop_back()
             new_chunk = last_chunk.concat(c)
             return m.push_back(new_chunk)
@@ -208,11 +220,16 @@ class Ssek:
     # Puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
         s1 = self
+        # TODO: parenthèses superflues ?
         if (s2.is_empty()):
             return s1
         if (s1.is_empty()):
             return s2
 
+        # TODO: il me semble que si m2=None il n'y a rien à faire d'autre
+        # que de tester ça aussi dans le "elif not m2.is_empty():".
+        # c'est juste le m1 qu'il faut toujours créer (en tous cas
+        # c'est nécessaire quand s1.back et s2.front ne sont pas vide).
         m1 = Ssek.create_empty() if s1.middle is None else s1.middle 
         m2 = Ssek.create_empty() if s2.middle is None else s2.middle
 
@@ -236,21 +253,20 @@ class Ssek:
         # push s1.back and s2.front into s1.middle
         m1 = m1.push_back_concat(s1_back)
         m1 = m1.push_back_concat(s2_front)
-        # TODO: en fait, la fonction "push_back_chunk_middle" pourrait prendre
-        # directement m1 en argument, et ne pas travailler sur "self" du tout.
         
         if m1.is_empty():
             # if m1 is empty m2 is the new middle
             middle = m2
+        # TODO: tu peux mettre elif m2 = None or m2.is_empty() ici,
+        # et ensuite faire la branche else pour la concaténation.
         elif not m2.is_empty():
             # else concatenate m1 and m2
             if m1.peek_back().size() + m2.peek_front().size() <= CAPACITY:
                 m2, p = m2.pop_front()
-                m1 = m1.push_back_concat(p) # TODO: could be push_back_chunk_middle(m1, p)
+                m1 = m1.push_back_concat(p)
             middle = m1.concat_back(m2)
         else:
             middle = m1
 
-
-        # TODO: check version!!!
+        # TODO: pour la version, il faut prendre le max des version_max de s1 et de s2.
         return Ssek.create_and_populate(front, middle, back, self.version_max)

@@ -45,6 +45,9 @@ class Echunk:
 
     # ------------------------------------------------------------------------ #
     # Insert & remove elements
+    # TODO: je te suggère une section pour PUSH, une pour POP, et une pour PEEK, ici.
+    # TODO: les fonctions push_front, push_back, pop_front et pop_back, et peek..
+    #  ne sont pas forcément indispensables, car le client final n'y accède jamais.
 
     def push(self, pov, item):
         assert not self.is_full()

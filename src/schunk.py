@@ -63,6 +63,8 @@ class Schunk:
 
     # Push element if support is shared
     def push_shared(self, pov, item, version):
+        # TODO: pas besoin de refaire l'assertion ici je pense,
+        # ou alors sinon il faudrait la refaire aussi dans push_unique, par symétrie
         assert not self.is_full()
         if (pov ^ self.dir == FRONT):
             new_head = self.head() + 1
@@ -185,6 +187,10 @@ class Schunk:
 
     # Check if view is aligned with chunk on a side, or both sides
     def is_aligned(self, pov = None):
+        # TODO: c'est assez douteux de faire des opérations avec pov=None,
+        # même si peut être que ça marche.
+        # je te propose de deux fonctions séparées "is_aligned" et 
+        # "is_aligned_side", ça sera bien plus clair.
         if (pov ^ self.dir == FRONT):
             return self.support.head == self.head()
         elif (pov ^ self.dir == BACK):
