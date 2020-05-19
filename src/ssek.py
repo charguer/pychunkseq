@@ -33,23 +33,19 @@ class Ssek:
 
     # Class method - create ssek with given parameters
     @classmethod
-    # TODO: je crois qu'il faut renommer front->this, back->that dans les arguments
-    def create(cls, front, middle, back, version_max = 0, pov = FRONT):
+    def create(cls, this, middle, that, version_max = 0, pov = FRONT):
         if (pov == FRONT):
-            return cls(front, middle, back, version_max)
+            return cls(this, middle, that, version_max)
         else:
-            return cls(back, middle, front, version_max)
+            return cls(that, middle, this, version_max)
 
     # Class method - create ssek with given parameters and populate
     @classmethod
     def create_and_populate(cls, this, middle, that, version_max, pov = FRONT):
-        # TODO: bug: il faut passer NO_VERSION à middle.pop,
-        # la valeur de version_max ne doit jamais être passée à aucune fonction,
-        # elle ne sert que pour pour la conversion vers esek.
         if this.is_empty() and middle is not None and not middle.is_empty():
-            middle, this = middle.pop(pov ^ FRONT, version_max) 
+            middle, this = middle.pop(pov ^ FRONT, NO_VERSION) 
         if that.is_empty() and middle is not None and not middle.is_empty():
-            middle, that = middle.pop(pov ^ BACK, version_max)
+            middle, that = middle.pop(pov ^ BACK, NO_VERSION)
         return Ssek.create(this, middle, that, version_max, pov)
         # LATER: populate pourrait renforcer l'invariant en disant que si
         # front ou back est vide, alors middle doit devenir None,
@@ -197,6 +193,8 @@ class Ssek:
 
     # Push back chunk by either push or concat to existing chunk
     # TODO: renommer chunk en schunk ici, et idem pour last_chunk
+    # je n'ai pas le droit de l'appeler schunk car le module qu'on importe
+    # a le même nom, donc l'appel aux fonctions ne va pas marcher
     # Used in concat
     def push_back_concat(self, c):
         m = self
@@ -209,8 +207,11 @@ class Ssek:
             #   p = m.peek_back();
             #   p.concat(c)
             # pour éviter de faire pop puis push du même objet.
-            m, last_chunk = m.pop_back()
-            new_chunk = last_chunk.concat(c)
+            # -- ça va pas marcher parce que p.concat(c) ne va pas modifier
+            # l'objet en place, mais renvoyer le nouveau résultat (schunk).
+            # je pense qu'on est obligé de faire comme ça
+            m, last_schunk = m.pop_back()
+            new_chunk = last_schunk.concat(c)
             return m.push_back(new_chunk)
 
 
@@ -220,10 +221,9 @@ class Ssek:
     # Puts data from s2 to the back of current object, and clears s2
     def concat_back(self, s2):
         s1 = self
-        # TODO: parenthèses superflues ?
-        if (s2.is_empty()):
+        if s2.is_empty():
             return s1
-        if (s1.is_empty()):
+        if s1.is_empty():
             return s2
 
         # TODO: il me semble que si m2=None il n'y a rien à faire d'autre
@@ -268,5 +268,5 @@ class Ssek:
         else:
             middle = m1
 
-        # TODO: pour la version, il faut prendre le max des version_max de s1 et de s2.
-        return Ssek.create_and_populate(front, middle, back, self.version_max)
+        version_max = max(s1.version_max, s2.version_max)
+        return Ssek.create_and_populate(front, middle, back, version_max)
