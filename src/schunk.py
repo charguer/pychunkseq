@@ -191,14 +191,16 @@ class Schunk:
         # même si peut être que ça marche.
         # je te propose de deux fonctions séparées "is_aligned" et 
         # "is_aligned_side", ça sera bien plus clair.
-        if (pov ^ self.dir == FRONT):
+        # -- pour l'instant j'ai change l'ordre des tests comme hotfix,
+        # mais je vais implementer cela apres
+        if pov is None:
+            return self.view == self.support.view()
+        elif (pov ^ self.dir == FRONT):
             return self.support.head == self.head()
-        elif (pov ^ self.dir == BACK):
+        else: # (pov ^ self.dir == BACK):
             view_index = self.size() - self.head()
             supp_index = self.support.size() - self.support.head
             return (view_index == supp_index)
-        else:
-            return self.view == self.support.view()
 
     # Check if schunk is the unique owner of a support echunk
     def is_uniquely_owned(self, version):
