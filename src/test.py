@@ -139,11 +139,11 @@ elif arg_test == "flatten":
     if arg_seq == "chunk_stack":
         seqs = Esek.create_empty()
         for i in range(R):
-            seqs.push_back(esek.init(S, lambda i: i))
+            seqs.push_back(Esek.init(S, lambda i: i))
         result = Esek.create_empty()
         t1 = time.time()
         for i in range(R):
-            result.concat_back(seqs[i])
+            result.concat_back(seqs.pop_front())
         # TODO: ajouter à la fin une ligne du type "s = result.size()", idem dans l'autre test
 
     if arg_seq == "stdlib":
