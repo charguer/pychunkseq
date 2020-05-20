@@ -49,12 +49,21 @@ if arg_test == "stack":
                q.pop_back()
                q.print_general(print_item)
 
+   elif arg_seq == "my_chunk_stack":
+       q = Esek.create_empty()
+       for i in range(R):
+          for k in range(1, S):
+               q.my_push_back(k)
+          # print("exectime1", time.time() - t1)
+          for _ in range(1, S):
+               s += q.my_pop_back()
+
    elif arg_seq == "chunk_stack":
        q = Esek.create_empty()
        for i in range(R):
-           for k in range(1, S):
+          for k in range(1, S):
                q.push_back(k)
-           for _ in range(1, S):
+          for _ in range(1, S):
                s += q.pop_back()
 
    elif arg_seq == "stdlib_back":

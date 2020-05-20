@@ -24,6 +24,7 @@ class Echunk:
     # Constructor
 
     def __init__(self, version = NO_VERSION):
+        self.mydata = []
         self.data = []
         self.head = 0
         self.dir  = FRONT

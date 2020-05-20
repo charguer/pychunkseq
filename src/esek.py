@@ -87,6 +87,18 @@ class Esek:
     # ------------------------------------------------------------------------ #
     # Push & pop elements
 
+    def my_push_back(self, item):
+        if len(self.back.data) == 128:
+           self.push(BACK, item)
+        else:
+           self.back.data.append(item)
+
+    def my_pop_back(self):
+        if len(self.back.data) > 1:
+            return self.back.data.pop()
+        else:
+            return self.pop(BACK)
+
     def push(self, pov, item):
         this, that = self.get_both(pov)
         if this.is_full():

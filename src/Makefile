@@ -66,7 +66,7 @@ concat_debug: $(MYPROG)
 # EFFECT OF CHUNK CAPACITY
 
 stack_chunk_capacity: $(MYPROG)
-	$(PRUN) -prog $(MYPROG) -seq chunk_stack -n 5000000 -length 10,1000,10000,1000000,2000000,5000000 -chunk_capacity 32,64,128,256,512,1024,4096
+	$(PRUN) -prog $(MYPROG) -seq chunk_stack -n 500000 -length 10,1000,10000,100000,500000 -chunk_capacity 4,8,16,32,64,128
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series chunk_capacity -legend-pos topleft -output plots_stack_chunk_capacity.pdf
 
 
@@ -74,8 +74,13 @@ stack_chunk_capacity: $(MYPROG)
 ################################################################
 # PERFORMANCE
 
+optim: $(MYPROG)
+	$(PRUN) $< -n 500000 -length 100,1000,500000 -seq my_chunk_stack,stdlib_back -chunk_capacity 128 -timeout 5
+	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output optim.pdf
+
+
 stack_perf: $(MYPROG)
-	$(PRUN) $< -n 500000 -length 10,1000,10000,500000 -seq chunk_stack,stdlib_back,stdlib_front,container_deque -chunk_capacity 32 -timeout 5
+	$(PRUN) $< -n 500000 -length 10,1000,10000,500000 -seq chunk_stack,stdlib_back,stdlib_front,container_deque -chunk_capacity 128 -timeout 5
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
 
 list_perf: $(MYPROG)
