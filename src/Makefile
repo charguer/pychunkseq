@@ -66,7 +66,7 @@ concat_debug: $(MYPROG)
 # EFFECT OF CHUNK CAPACITY
 
 stack_chunk_capacity: $(MYPROG)
-	$(PRUN) -prog $(MYPROG) -seq chunk_stack -n 5000000 -length 10,1000,10000,1000000,2000000,5000000 -chunk_capacity 32,64,128,256,512,1024,4096
+	$(PRUN) -prog $(MYPROG) -seq esek_back -n 5000000 -length 10,1000,10000,1000000,2000000,5000000 -chunk_capacity 32,64,128,256,512,1024,4096
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series chunk_capacity -legend-pos topleft -output plots_stack_chunk_capacity.pdf
 
 
@@ -75,7 +75,7 @@ stack_chunk_capacity: $(MYPROG)
 # PERFORMANCE
 
 stack_perf: $(MYPROG)
-	$(PRUN) $< -n 500000 -length 10,1000,10000,500000 -seq chunk_stack,stdlib_back,stdlib_front,container_deque -chunk_capacity 32 -timeout 5
+	$(PRUN) $< -n 500000 -length 10,50,100,500,1000,5000,10000,50000,100000,500000 -seq esek_back,stdlib_back,stdlib_front,container_deque -chunk_capacity 32 -timeout 5
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
 
 list_perf: $(MYPROG)
@@ -83,11 +83,11 @@ list_perf: $(MYPROG)
 	$(PPLOT) scatter --yzero --xlog -x n -y exectime -series seq -legend-pos topleft -output plots_stack_perf.pdf
 
 concat_perf: $(MYPROG)
-	$(PRUN) $< -test concat -n 500000 -length 10000,50000,100000,500000 -seq chunk_stack,stdlib -timeout 10
+	$(PRUN) $< -test concat -n 500000 -length 10,50,100,500,1000,5000,10000,50000,100000,500000 -seq esek,stdlib -timeout 10
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_concat_perf.pdf
 
 flatten_perf: $(MYPROG)
-	$(PRUN) $< -test flatten -n 500000 -length 1000,10000,500000 -seq chunk_stack,stdlib -timeout 10
+	$(PRUN) $< -test flatten -n 500000 -length 10,50,100,500,1000,5000,10000,50000,100000,500000 -seq esek,stdlib -timeout 10
 	$(PPLOT) scatter --yzero --xlog -x length -y exectime -series seq -legend-pos topleft -output plots_flatten_perf.pdf
 
 # Example command line

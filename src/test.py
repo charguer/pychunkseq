@@ -49,7 +49,7 @@ if arg_test == "stack":
                q.pop_back()
                q.print_general(print_item)
 
-   elif arg_seq == "chunk_stack":
+   elif arg_seq == "esek_back":
        q = Esek.create_empty()
        for i in range(R):
            for k in range(1, S):
@@ -110,7 +110,7 @@ elif arg_test == "concat":
        print("=== CONCAT ===")
        s1.print_general(print_item)
 
-    if arg_seq == "chunk_stack":
+    if arg_seq == "esek":
         s2 = Esek.create_empty()
         t1 = time.time()
         for k in range(R):
@@ -136,7 +136,7 @@ elif arg_test == "concat":
 
 elif arg_test == "flatten":
 
-    if arg_seq == "chunk_stack":
+    if arg_seq == "esek":
         seqs = Esek.create_empty()
         for i in range(R):
             seqs.push_back(Esek.init(S, lambda i: i))
